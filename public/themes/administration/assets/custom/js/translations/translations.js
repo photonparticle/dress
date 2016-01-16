@@ -20,8 +20,6 @@
  */
 
 function translate(key) {
-
-
 	if(translateData[key] && translateData[key].length > 0) {
 		return translateData[key];
 	} else {

@@ -42,19 +42,22 @@ class AdminAuth extends BaseController
 				'blade_standalone'   => TRUE,
 				'blade_custom_css'   => $customCSS,
 				'blade_custom_js'    => $customJS,
+				'pageTitle'          => trans('users.login_admin_title')
 			];
 
 			return Theme::view('auth.login', $data);
-		} else {
-		//If user is logged in - make redirect
+		}
+		else
+		{
+			//If user is logged in - make redirect
 			return Redirect::to('/admin')->send();
 		}
 	}
 
 	public function loginRequest()
 	{
-		$response['status'] = 'error';
-		$response['title'] = trans('users.check_login_details');
+		$response['status']  = 'error';
+		$response['title']   = trans('users.check_login_details');
 		$response['message'] = trans('users.auth_not_successful');
 
 		if ( ! empty($_POST) && ! empty($_POST['email']) && ! empty($_POST['password']))
@@ -68,7 +71,8 @@ class AdminAuth extends BaseController
 			$user = Sentinel::authenticate($credentials);
 
 			//If Authentication was successful
-			if(!empty($user)) {
+			if ( ! empty($user))
+			{
 				//Login and remember
 				if ( ! empty($_POST['remember']))
 				{
@@ -76,12 +80,12 @@ class AdminAuth extends BaseController
 				}
 				else
 				{
-				//Login without remember
+					//Login without remember
 					Sentinel::loginAndRemember($user);
 				}
 
-				$response['status'] = 'success';
-				$response['title'] = trans('global.redirecting') . '...';
+				$response['status']  = 'success';
+				$response['title']   = trans('global.redirecting').'...';
 				$response['message'] = trans('users.auth_successful');
 			}
 		}
@@ -89,8 +93,10 @@ class AdminAuth extends BaseController
 		echo json_encode($response);
 	}
 
-	public function logout() {
+	public function logout()
+	{
 		Sentinel::logout();
+
 		return Redirect::to('/admin')->send();
 	}
 }

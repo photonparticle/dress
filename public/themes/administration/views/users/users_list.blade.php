@@ -6,7 +6,7 @@
     <div class="portlet box blue-madison">
         <div class="portlet-title">
             <div class="caption">
-                <i class="fa fa-user"></i>{{trans('global.users_list')}}
+                <i class="fa fa-user"></i>{{$pageTitle}}
             </div>
         </div>
         <div class="portlet-body">

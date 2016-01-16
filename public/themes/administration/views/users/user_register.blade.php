@@ -8,7 +8,7 @@
         <div class="portlet-title">
             <div class="caption font-green-haze">
                 <i class="fa fa-user-plus"></i>
-                <span class="caption-subject bold uppercase"> {{trans('global.create_user')}}</span>
+                <span class="caption-subject bold uppercase"> {{$pageTitle}}</span>
             </div>
             <div class="actions">
                 <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">

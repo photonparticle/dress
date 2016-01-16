@@ -38,28 +38,6 @@
                     </li>
                 </ul>
             </li>
-            
-            <li class="last ">
-                <a href="javascript:;">
-                <i class="fa fa-cogs"></i> <!--
-                    <i class="icon-pointer"></i> -->
-                <span class="title">{{trans('global.categories')}}</span>
-                <span class="arrow "></span>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="#{{trans('global.categories')}}">
-                        {{trans('global.categories')}}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#{{trans('global.list')}}">
-                        {{trans('global.list')}}
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            
         </ul>
         <!-- END SIDEBAR MENU -->
     </div>

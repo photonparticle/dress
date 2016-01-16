@@ -31,11 +31,14 @@ return [
 	'view_profile'           => 'View profile',
 	'login_tip'              => 'To successfully authorise enter yours e-mail and password.',
 	'login'                  => 'Login',
+	'login_admin_title'      => 'Login to administration',
 	'remember_me'            => 'Remember me',
 	'forgotten_password'     => 'Forgotten password?',
 	'forgotten_password_tip' => 'Enter your e-mail address below to reset your password.',
 	'auth_successful'        => 'User authentication was successful',
 	'auth_not_successful'    => 'User authentication was not successful',
 	'check_login_details'    => 'Check your login details',
-    
+	'user_group'             => 'User group',
+	'administrators'         => 'Administrators',
+	'users'                  => 'User',
 ];

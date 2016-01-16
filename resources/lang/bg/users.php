@@ -31,11 +31,14 @@ return [
 	'view_profile'           => 'Виж профила',
 	'login_tip'              => 'За успешна оторизация е нужно да въведете e-mail и парола.',
 	'login'                  => 'Вход',
+	'login_admin_title'      => 'Вход в администрация',
 	'remember_me'            => 'Запомни ме',
 	'forgotten_password'     => 'Забравена парола?',
 	'forgotten_password_tip' => 'Въведете Вашия e-mail адрес за да възстановите паролата си.',
 	'auth_successful'        => 'Успешно влязохте в системата.',
 	'auth_not_successful'    => 'Вие не влязохте в системата',
 	'check_login_details'    => 'Проверете въведените данни.',
-    
+	'user_group'             => 'Потребителска група',
+	'administrators'         => 'Администратори',
+	'users'                  => 'Потребители',
 ];

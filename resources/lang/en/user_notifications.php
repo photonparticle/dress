@@ -14,6 +14,6 @@ return [
 	'password_not_changed' => 'Password was not changed successfully',
 	'old_password_do_not_match' => 'Old password do not match',
 	'new_passwords_do_not_match' => 'New passwords do not match',
-	'user_info_not_updated' => 'User information was not updated successfully'
-
+	'user_info_not_updated' => 'User information was not updated successfully',
+	'password_length' => 'The password must be 8 characters at least'
 ];

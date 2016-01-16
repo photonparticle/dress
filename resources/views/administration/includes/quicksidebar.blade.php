@@ -1,5 +1,5 @@
 <!-- BEGIN QUICK SIDEBAR -->
-<a href="javascript:;" class="page-quick-sidebar-toggler"><i class="icon-login"></i></a>
+<a href="#" class="page-quick-sidebar-toggler"><i class="icon-login"></i></a>
 <div class="page-quick-sidebar-wrapper">
     <div class="page-quick-sidebar">
         <div class="nav-justified">

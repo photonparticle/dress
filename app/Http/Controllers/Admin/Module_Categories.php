@@ -24,6 +24,7 @@ class Module_Categories extends BaseController
 
         $response['categories'] = Model_Categories::getAllCategories();
         $response['categories_relations'] = Model_Categories::getAllCategoriesRelatios();
+        $response['categories_three'] = Model_Categories::getCategoriesThree();
 
 
         $customCSS = [

@@ -64,6 +64,7 @@ class Module_Users extends BaseController
 
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
+		$response['pageTitle'] = trans('global.users_list');
 
 //		print('<pre>');print_r($response);exit;
 
@@ -76,9 +77,9 @@ class Module_Users extends BaseController
 	 */
 	public function getCreate()
 	{
-		$data = [];
+		$response['pageTitle'] = trans('global.create_user');
 
-		return Theme::view('users.user_register', $data);
+		return Theme::view('users.user_register', $response);
 	}
 
 	/**
@@ -133,8 +134,10 @@ class Module_Users extends BaseController
 	 */
 	public function getShow($id)
 	{
-		$user_data = [];
-		return Theme::view('users.user_profile', $user_data);
+		$reponse = [];
+		$response['pageTitle'] = trans('global.user_profile');
+
+		return Theme::view('users.user_profile', $response);
 	}
 
 	/**
@@ -149,17 +152,31 @@ class Module_Users extends BaseController
 		if ( ! empty($id) && ! empty(intval($id)))
 		{
 			//Get user data
-			$user_data            = Model_Users::getUserData(intval($id));
-			$user_data['user_id'] = $id;
+			$response            = Model_Users::getUserData(intval($id));
+			$response['user_id'] = $id;
 			//Do not pass sensitive data to view
 			$remove = ['password', 'remember_token', 'last_login', 'created_at', 'updated_at'];
 
 			foreach ($remove as $key => $object)
 			{
-				unset($user_data[$key]);
+				unset($response[$key]);
 			}
 
-			return Theme::view('users.users_edit', $user_data);
+			$response['pageTitle'] = trans('global.edit') . ' - ' . trans('global.users');
+			$response['blade_custom_css'] = [
+				'global/plugins/bootstrap-select/bootstrap-select.min',
+				'global/plugins/select2/select2',
+				'global/plugins/jquery-multi-select/css/multi-select'
+			];
+			$response['blade_custom_js'] = [
+				'admin/pages/scripts/components-dropdowns',
+				'global/plugins/bootstrap-select/bootstrap-select.min',
+				'global/plugins/bootstrap-select/bootstrap-select.min',
+				'global/plugins/select2/select2.min',
+				'global/plugins/jquery-multi-select/js/jquery.multi-select',
+			];
+
+			return Theme::view('users.users_edit', $response);
 		}
 		else
 		{
@@ -223,6 +240,10 @@ class Module_Users extends BaseController
 					)
 					{
 						$response['message'] = trans('user_notifications.new_passwords_do_not_match');
+					} elseif(
+						mb_strlen($user_data['new_password']) < 8
+					) {
+						$response['message'] = trans('user_notifications.password_length');
 					}
 					else
 					{

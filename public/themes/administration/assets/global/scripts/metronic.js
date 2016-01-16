@@ -272,10 +272,10 @@ var Metronic = function() {
             }
         } 
 
-        $('body').on('keydown', '.form-md-floating-label .form-control', function(e) { 
+        $('body').on('keydown', '.form-md-floating-label .form-control', function(e) {
             handleInput($(this));
         });
-        $('body').on('blur', '.form-md-floating-label .form-control', function(e) { 
+        $('body').on('blur', '.form-md-floating-label .form-control', function(e) {
             handleInput($(this));
         });        
 

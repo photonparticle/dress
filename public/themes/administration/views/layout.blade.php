@@ -7,7 +7,7 @@
 <!-- BEGIN HEAD -->
 <head>
     <meta charset="utf-8"/>
-    <title>Metronic | Admin Dashboard Template</title>
+    <title>@if(isset($pageTitle)) {{$pageTitle}} - @endif {{trans('global.administration')}} - DressPlace</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -66,7 +66,7 @@
                 @yield('content')
 
                 @if(!isset($blade_hide_quicksidebar))
-                    @include('administration.includes.quicksidebar');
+{{--                    @include('administration.includes.quicksidebar');--}}
                 @endif
             <!-- END CONTENT -->
             </div>
@@ -135,7 +135,7 @@
     @endif
 
 @if(!isset($blade_hide_quicksidebar))
-    <script src="/themes/administration/assets/admin/layout2/scripts/quick-sidebar.js" type="text/javascript"></script>
+    {{--<script src="/themes/administration/assets/admin/layout2/scripts/quick-sidebar.js" type="text/javascript"></script>--}}
 @endif
 <!-- END PAGE LEVEL SCRIPTS -->
 

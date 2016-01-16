@@ -2251,7 +2251,6 @@
             Metronic.init(); // init metronic core componets
             Layout.init(); // init layout
             Demo.init(); // init demo features
-            QuickSidebar.init(); // init quick sidebar
             Index.init();
             Index.initDashboardDaterange();
             Index.initJQVMAP(); // init index page's custom scripts
