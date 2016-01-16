@@ -186,8 +186,8 @@
                                                     {{trans('users.user_group')}}
                                                 </h4>
                                                 <select id="user_group" name="user_group" class="form-control select2me input-lg">
-                                                    <option value="0" @if()>{{trans('users.administrators')}}</option>
-                                                    <option value="test_2">{{trans('users.users')}}</option>
+                                                    <option value="0" @if(isset($is_admin)) selected @endif>{{trans('users.administrators')}}</option>
+                                                    <option value="test_2" @if(!isset($is_admin)) selected @endif>{{trans('users.users')}}</option>
                                                 </select>
                                             </div>
                                             <div class="clearfix"></div>
