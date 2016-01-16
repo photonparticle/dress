@@ -17,3 +17,13 @@ Rounded Portlets
 	border-radius: 0px 0px 4px 4px !important;
 }
 */
+
+body {
+	text-rendering: optimizeLegibility;
+	text-rendering: geometricPrecision;
+	font-smooth: always;
+	font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-webkit-font-smoothing: antialiased;
+	-webkit-font-smoothing: subpixel-antialiased;
+}

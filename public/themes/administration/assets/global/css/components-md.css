@@ -335,8 +335,7 @@ body {
   margin-top: -20px;
 }
 .form-group.form-md-line-input > .input-icon.right .form-control {
-  padding-left: 0;
-  padding-right: 34px;
+  padding: 0 34px 0 0;
 }
 .form-group.form-md-line-input > .input-icon.right > i {
   left: auto;
