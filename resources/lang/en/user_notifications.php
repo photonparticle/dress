@@ -19,4 +19,11 @@ return [
 	'user_group_changed'         => 'User group was changed',
 	'access_denied'              => 'Access denied!',
 	'no_admin_permission'        => 'You don\'t have admin access',
+	'user_remove'                => 'Remove user',
+	'confirm_action'             => 'Do you confirm this action?',
+	'user_not_removed'           => 'User was not removed',
+	'user_removed'               => 'User was removed',
+	'user_created'               => 'User was created successfully',
+	'user_not_created'           => 'User was not created successfully',
+	'user_exists'                => 'There already have registered user with this email',
 ];

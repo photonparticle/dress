@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\BaseController;
 use Caffeinated\Themes\Facades\Theme;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Illuminate\Support\Facades\Input;
 
 class Module_Users extends BaseController
 {
@@ -59,7 +60,7 @@ class Module_Users extends BaseController
 		$customJS = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
-			'custom/js/users',
+			'global/plugins/bootbox/bootbox.min'
 		];
 
 		$response['blade_custom_css'] = $customCSS;
@@ -90,38 +91,43 @@ class Module_Users extends BaseController
 	 */
 	public function postStore()
 	{
-		if ( ! empty(($request['email'] = $_POST['email'])) &&
-			! empty(($request['password'] = $_POST['password']))
+		if ( ! empty(($request['email'] = Input::get('email'))) &&
+			! empty(($request['password'] = Input::get('password')))
 		)
 		{
 
 			if ( ! Sentinel::findByCredentials($request))
 			{
-				if (Sentinel::registerAndActivate($request))
-				{
-					$response['status']  = 'success';
-					$response['message'] = 'User was created successfully.';
-				}
-				else
-				{
-					$response['status']  = 'error';
-					$response['message'] = 'User was not created successfully.';
+				if(mb_strlen(Input::get('password')) < 8) {
+					$response['status']  = 'warning';
+					$response['message'] = trans('user_notifications.password_length');
+				} else {
+					if (Sentinel::registerAndActivate($request))
+					{
+						$response['status']  = 'success';
+						$response['message'] = trans('user_notifications.user_created');
+					}
+					else
+					{
+						$response['status']  = 'error';
+						$response['message'] = trans('user_notifications.user_not_created');
+					}
 				}
 			}
 			else
 			{
 				$response['status']  = 'error';
-				$response['message'] = 'User with this email is already registered.';
+				$response['message'] = trans('user_notifications.user_exists');
 			}
 
 		}
 		else
 		{
 			$response['status']  = 'warning';
-			$response['message'] = 'All fields are required.';
+			$response['message'] = trans('global.all_fields_required');
 		}
 
-		echo json_encode($response);
+		return response()->json($response);
 	}
 
 	/**
@@ -202,12 +208,12 @@ class Module_Users extends BaseController
 		{
 			if ($action == 'personal_info')
 			{
-				$user_data['first_name'] = ( ! empty($_POST['first_name'])) ? $_POST['first_name'] : '';
-				$user_data['last_name']  = ( ! empty($_POST['last_name'])) ? $_POST['last_name'] : '';
-				$user_data['phone']      = ( ! empty($_POST['phone'])) ? $_POST['phone'] : '';
-				$user_data['address']    = ( ! empty($_POST['address'])) ? $_POST['address'] : '';
-				$user_data['city']       = ( ! empty($_POST['city'])) ? $_POST['city'] : '';
-				$user_data['country']    = ( ! empty($_POST['country'])) ? $_POST['country'] : '';
+				$user_data['first_name'] = ( ! empty(Input::get('first_name'))) ? Input::get('first_name') : '';
+				$user_data['last_name']  = ( ! empty(Input::get('last_name'))) ? Input::get('last_name') : '';
+				$user_data['phone']      = ( ! empty(Input::get('phone'))) ? Input::get('phone') : '';
+				$user_data['address']    = ( ! empty(Input::get('address'))) ? Input::get('address') : '';
+				$user_data['city']       = ( ! empty(Input::get('city'))) ? Input::get('city') : '';
+				$user_data['country']    = ( ! empty(Input::get('country'))) ? Input::get('country') : '';
 
 				if (Model_Users::updateUserInfo($id, $user_data) === TRUE)
 				{
@@ -221,9 +227,9 @@ class Module_Users extends BaseController
 			}
 			elseif ($action == 'change_password')
 			{
-				$user_data['password']        = ( ! empty($_POST['password'])) ? $_POST['password'] : '';
-				$user_data['new_password']    = ( ! empty($_POST['new_password'])) ? $_POST['new_password'] : '';
-				$user_data['re_new_password'] = ( ! empty($_POST['re_new_password'])) ? $_POST['re_new_password'] : '';
+				$user_data['password']        = ( ! empty(Input::get('password'))) ? Input::get('password') : '';
+				$user_data['new_password']    = ( ! empty(Input::get('new_password'))) ? Input::get('new_password') : '';
+				$user_data['re_new_password'] = ( ! empty(Input::get('re_new_password'))) ? Input::get('re_new_password') : '';
 
 				if ( ! empty($user_data['password']) && ! empty($user_data['new_password']) && ! empty($user_data['re_new_password']))
 				{
@@ -243,6 +249,7 @@ class Module_Users extends BaseController
 					} elseif(
 						mb_strlen($user_data['new_password']) < 8
 					) {
+						$response['status'] = 'warning';
 						$response['message'] = trans('user_notifications.password_length');
 					}
 					else
@@ -255,7 +262,7 @@ class Module_Users extends BaseController
 					}
 				}
 			} elseif ($action == 'user_group') {
-				$user_group = ( isset($_POST['user_group']) ? $_POST['user_group'] : 0);
+				$user_group = ( !empty(Input::get('user_group')) ? Input::get('user_group') : 0);
 
 				if($user_group == 0 || $user_group == 1) {
 					if(Model_Users::setUserGroup($id, $user_group) === TRUE ) {
@@ -266,7 +273,7 @@ class Module_Users extends BaseController
 			}
 		}
 
-		echo json_encode($response);
+		return response()->json($response);
 	}
 
 	/**
@@ -278,6 +285,16 @@ class Module_Users extends BaseController
 	 */
 	public function postDestroy($id)
 	{
-		//
+		$response['status'] = 'error';
+		$response['message'] = trans('user_notifications.user_not_removed');
+
+		if(!empty($id) && intval($id) > 0) {
+			if(Model_Users::removeUser($id) === TRUE) {
+				$response['status'] = 'success';
+				$response['message'] = trans('user_notifications.user_removed');
+			}
+		}
+
+		return response()->json($response);
 	}
 }

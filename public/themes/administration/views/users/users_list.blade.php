@@ -67,9 +67,10 @@
                                 <i class="fa fa-pencil"></i>
                             </a>
                             <a href="#"
-                               class="btn btn-icon-only red"
+                               class="btn btn-icon-only red remove_user"
                                title="{{trans('global.remove')}}"
                                data-id="{{isset($user['id']) ? $user['id'] : ''}}"
+                               data-email="{{isset($user['email']) ? $user['email'] : ''}}"
                             >
                                 <i class="fa fa-trash"></i>
                             </a>
@@ -87,9 +88,67 @@
 @section('customJS')
     <script type="text/javascript">
         jQuery(document).ready(function () {
+
+            $('.remove_user').click( function () {
+                var user_id = $(this).attr('data-id');
+                var user_email = $(this).attr('data-email');
+                var parent = $(this).closest('tr');
+
+                if(
+                    typeof user_id !== typeof undefined && typeof user_email !== typeof undefined &&
+                    user_id.length > 0 && user_email.length > 0
+                ) {
+                    bootbox.dialog({
+                       message: "<h4>{{trans('user_notifications.user_remove')}}</h4> <strong>ID:</strong> " + user_id + " <br /><strong>Email:</strong> " + user_email,
+                            title: "{{trans('user_notifications.confirm_action')}}",
+                            buttons: {
+                        cancel: {
+                            label: "{{trans('global.no')}}",
+                            className: "btn-danger"
+                        },
+                        confirm: {
+                            label: "{{trans('global.yes')}}",
+                                className: "btn-success",
+                                callback: function () {
+                                    $.ajax({
+                                       type: 'post',
+                                       url: '/admin/users/destroy/' + user_id,
+                                       headers: {
+                                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                       },
+                                       success: function (response) {
+                                           if(typeof response == typeof {} && response['status'] && response['message']) {
+                                               showNotification(response['status'], response['title'], response['message']);
+                                               parent.remove();
+                                           } else {
+                                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                           }
+                                       },
+                                       error: function () {
+                                           showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                       }
+
+                                   });
+                            }
+                        }
+                    }
+                });
+                }
+            });
+
+
+            $('#users_list').DataTable({
+               responsive: true,
+               order: [[0, 'asc']],
+               stateSave: true,
+               adaptiveHeight: true,
+               language: translateData['dataTable']
+           });
+
             Metronic.init(); // init metronic core components
             Layout.init(); // init current layout
             Demo.init(); // init demo features
+
         });
     </script>
 @endsection

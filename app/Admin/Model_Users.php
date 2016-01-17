@@ -236,4 +236,19 @@ class Model_Users extends Model
 			return FALSE;
 		}
 	}
+
+	public static function removeUser($user_id) {
+		if(!empty($user_id)) {
+			DB::table('users')
+				->where('id', '=', $user_id)
+				->delete();
+			DB::table('users_info')
+				->where('user_id', '=', $user_id)
+				->delete();
+
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 }

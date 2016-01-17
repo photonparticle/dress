@@ -240,16 +240,14 @@
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                            },
                            success: function (response) {
-                               response = $.parseJSON(response);
-
-                               if (response.status == 'success') {
-                                   showNotification(response.status, response.message);
+                               if(typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['message']);
                                } else {
-                                   showNotification(response.status, response.message);
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
                                }
                            },
                            error: function () {
-                               showNotification('error', 'Request could not be completed.', 'Contact us at office@dressplace.net');
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
                            }
 
                        });

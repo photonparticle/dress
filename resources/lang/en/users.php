@@ -26,7 +26,7 @@ return [
 	'profile_account'        => 'Profile',
 	'actions'                => 'Actions',
 	'register'               => 'Register',
-	'minsymb'                => 'Minimum 6 symbols',
+	'minsymb'                => 'Minimum 8 symbols',
 	'created_at'             => 'Created at',
 	'view_profile'           => 'View profile',
 	'login_tip'              => 'To successfully authorise enter yours e-mail and password.',

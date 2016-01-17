@@ -61,7 +61,7 @@ class AdminAuth extends BaseController
 		$response['title']   = trans('users.check_login_details');
 		$response['message'] = trans('users.auth_not_successful');
 
-		if ( ! empty($_POST) && ! empty($_POST['email']) && ! empty($_POST['password']))
+		if ( ! empty($_POST) && ! empty(Input::get('email')) && ! empty(Input::get('password')))
 		{
 			$is_admin = Model_Users::getUserGroup(FALSE, Input::get('email'));
 
@@ -79,7 +79,7 @@ class AdminAuth extends BaseController
 				if ( ! empty($user))
 				{
 					//Login and remember
-					if ( ! empty($_POST['remember']))
+					if ( ! empty(Input::get('remember')))
 					{
 						Sentinel::loginAndRemember($user);
 					}
