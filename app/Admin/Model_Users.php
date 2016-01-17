@@ -91,7 +91,8 @@ class Model_Users extends Model
 
 		$users = $users->get();
 
-		if(!empty($id)) {
+		if ( ! empty($id))
+		{
 			$users = $users[0];
 		}
 
@@ -179,9 +180,60 @@ class Model_Users extends Model
 		}
 	}
 
-	public static function getLoggedUserID() {
+	public static function getLoggedUserID()
+	{
 		$user = Sentinel::check();
 
 		return $user->id;
+	}
+
+	public static function setUserGroup($user_id, $group)
+	{
+		if (isset($group) && $group == 0 || $group == 1)
+		{
+			DB::table('users')
+			  ->where('id', '=', $user_id)
+			  ->update(['admin' => $group, 'updated_at' => date('Y-m-d H:i:s')]);
+
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * 	Get user group - admin (int 1) or user (int 0)
+	 * @param $user_id
+	 * @param bool $email
+	 *
+	 * @return bool
+	 */
+	public static function getUserGroup($user_id, $email = FALSE)
+	{
+		if ( ! empty($user_id) || (empty($user_id) && !empty($email)))
+		{
+			$response = DB::table('users')
+					 ->select('admin');
+
+			if(!empty($email)) {
+				$response = $response->where('email', '=', $email);
+			} else {
+				$response = $response->where('id', '=', $user_id);
+			}
+
+			$response = $response->get();
+
+			if(!empty($response) && isset($response[0]['admin'])) {
+				return $response[0]['admin'];
+			} else {
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 }

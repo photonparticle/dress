@@ -402,7 +402,7 @@
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <img alt="" class="img-circle" src="/themes/administration/assets/admin/layout2/img/avatar3_small.jpg"/>
 						<span class="username username-hide-on-mobile">
-						    @if(isset($user['email'])) {{$user['email']}} @endif
+						    @if(isset($current_user['email'])) {{$current_user['email']}} @endif
                         </span>
                             <i class="fa fa-angle-down"></i>
                         </a>

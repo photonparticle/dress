@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Admin\Model_Users;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -42,7 +43,7 @@ class AdminAuth extends BaseController
 				'blade_standalone'   => TRUE,
 				'blade_custom_css'   => $customCSS,
 				'blade_custom_js'    => $customJS,
-				'pageTitle'          => trans('users.login_admin_title')
+				'pageTitle'          => trans('users.login_admin_title'),
 			];
 
 			return Theme::view('auth.login', $data);
@@ -62,31 +63,41 @@ class AdminAuth extends BaseController
 
 		if ( ! empty($_POST) && ! empty($_POST['email']) && ! empty($_POST['password']))
 		{
-			//User data and Authentication
-			$credentials = [
-				'email'    => Input::get('email'),
-				'password' => Input::get('password'),
-			];
+			$is_admin = Model_Users::getUserGroup(FALSE, Input::get('email'));
 
-			$user = Sentinel::authenticate($credentials);
-
-			//If Authentication was successful
-			if ( ! empty($user))
+			if ($is_admin == 1)
 			{
-				//Login and remember
-				if ( ! empty($_POST['remember']))
-				{
-					Sentinel::login($user);
-				}
-				else
-				{
-					//Login without remember
-					Sentinel::loginAndRemember($user);
-				}
+				//User data and Authentication
+				$credentials = [
+					'email'    => Input::get('email'),
+					'password' => Input::get('password'),
+				];
 
-				$response['status']  = 'success';
-				$response['title']   = trans('global.redirecting').'...';
-				$response['message'] = trans('users.auth_successful');
+				$user = Sentinel::authenticate($credentials);
+
+				//If Authentication was successful
+				if ( ! empty($user))
+				{
+					//Login and remember
+					if ( ! empty($_POST['remember']))
+					{
+						Sentinel::loginAndRemember($user);
+					}
+					else
+					{
+						//Login without remember
+						Sentinel::login($user);
+					}
+
+					$response['status']  = 'success';
+					$response['title']   = trans('global.redirecting').'...';
+					$response['message'] = trans('users.auth_successful');
+				}
+			}
+			else
+			{
+				$response['title']   = trans('user_notifications.access_denied');
+				$response['message'] = trans('user_notifications.no_admin_permission');
 			}
 		}
 

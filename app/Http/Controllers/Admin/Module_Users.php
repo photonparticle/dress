@@ -65,8 +65,7 @@ class Module_Users extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 		$response['pageTitle'] = trans('global.users_list');
-
-//		print('<pre>');print_r($response);exit;
+//$this->dd($response);
 
 		return Theme::view('users.users_list', $response);
 	}
@@ -175,6 +174,7 @@ class Module_Users extends BaseController
 				'global/plugins/select2/select2.min',
 				'global/plugins/jquery-multi-select/js/jquery.multi-select',
 			];
+			$response['is_admin'] = Model_Users::getUserGroup($id);
 
 			return Theme::view('users.users_edit', $response);
 		}
@@ -252,6 +252,15 @@ class Module_Users extends BaseController
 							$response['status']  = 'success';
 							$response['message'] = trans('user_notifications.password_changed');
 						}
+					}
+				}
+			} elseif ($action == 'user_group') {
+				$user_group = ( isset($_POST['user_group']) ? $_POST['user_group'] : 0);
+
+				if($user_group == 0 || $user_group == 1) {
+					if(Model_Users::setUserGroup($id, $user_group) === TRUE ) {
+						$response['status'] = 'success';
+						$response['message'] = trans('user_notifications.user_group_changed');
 					}
 				}
 			}

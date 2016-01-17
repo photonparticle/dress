@@ -186,8 +186,8 @@
                                                     {{trans('users.user_group')}}
                                                 </h4>
                                                 <select id="user_group" name="user_group" class="form-control select2me input-lg">
-                                                    <option value="0" @if(isset($is_admin)) selected @endif>{{trans('users.administrators')}}</option>
-                                                    <option value="test_2" @if(!isset($is_admin)) selected @endif>{{trans('users.users')}}</option>
+                                                    <option value="1" @if(isset($is_admin) && $is_admin == 1) selected @endif>{{trans('users.administrators')}}</option>
+                                                    <option value="0" @if(isset($is_admin) && $is_admin == 0) selected @endif>{{trans('users.users')}}</option>
                                                 </select>
                                             </div>
                                             <div class="clearfix"></div>
@@ -195,8 +195,8 @@
                                             <div class="margin-top-20">
                                                 <button id="save_user_group" class="btn green-haze" data-action="user_group">
                                                     {{trans('users.save_changes')}} </button>
-                                                <button type="reset" class="btn default">
-                                                    {{trans('users.cancel')}} </button>
+                                                <a href="/admin/users" class="btn default">
+                                                    {{trans('users.cancel')}} </a>
                                             </div>
                                         </form>
                                     </div>

@@ -103,6 +103,6 @@ class BaseController extends Controller
 			unset($user_data[$key]);
 		}
 
-		View::share('user', $user_data);
+		View::share('current_user', $user_data);
 	}
 }

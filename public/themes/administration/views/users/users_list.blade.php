@@ -29,6 +29,9 @@
                         {{trans('users.created_at')}}
                     </th>
                     <th>
+                        {{trans('global.administrator')}}
+                    </th>
+                    <th>
                         {{trans('users.actions')}}
                     </th>
                 </tr>
@@ -41,13 +44,22 @@
                         <td>{{isset($user['first_name']) ? $user['first_name'] : 'n/a'}}</td>
                         <td>{{isset($user['last_name']) ? $user['last_name'] : 'n/a'}}</td>
                         <td>{{isset($user['created_at']) ? $user['created_at'] : 'n/a'}}</td>
+                        <td>
+                            @if(isset($user['admin']))
+                                @if($user['admin'] == 1)
+                                    {{trans('global.yes')}}
+                                @else
+                                    {{trans('global.no')}}
+                                @endif
+                            @endif
+                        </td>
                         <td class="text-center">
-                            <a href="/admin/users/show/{{isset($user['id']) ? $user['id'] : 'n/a'}}"
-                               class="btn btn-icon-only blue"
-                               title="{{trans('users.view_profile')}}"
-                            >
-                                <i class="fa fa-eye"></i>
-                            </a>
+                            {{--<a href="/admin/users/show/{{isset($user['id']) ? $user['id'] : 'n/a'}}"--}}
+                               {{--class="btn btn-icon-only blue"--}}
+                               {{--title="{{trans('users.view_profile')}}"--}}
+                            {{-->--}}
+                                {{--<i class="fa fa-eye"></i>--}}
+                            {{--</a>--}}
                             <a href="/admin/users/edit/{{isset($user['id']) ? $user['id'] : 'n/a'}}"
                                class="btn btn-icon-only green"
                                title="{{trans('global.edit')}}"
