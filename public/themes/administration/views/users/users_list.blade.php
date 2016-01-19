@@ -2,7 +2,6 @@
 
 @section('content')
         <!-- BEGIN EXAMPLE TABLE PORTLET-->
-<div class="page-content">
     <div class="portlet box blue-madison">
         <div class="portlet-title">
             <div class="caption">
@@ -81,7 +80,6 @@
             </table>
         </div>
     </div>
-</div>
 <!-- END EXAMPLE TABLE PORTLET-->
 @endsection
 

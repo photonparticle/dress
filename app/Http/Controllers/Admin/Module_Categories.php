@@ -50,8 +50,8 @@ class Module_Categories extends BaseController
      */
     public function create()
     {
-
-        return Theme::view('categories.categories_create');
+        $response = [];
+        return Theme::view('categories.categories_create', $response);
     }
 
     /**

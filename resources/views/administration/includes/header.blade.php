@@ -89,7 +89,7 @@
             <!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
             <form class="search-form search-form-expanded" action="extra_search.html" method="GET">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search..." name="query">
+                    <input type="text" class="form-control" placeholder="{{trans('global.search')}}..." name="query">
 					<span class="input-group-btn">
 					<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
 					</span>
@@ -101,13 +101,13 @@
                 <ul class="nav navbar-nav pull-right">
                     <!-- BEGIN NOTIFICATION DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-extended dropdown-dark dropdown-notification" id="header_notification_bar">
+                    <li class="dropdown dropdown-extended dropdown-dark dropdown-notification hide" id="header_notification_bar">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <i class="icon-bell"></i>
 						<span class="badge badge-default">
 						7 </span>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu hide">
                             <li class="external">
                                 <h3><span class="bold">12 pending</span> notifications</h3>
                                 <a href="extra_profile.html">view all</a>
@@ -211,7 +211,7 @@
                     <!-- END NOTIFICATION DROPDOWN -->
                     <!-- BEGIN INBOX DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-extended dropdown-dark dropdown-inbox" id="header_inbox_bar">
+                    <li class="dropdown dropdown-extended dropdown-dark dropdown-inbox hide" id="header_inbox_bar">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <i class="icon-envelope-open"></i>
 						<span class="badge badge-default">
@@ -301,7 +301,7 @@
                     <!-- END INBOX DROPDOWN -->
                     <!-- BEGIN TODO DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-extended dropdown-dark dropdown-tasks" id="header_task_bar">
+                    <li class="dropdown dropdown-extended dropdown-dark dropdown-tasks hide" id="header_task_bar">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <i class="icon-calendar"></i>
 						<span class="badge badge-default">
@@ -400,42 +400,38 @@
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                     <li class="dropdown dropdown-user dropdown-extended dropdown-dark">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <img alt="" class="img-circle" src="/themes/administration/assets/admin/layout2/img/avatar3_small.jpg"/>
-						<span class="username username-hide-on-mobile">
+                            {{--<img alt="" class="img-circle" src="/themes/administration/assets/admin/layout2/img/avatar3_small.jpg"/>--}}
+                            <span class="username username-hide-on-mobile">
 						    @if(isset($current_user['email'])) {{$current_user['email']}} @endif
                         </span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
-                            <li>
-                                <a href="extra_profile.html">
-                                    <i class="icon-user"></i> My Profile </a>
-                            </li>
-                            <li>
-                                <a href="page_calendar.html">
-                                    <i class="icon-calendar"></i> My Calendar </a>
-                            </li>
+                            {{--<li>--}}
+                            {{--<a href="page_calendar.html">--}}
+                            {{--<i class="icon-calendar"></i> My Calendar </a>--}}
+                            {{--</li>--}}
                             <li>
                                 <a href="inbox.html">
-                                    <i class="icon-envelope-open"></i> My Inbox <span class="badge badge-danger">
+                                    <i class="icon-envelope-open"></i>{{trans('global.inbox')}}<span class="badge badge-danger">
 								3 </span>
                                 </a>
                             </li>
                             <li>
                                 <a href="page_todo.html">
-                                    <i class="icon-rocket"></i> My Tasks <span class="badge badge-success">
+                                    <i class="icon-rocket"></i>{{trans('global.new_orders')}}<span class="badge badge-success">
 								7 </span>
                                 </a>
                             </li>
                             <li class="divider">
                             </li>
-                            <li>
-                                <a href="extra_lock.html">
-                                    <i class="icon-lock"></i> Lock Screen </a>
-                            </li>
+                            {{--<li>--}}
+                            {{--<a href="extra_lock.html">--}}
+                            {{--<i class="icon-lock"></i> Lock Screen </a>--}}
+                            {{--</li>--}}
                             <li>
                                 <a href="/admin/auth/logout">
-                                    <i class="icon-key"></i> Log Out </a>
+                                    <i class="icon-key"></i>{{trans('global.logout')}}</a>
                             </li>
                         </ul>
                     </li>

@@ -19,6 +19,74 @@
                 </a>
             </li>
 
+            <li>
+                <a href="javascript:;">
+                    <i class="fa fa-tasks"></i>
+                    <span class="title">{{trans('global.categories')}}</span>
+                    <span class="arrow "></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="/admin/categories">
+                            {{trans('global.categories_list')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/categories/create">
+                            {{trans('global.create_category')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="fa fa-archive"></i>
+                    <span class="title">{{trans('global.products')}}</span>
+                    <span class="arrow "></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="/admin/products">
+                            {{trans('global.products_list')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/products/create">
+                            {{trans('global.create_product')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span class="title">{{trans('global.orders')}}</span>
+                    <span class="arrow "></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="/admin/orders">
+                            {{trans('global.orders_list')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/products/orders/create">
+                            {{trans('global.create_order')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="fa fa-cogs"></i>
+                    <span class="title">{{trans('global.modules')}}</span>
+                    <span class="arrow "></span>
+                </a>
+            </li>
+
             <li class="last ">
                 <a href="javascript:;">
                     <i class="icon-user"></i>

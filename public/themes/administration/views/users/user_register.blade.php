@@ -1,8 +1,6 @@
 @extends('administration::layout')
 
 @section('content')
-        <!-- BEGIN EXAMPLE TABLE PORTLET-->
-<div class="page-content">
     <!-- BEGIN SAMPLE FORM PORTLET-->
     <div class="portlet light">
         <div class="portlet-title">
@@ -56,8 +54,6 @@
         </div>
 
     </div>
-</div>
-<!-- END EXAMPLE TABLE PORTLET-->
 @endsection
 
 @section('customJS')

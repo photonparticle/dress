@@ -63,19 +63,19 @@
 
             <!-- BEGIN CONTENT -->
             <div class="page-content-wrapper">
-                @yield('content')
+                <div class="page-content">
+                    @yield('content')
+                </div>
 
                 @if(!isset($blade_hide_quicksidebar))
 {{--                    @include('administration.includes.quicksidebar');--}}
                 @endif
             <!-- END CONTENT -->
             </div>
-        </div>
 
     @if(!isset($blade_hide_footer))
     @include('administration.includes.footer')
     @endif
-    </div>
 @else
       @yield('content')
 @endif
@@ -124,9 +124,9 @@
 <script src="/themes/administration/assets/admin/layout2/scripts/layout.js" type="text/javascript"></script>
 <script src="/themes/administration/assets/admin/pages/scripts/ui-notific8.js" type="text/javascript"></script>
 <script src="/themes/administration/assets/admin/layout2/scripts/demo.js" type="text/javascript"></script>
-<script src="/themes/administration/assets/custom/js/main.js" type="text/javascript"></script>
 <script src="/themes/administration/assets/custom/js/translations/translations.js" type="text/javascript"></script>
 <script src="/themes/administration/assets/custom/js/translations/{{Lang::locale()}}.js" type="text/javascript"></script>
+<script src="/themes/administration/assets/custom/js/main.js" type="text/javascript"></script>
 
     @if(!empty($blade_custom_js))
         @foreach($blade_custom_js as $file)
@@ -142,6 +142,8 @@
 @yield('customJS');
 
 <!-- END JAVASCRIPTS -->
+        </div>
+    </div>
 </body>
 <!-- END BODY -->
 </html>

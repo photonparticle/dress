@@ -27,3 +27,10 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-webkit-font-smoothing: subpixel-antialiased;
 }
+
+.page-boxed .page-footer .page-footer-inner {
+	color: #fff;
+	text-align: center;
+	padding: 20px 0;
+	width: 100%;
+}
