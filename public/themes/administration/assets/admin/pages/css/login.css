@@ -147,7 +147,8 @@ Login page
   margin-top: 1px;
 }
 
-.login .content .form-actions .btn-success {
+.login .content .form-actions .btn-success,
+.login .content .form-actions .btn-danger {
   font-weight: 600;
   padding: 10px 20px !important;
 }

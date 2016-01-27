@@ -32,7 +32,9 @@ Route::group(
 
 
 		Route::controller('/users', 'Module_Users');
-		Route::resource('/categories', 'Module_Categories');
+		Route::controller('/categories', 'Module_Categories');
+		Route::controller('/products', 'Module_Products');
+
 		//Resources
 //		Route::resource('/users', 'Module_Users');
 	}

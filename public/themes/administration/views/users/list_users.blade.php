@@ -117,7 +117,9 @@
                                        success: function (response) {
                                            if(typeof response == typeof {} && response['status'] && response['message']) {
                                                showNotification(response['status'], response['title'], response['message']);
-                                               parent.remove();
+                                               if(response['status'] == 'success') {
+                                                   parent.remove();
+                                               }
                                            } else {
                                                showNotification('error', translate('request_not_completed'), translate('contact_support'));
                                            }

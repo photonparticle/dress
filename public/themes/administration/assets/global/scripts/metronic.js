@@ -527,7 +527,7 @@ var Metronic = function() {
     var handleSelect2 = function() {
         if ($().select2) {
             $('.select2me').select2({
-                placeholder: "Select",
+                placeholder: $(this).data('placeholder'),
                 allowClear: true
             });
         }

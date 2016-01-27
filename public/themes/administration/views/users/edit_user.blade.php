@@ -154,7 +154,7 @@
 
                                             <div class="input-icon right">
 
-                                                <input name="re_new_password" type="password" class="form-control"/>
+                                                <input name="re_new_password" type="password" class="form-control input-lg"/>
 
                                                 <label for="re_new_password">{{trans('users.re_new_password')}}</label>
 
@@ -181,9 +181,9 @@
                                     <form id="user_group">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <div class="col-xs-12">
-                                            <h4>
+                                            <label for="user_group" class="control-label col-xs-12 default no-padding">
                                                 {{trans('users.user_group')}}
-                                            </h4>
+                                            </label>
                                             <select id="user_group" name="user_group" class="form-control select2me input-lg">
                                                 <option value="1" @if(isset($is_admin) && $is_admin == 1) selected @endif>{{trans('users.administrators')}}</option>
                                                 <option value="0" @if(isset($is_admin) && $is_admin == 0) selected @endif>{{trans('users.users')}}</option>

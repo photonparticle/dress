@@ -1,0 +1,38 @@
+body {
+	text-rendering: optimizeLegibility;
+	text-rendering: geometricPrecision;
+	font-smooth: always;
+	font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-webkit-font-smoothing: antialiased;
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+.page-boxed .page-footer .page-footer-inner {
+	color: #fff;
+	text-align: center;
+	padding: 20px 0;
+	width: 100%;
+}
+
+.no-padding {
+	padding: 0 !important;
+}
+
+.no-margin {
+	margin: 0 !important;
+}
+
+label.default {
+	color: #999;
+	font-size: 20px;
+	font-weight: 400;
+}
+
+.tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li.disabled:hover {
+	border-bottom: 4px solid #ccc;
+}
+
+.portlet.light > .portlet-title > .nav-tabs > li.disabled > a {
+	cursor: not-allowed;
+}

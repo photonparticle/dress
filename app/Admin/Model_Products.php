@@ -6,7 +6,7 @@ use DB;
 use Illuminate\Database\Eloquent\Model;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 
-class Model_Categories extends Model
+class Model_Products extends Model
 {
 	private $category_objects = [
 		'number',
@@ -18,54 +18,53 @@ class Model_Categories extends Model
 	];
 
 	/**
-	 * @param bool $category_id - int|array - FALSE for to get all categories
-	 * @param array $objects
-	 *
+	 * Returns array of all products
 	 * @return array
 	 */
-	public static function getCategory($category_id = FALSE, $objects = [])
+	public static function getAllProducts()
 	{
-		$categories = DB::table('categories')
-						->orderBy('created_at', 'ASC');
-		$response   = [];
+		$products = DB::table('products')
+						->orderBy('created_at', 'ASC')
+						->get();
 
-		if (is_array($category_id))
+		if ( ! empty($products) && is_array($products))
 		{
-			$category = $categories->whereIn('id', $category_id);
-		}
-		elseif (is_string($category_id) || is_int($category_id))
-		{
-			$category = $categories->where('id', '=', $category_id);
-		}
-
-		$categories = $categories->get();
-
-		if ( ! empty($categories) && is_array($categories))
-		{
-			foreach ($categories as $key => $category)
+			foreach ($products as $key => $product)
 			{
-				if ( ! empty($category) && is_array($category))
+				if ( ! empty($product) && is_array($product))
 				{
-					$response[$category['id']] = $category;
-				}
-			}
-		}
-
-		if (is_array(($category_objects = self::getCategoryObjects($category_id, $objects))))
-		{
-			foreach ($category_objects as $key => $objects)
-			{
-				if ( ! empty($objects) && is_array($objects))
-				{
-					foreach ($objects as $obj_key => $object)
+					if (is_array(($product_objects = self::getCategoryObjects($product['id']))))
 					{
-						$response[$key][$obj_key] = $object;
+						$products[$key] = array_merge($product, $product_objects);
 					}
 				}
 			}
 		}
 
-		return $response;
+		return $products;
+	}
+
+	public static function getCategory($category_id)
+	{
+		$category = DB::table('categories')
+					  ->where('id', '=', $category_id)
+					  ->get();
+
+		if ( ! empty($category) && is_array($category))
+		{
+			foreach ($category as $key => $category_data)
+			{
+				if ( ! empty($category_data) && is_array($category_data))
+				{
+					if (is_array(($category_objects = self::getCategoryObjects($category_data['id']))))
+					{
+						$category[$key] = array_merge($category, $category_objects);
+					}
+				}
+			}
+		}
+
+		return $category;
 	}
 
 	/*
@@ -297,45 +296,36 @@ class Model_Categories extends Model
 		}
 	}
 
-	public static function getCategoryObjects($category_id, $objects = array())
-	{
-		$response = [];
-		$result   = DB::table('categories_data');
-
-		if (is_array($category_id))
-		{
-			$result = $result->whereIn('category_id', $category_id);
-		}
-		elseif (is_string($category_id) || is_int($category_id))
-		{
-			$result = $result->where('category_id', '=', $category_id);
-		}
-
-		if ( ! empty($objects) && is_array($objects))
-		{
-			$result = $result->whereIn('object', $objects);
-		}
-
-		$result = $result->get();
-
-		if ( ! empty($result) && is_array($result))
-		{
-			foreach ($result as $key => $value)
-			{
-				if ( ! empty($value['object']) && ! empty($value['type']) && ! empty($value[$value['type']]))
-				{
-					$response[$value['category_id']][$value['object']] = $value[$value['type']];
-				}
-			}
-		}
-
-		return $response;
-	}
-
-	public static function removeCategory($category_id)
+	public static function getCategoryObjects($category_id)
 	{
 		if ( ! empty($category_id))
 		{
+			$response = [];
+			$result   = DB::table('categories_data')
+						  ->where('category_id', '=', $category_id)
+						  ->get();
+
+			if ( ! empty($result) && is_array($result))
+			{
+				foreach ($result as $key => $value)
+				{
+					if ( ! empty($value['object']) && ! empty($value['type']) && ! empty($value[$value['type']]))
+					{
+						$response[$value['object']] = $value[$value['type']];
+					}
+				}
+			}
+
+			return $response;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public static function removeCategory($category_id) {
+		if(!empty($category_id)) {
 			DB::table('categories')
 			  ->where('id', '=', $category_id)
 			  ->delete();
@@ -344,90 +334,8 @@ class Model_Categories extends Model
 			  ->delete();
 
 			return TRUE;
-		}
-		else
-		{
+		} else {
 			return FALSE;
 		}
-	}
-
-	/**
-	 * @param array $category_id
-	 */
-	public static function getCategoryTree($category_id = FALSE)
-	{
-		if ( ! empty($category_id))
-		{
-			$categories = self::getCategory();
-		}
-		else
-		{
-			$categories = self::getCategory($category_id);
-		}
-		$response = [];
-		$first_level = [];
-		$second_level = [];
-		$third_level = [];
-
-		if ( ! empty($categories) && is_array($categories))
-		{
-			foreach ($categories as $key => $category)
-			{
-				//If main category
-				if ($category['level'] == 0)
-				{
-					$first_level[$category['id']] = $category;
-				}
-				elseif (in_array($category['level'], [1, 2]))
-				{
-					//If second level
-					if ($category['level'] == 1)
-					{
-						$second_level[$category['id']] = $category;
-					}
-					elseif ($category['level'] == 2)
-					{
-						$third_level[$category['id']]= $category;
-					}
-				}
-			}
-		}
-
-		//If first level level
-		foreach($first_level as $cat_id => $category) {
-			$response[$cat_id] = $category;
-		}
-
-		//If second level level
-		foreach($second_level as $cat_id => $category) {
-			if ( ! empty($response[$category['parent_id']]))
-			{
-				$response[$category['parent_id']]['children'][$category['id']] = $category;
-			}
-		}
-
-		//If third level level
-		foreach($third_level as $category) {
-			if ( ! empty($response) && is_array($response))
-			{
-				foreach ($response as $cat_id => $response_cat)
-				{
-					$children = ! empty($response_cat['children'][$category['parent_id']]) ? $response_cat['children'][$category['parent_id']] : '';
-					if (
-						! empty($children) &&
-						is_array($children)
-					)
-					{
-						if ($child['id'] = $category['parent_id'])
-						{
-							$response[$cat_id]['children'][$category['parent_id']]['children'][$category['id']] = $category;
-						}
-					}
-				}
-			}
-		}
-
-		return $response;
-
 	}
 }

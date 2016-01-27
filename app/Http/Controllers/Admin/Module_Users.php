@@ -68,7 +68,7 @@ class Module_Users extends BaseController
 		$response['pageTitle'] = trans('global.users_list');
 //$this->dd($response);
 
-		return Theme::view('users.users_list', $response);
+		return Theme::view('users.list_users', $response);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class Module_Users extends BaseController
 	{
 		$response['pageTitle'] = trans('global.create_user');
 
-		return Theme::view('users.user_register', $response);
+		return Theme::view('users.register_user', $response);
 	}
 
 	/**
@@ -182,7 +182,7 @@ class Module_Users extends BaseController
 			];
 			$response['is_admin'] = Model_Users::getUserGroup($id);
 
-			return Theme::view('users.users_edit', $response);
+			return Theme::view('users.edit_user', $response);
 		}
 		else
 		{

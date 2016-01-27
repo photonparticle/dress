@@ -19,6 +19,10 @@ var Login = function() {
                            }
 
                            showNotification(response['status'], response['title'], response['message']);
+
+                           if(response['status'] == 'success') {
+                               $('#doSubmit').attr('disabled', 'disabled').removeClass('btn-success').addClass('btn-danger');
+                           }
                        } else {
                            showNotification('error', translate('request_not_completed'), translate('contact_support'));
                        }

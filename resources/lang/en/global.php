@@ -25,6 +25,7 @@ return [
 	'categories'          => 'Categories',
 	'create_category'     => 'Create category',
 	'categories_list'     => 'Categories list',
+	'order_categories'    => 'Categories order',
 	'products'            => 'Products',
 	'products_list'       => 'Products list',
 	'create_product'      => 'Create product',

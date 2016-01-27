@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Admin\Model_Products;
 use App\Admin\Model_Categories;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ use Caffeinated\Themes\Facades\Theme;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Support\Facades\Input;
 
-class Module_Categories extends BaseController
+class Module_Products extends BaseController
 {
 	/**
 	 * Display a listing of categories
@@ -21,9 +22,9 @@ class Module_Categories extends BaseController
 	 */
 	public function getIndex()
 	{
-		$response['pageTitle'] = trans('global.categories');
+		$response['pageTitle'] = trans('global.products');
 
-		$response['categories']           = Model_Categories::getCategory(FALSE, ['title']);
+		$response['categories']           = Model_Categories::getAllCategories();
 
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -38,7 +39,7 @@ class Module_Categories extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		return Theme::view('categories.list_categories', $response);
+		return Theme::view('categories.categories_list', $response);
 	}
 
 	/**
@@ -47,7 +48,6 @@ class Module_Categories extends BaseController
 	 */
 	public function getCreate()
 	{
-
 		$customCSS                    = [
 			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
 			'global/plugins/bootstrap-summernote/summernote',
@@ -71,10 +71,11 @@ class Module_Categories extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['pageTitle'] = trans('global.create_category');
+		$response['pageTitle'] = trans('global.create_product');
 
-		return Theme::view('categories.create_category', $response);
+		$response['categories'] = Model_Categories::getCategory();
+
+		return Theme::view('products.create_product', $response);
 	}
 
 	/**
@@ -177,7 +178,7 @@ class Module_Categories extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+		$response['categories'] = Model_Categories::getAllCategories();
 		$response['pageTitle'] = trans('categories.edit_category');
 
 		if(!empty($response['categories']) && is_array($response['categories'])) {
@@ -188,7 +189,7 @@ class Module_Categories extends BaseController
 			}
 		}
 
-		return Theme::view('categories.edit_category', $response);
+		return Theme::view('categories.categories_edit', $response);
 	}
 
 	/**
