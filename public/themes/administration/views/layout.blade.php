@@ -1,3 +1,4 @@
+@if(empty($blade_standalone) || (isset($blade_standalone) && $blade_standalone !== TRUE))
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="{{Lang::locale()}}" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="{{Lang::locale()}}" class="ie9 no-js"> <![endif]-->
@@ -46,7 +47,6 @@
 </head>
 <!-- END HEAD -->
 <body class="page-md page-boxed page-sidebar-closed-hide-logo page-header-fixed page-container-bg-solid">
-@if(!isset($blade_standalone))
 
     @if(!isset($blade_hide_header))
     @include('administration.includes.header')
@@ -76,10 +76,6 @@
     @if(!isset($blade_hide_footer))
     @include('administration.includes.footer')
     @endif
-@else
-      @yield('content')
-@endif
-
         <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
@@ -147,3 +143,6 @@
 </body>
 <!-- END BODY -->
 </html>
+@else
+    @yield('content')
+@endif

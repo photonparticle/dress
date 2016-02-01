@@ -12,7 +12,18 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('products', function (Blueprint $table) {
+            $table->increments('id');
+            $table->tinyInteger('active');
+            $table->integer('position');
+            $table->integer('quantity');
+            $table->float('original_price');
+            $table->float('price');
+            $table->float('discount_price');
+            $table->timestamp('discount_start');
+            $table->timestamp('discount_end');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +33,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('products');
     }
 }

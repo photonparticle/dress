@@ -12,19 +12,35 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\BaseController;
 use Caffeinated\Themes\Facades\Theme;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Mockery\CountValidator\Exception;
+use Symfony\Component\DomCrawler\Form;
+use View;
 
 class Module_Products extends BaseController
 {
+	private $active_module = '';
+
+	public function __construct(Request $request)
+	{
+		$modules = Config::get('system_settings.modules');
+		if(in_array('users', $modules)) {
+			$this->active_module = 'products';
+			View::share('active_module', $this->active_module);
+		}
+		parent::__construct($request);
+	}
+
 	/**
-	 * Display a listing of categories
+	 * Display a listing of products
 	 * @return \Illuminate\Http\Response
 	 */
 	public function getIndex()
 	{
 		$response['pageTitle'] = trans('global.products');
 
-		$response['categories']           = Model_Categories::getAllCategories();
+		$response['products'] = Model_Products::getProducts(FALSE, ['title']);
 
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -33,13 +49,13 @@ class Module_Products extends BaseController
 		$customJS = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
-			'global/plugins/bootbox/bootbox.min'
+			'global/plugins/bootbox/bootbox.min',
 		];
 
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		return Theme::view('categories.categories_list', $response);
+		return Theme::view('products.list_products', $response);
 	}
 
 	/**
@@ -54,7 +70,8 @@ class Module_Products extends BaseController
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2',
 			'global/plugins/jquery-multi-select/css/multi-select',
-			'/global/plugins/bootstrap-switch/css/bootstrap-switch.min',
+			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
+			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
@@ -67,13 +84,14 @@ class Module_Products extends BaseController
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
 			'global/plugins/fuelux/js/spinner.min',
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
+			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
 		$response['pageTitle'] = trans('global.create_product');
 
-		$response['categories'] = Model_Categories::getCategory();
+		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -85,7 +103,7 @@ class Module_Products extends BaseController
 	public function postStore()
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('categories.not_created');
+		$response['message'] = trans('products.not_created');
 
 		if ( ! empty($_POST))
 		{
@@ -93,41 +111,34 @@ class Module_Products extends BaseController
 
 			if (empty(trim(Input::get('title'))))
 			{
-				$response['message'] = trans('categories.title_required');
+				$response['message'] = trans('products.title_required');
 				$error               = TRUE;
-			}
-
-			$category_level = Input::get('level');
-			$parent         = Input::get('parent');
-			if ( ! empty($category_level) && in_array($category_level, ['1', '2']))
-			{
-				if (empty($parent))
-				{
-					$response['message'] = trans('categories.parent_required');
-					$error               = TRUE;
-				}
 			}
 
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'       => trim(Input::get('title')),
-					'description' => Input::get('description'),
-					'level'       => $category_level,
-					'parent'      => $parent,
-					'position'    => Input::get('position'),
-					'visible'     => Input::get('visible'),
-					'active'      => Input::get('active'),
+					'title'          => trim(Input::get('title')),
+					'description'    => Input::get('description'),
+					'quantity'       => Input::get('quantity'),
+					'position'       => Input::get('position'),
+					'active'         => Input::get('active'),
+					'original_price' => Input::get('original_price'),
+					'price'          => Input::get('price'),
+					'discount_price' => Input::get('discount_price'),
+					'discount_start' => Input::get('discount_start'),
+					'discount_end'   => Input::get('discount_end'),
+					'created_at'     => Input::get('created_at'),
 				];
 
-				if (Model_Categories::createCategory($data) === TRUE)
+				if (Model_Products::createProduct($data) === TRUE)
 				{
 					$response['status']  = 'success';
-					$response['message'] = trans('categories.created');
+					$response['message'] = trans('products.created');
 				}
 				else
 				{
-					$response['message'] = trans('categories.not_created');
+					$response['message'] = trans('products.not_created');
 				}
 			}
 		}
@@ -161,7 +172,8 @@ class Module_Products extends BaseController
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2',
 			'global/plugins/jquery-multi-select/css/multi-select',
-			'/global/plugins/bootstrap-switch/css/bootstrap-switch.min',
+			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
+			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
@@ -174,22 +186,22 @@ class Module_Products extends BaseController
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
 			'global/plugins/fuelux/js/spinner.min',
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
+			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories'] = Model_Categories::getAllCategories();
-		$response['pageTitle'] = trans('categories.edit_category');
+		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+		$response['related_categories'] = Model_Products::getProductToCategory($id);
 
-		if(!empty($response['categories']) && is_array($response['categories'])) {
-			foreach($response['categories'] as $category) {
-				if(!empty($category['id']) && $category['id'] == $id) {
-					$response['category'] = $category;
-				}
-			}
+		$product = Model_Products::getProducts($id);
+		if ( ! empty($product[$id]))
+		{
+			$response['product'] = $product[$id];
 		}
+		$response['pageTitle'] = trans('products.edit');
 
-		return Theme::view('categories.categories_edit', $response);
+		return Theme::view('products.edit_product', $response);
 	}
 
 	/**
@@ -202,8 +214,9 @@ class Module_Products extends BaseController
 	 * @return \Illuminate\Http\Response
 	 */
 	public function postUpdate(Request $request, $id)
-	{$response['status']  = 'error';
-		$response['message'] = trans('categories.not_created');
+	{
+		$response['status']  = 'error';
+		$response['message'] = trans('products.not_updated');
 
 		if ( ! empty($_POST))
 		{
@@ -211,42 +224,45 @@ class Module_Products extends BaseController
 
 			if (empty(trim(Input::get('title'))))
 			{
-				$response['message'] = trans('categories.title_required');
+				$response['message'] = trans('products.title_required');
 				$error               = TRUE;
-			}
-
-			$category_level = Input::get('level');
-			$parent         = Input::get('parent');
-
-			if ( ! empty($category_level) && in_array($category_level, ['1', '2']))
-			{
-				if (empty($parent))
-				{
-					$response['message'] = trans('categories.parent_required');
-					$error               = TRUE;
-				}
 			}
 
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'       => trim(Input::get('title')),
-					'description' => Input::get('description'),
-					'level'       => $category_level,
-					'parent'      => $parent,
-					'position'    => Input::get('position'),
-					'visible'     => Input::get('visible'),
-					'active'      => Input::get('active'),
+					'title'          => trim(Input::get('title')),
+					'description'    => Input::get('description'),
+					'quantity'       => Input::get('quantity'),
+					'position'       => Input::get('position'),
+					'active'         => Input::get('active'),
+					'original_price' => Input::get('original_price'),
+					'price'          => Input::get('price'),
+					'discount_price' => Input::get('discount_price'),
+					'discount_start' => Input::get('discount_start'),
+					'discount_end'   => Input::get('discount_end'),
+					'created_at'     => Input::get('created_at'),
 				];
 
-				if (Model_Categories::updateCategory($id, $data) === TRUE)
+				if (Model_Products::updateProduct($id, $data) === TRUE)
 				{
-					$response['status']  = 'success';
-					$response['message'] = trans('categories.updated');
+					try
+					{
+						//Manage relations
+						if(!empty($_POST['categories']) && is_array($_POST['categories'])) {
+							Model_Products::setProductToCategory($id, $_POST['categories']);
+						}
+
+						$response['status']  = 'success';
+						$response['message'] = trans('products.updated');
+					} catch (Exception $e)
+					{
+						$response['message'] = $e;
+					}
 				}
 				else
 				{
-					$response['message'] = trans('categories.not_updated');
+					$response['message'] = trans('products.not_updated');
 				}
 			}
 		}
@@ -264,14 +280,14 @@ class Module_Products extends BaseController
 	public function postDestroy($id)
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('categories.not_removed');
+		$response['message'] = trans('products.not_removed');
 
 		if ( ! empty($id) && intval($id) > 0)
 		{
-			if (Model_Categories::removeCategory($id) === TRUE)
+			if (Model_Products::removeProduct($id) === TRUE)
 			{
 				$response['status']  = 'success';
-				$response['message'] = trans('categories.removed');
+				$response['message'] = trans('products.removed');
 			}
 		}
 

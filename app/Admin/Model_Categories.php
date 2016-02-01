@@ -26,16 +26,16 @@ class Model_Categories extends Model
 	public static function getCategory($category_id = FALSE, $objects = [])
 	{
 		$categories = DB::table('categories')
-						->orderBy('created_at', 'ASC');
+						->orderBy('created_at', 'DESC');
 		$response   = [];
 
 		if (is_array($category_id))
 		{
-			$category = $categories->whereIn('id', $category_id);
+			$categories = $categories->whereIn('id', $category_id);
 		}
 		elseif (is_string($category_id) || is_int($category_id))
 		{
-			$category = $categories->where('id', '=', $category_id);
+			$categories = $categories->where('id', '=', $category_id);
 		}
 
 		$categories = $categories->get();
@@ -74,10 +74,20 @@ class Model_Categories extends Model
 
 	public static function getCategoriesIDs($level = FALSE, $parent = FALSE)
 	{
-		$categories = DB::table('categories')
-						->select(['id', 'level', 'parent_id']);
+		$select = ['id'];
+		if (isset($level) && in_array($level, [0, 1, 2]) && $level !== FALSE)
+		{
+			$select[] = 'level';
+		}
+		if ( ! empty($parent))
+		{
+			$select[] = 'parent';
+		}
 
-		if (isset($level) && in_array($level, [0, 1, 2]))
+		$categories = DB::table('categories')
+							->select($select);
+
+		if (isset($level) && in_array($level, [0, 1, 2]) && $level !== FALSE)
 		{
 			$categories = $categories->where('level', '=', $level);
 		}
@@ -94,6 +104,7 @@ class Model_Categories extends Model
 	{
 		if ( ! empty($data))
 		{
+
 
 			//Set defaults
 			if (empty($data['level']))

@@ -10,10 +10,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\BaseController;
 use Caffeinated\Themes\Facades\Theme;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use View;
 
 class Module_Users extends BaseController
 {
+	private $active_module = '';
+
+	public function __construct(Request $request)
+	{
+		$modules = Config::get('system_settings.modules');
+		if(in_array('users', $modules)) {
+			$this->active_module = 'users';
+			View::share('active_module', $this->active_module);
+		}
+		parent::__construct($request);
+	}
+
 	/**
 	 * Display a listing of the users
 	 * @return \Illuminate\Http\Response
@@ -66,7 +80,6 @@ class Module_Users extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 		$response['pageTitle'] = trans('global.users_list');
-//$this->dd($response);
 
 		return Theme::view('users.list_users', $response);
 	}

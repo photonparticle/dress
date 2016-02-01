@@ -35,6 +35,10 @@ Route::group(
 		Route::controller('/categories', 'Module_Categories');
 		Route::controller('/products', 'Module_Products');
 
+		//Modules routes
+		Route::controller('/modules', 'Modules');
+		Route::controller('/module/sizes', 'Module_Sizes');
+
 		//Resources
 //		Route::resource('/users', 'Module_Users');
 	}

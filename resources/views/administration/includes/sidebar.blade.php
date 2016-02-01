@@ -11,19 +11,24 @@
         <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
         <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
         <ul class="page-sidebar-menu page-sidebar-menu-hover-submenu" data-keep-expanded="true" data-auto-scroll="true" data-slide-speed="1000">
-            <li class="start active ">
+            <li class="start @if(isset($active_module) && $active_module == 'dashboard') active @endif">
                 <a href="/admin/">
                     <i class="icon-home"></i>
                     <span class="title">{{trans('global.dashboard')}}</span>
-                    <span class="selected"></span>
+                    @if(isset($active_module) && $active_module == 'dashboard')
+                        <span class="selected"></span>
+                    @endif
                 </a>
             </li>
 
-            <li>
+            <li class="@if(isset($active_module) && $active_module == 'categories') active @endif">
                 <a href="javascript:;">
                     <i class="fa fa-tasks"></i>
                     <span class="title">{{trans('global.categories')}}</span>
                     <span class="arrow "></span>
+                    @if(isset($active_module) && $active_module == 'categories')
+                        <span class="selected"></span>
+                    @endif
                 </a>
                 <ul class="sub-menu">
                     <li>
@@ -39,11 +44,14 @@
                 </ul>
             </li>
 
-            <li>
+            <li class="@if(isset($active_module) && $active_module == 'products') active @endif">
                 <a href="javascript:;">
                     <i class="fa fa-archive"></i>
                     <span class="title">{{trans('global.products')}}</span>
                     <span class="arrow "></span>
+                    @if(isset($active_module) && $active_module == 'products')
+                        <span class="selected"></span>
+                    @endif
                 </a>
                 <ul class="sub-menu">
                     <li>
@@ -59,7 +67,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li class="@if(isset($active_module) && $active_module == 'orders') active @endif">
                 <a href="javascript:;">
                     <i class="fa fa-shopping-cart"></i>
                     <span class="title">{{trans('global.orders')}}</span>
@@ -79,19 +87,24 @@
                 </ul>
             </li>
 
-            <li>
-                <a href="javascript:;">
+            <li class="@if(isset($active_module) && $active_module == 'modules') active @endif">
+                <a href="/modules">
                     <i class="fa fa-cogs"></i>
                     <span class="title">{{trans('global.modules')}}</span>
-                    <span class="arrow "></span>
+                    @if(isset($active_module) && $active_module == 'modules')
+                        <span class="selected"></span>
+                    @endif
                 </a>
             </li>
 
-            <li class="last ">
+            <li class="last @if(isset($active_module) && $active_module == 'users') active @endif">
                 <a href="javascript:;">
                     <i class="icon-user"></i>
                     <span class="title">{{trans('global.users')}}</span>
                     <span class="arrow "></span>
+                    @if(isset($active_module) && $active_module == 'users')
+                        <span class="selected"></span>
+                    @endif
                 </a>
                 <ul class="sub-menu">
                     <li>

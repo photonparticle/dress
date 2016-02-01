@@ -12,10 +12,17 @@ class CreateProductsDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('products_data', function (Blueprint $table) {
             $table->increments('id');
-            $table->tinyInteger('active');
-            $table->timestamps();
+            $table->integer('product_id');
+            $table->string('object');
+            $table->string('type');
+            $table->integer('number');
+            $table->tinyInteger('bool');
+            $table->string('string');
+            $table->longText('text');
+            $table->timestamp('dateTime');
+            $table->json('json');
         });
     }
 
@@ -26,6 +33,6 @@ class CreateProductsDataTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('products_data');
     }
 }

@@ -9,24 +9,24 @@
         </div>
     </div>
     <div class="portlet-body">
-        @if(!empty($categories) && is_array($categories))
-            <table class="table table-striped table-bordered table-hover" id="categories_list">
+        @if(!empty($products) && is_array($products))
+            <table class="table table-striped table-bordered table-hover" id="products_list">
                 <thead>
                 <tr>
                     <th>
                         ID
                     </th>
                     <th>
-                        {{trans('categories.title')}}
+                        {{trans('products.title')}}
                     </th>
                     <th>
-                        {{trans('categories.level')}}
+                        {{trans('products.quantity')}}
                     </th>
                     <th>
-                        {{trans('categories.active')}}
+                        {{trans('products.price')}}
                     </th>
                     <th>
-                        {{trans('categories.visibility')}}
+                        {{trans('products.active')}}
                     </th>
                     <th>
                         {{trans('global.actions')}}
@@ -34,31 +34,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($categories as $category)
+                @foreach($products as $product)
                     <tr>
-                        <td>{{isset($category['id']) ? $category['id'] : 'n/a'}}</td>
-                        <td>{{isset($category['title']) ? $category['title'] : 'n/a'}}</td>
-                        <td>{{isset($category['level']) ? trans('categories.level_'.$category['level']) : 'n/a'}}</td>
+                        <td>{{isset($product['id']) ? $product['id'] : 'n/a'}}</td>
+                        <td>{{isset($product['title']) ? $product['title'] : 'n/a'}}</td>
+                        <td>{{isset($product['quantity']) ? $product['quantity'] : '0'}}</td>
+                        <td>{{isset($product['price']) ? $product['price'] : '0'}}</td>
                         <td>
-                            @if(isset($category['active']))
-                                @if($category['active'] == 1)
-                                    {{trans('categories.activated')}}
+                            @if(isset($product['active']))
+                                @if($product['active'] == 1)
+                                    {{trans('products.activated')}}
                                 @else
-                                    {{trans('categories.not_activated')}}
-                                @endif
-                            @endif
-                        </td>
-                        <td>
-                            @if(isset($category['menu_visibility']))
-                                @if($category['menu_visibility'] == 1)
-                                    {{trans('categories.visible')}}
-                                @else
-                                    {{trans('categories.invisible')}}
+                                    {{trans('products.not_activated')}}
                                 @endif
                             @endif
                         </td>
                         <td class="text-center">
-                            <a href="/admin/categories/edit/{{isset($category['id']) ? $category['id'] : 'n/a'}}"
+                            <a href="/admin/products/edit/{{isset($product['id']) ? $product['id'] : 'n/a'}}"
                                class="btn btn-icon-only green"
                                title="{{trans('global.edit')}}"
                             >
@@ -67,8 +59,8 @@
                             <a href="#"
                                class="btn btn-icon-only red remove_category"
                                title="{{trans('global.remove')}}"
-                               data-id="{{isset($category['id']) ? $category['id'] : ''}}"
-                               data-title="{{isset($category['title']) ? $category['title'] : ''}}"
+                               data-id="{{isset($product['id']) ? $product['id'] : ''}}"
+                               data-title="{{isset($product['title']) ? $product['title'] : ''}}"
                             >
                                 <i class="fa fa-trash"></i>
                             </a>
@@ -88,16 +80,16 @@
         jQuery(document).ready(function () {
 
             $('.remove_category').click(function () {
-                var category_id = $(this).attr('data-id');
-                var category_title = $(this).attr('data-title');
+                var product_id = $(this).attr('data-id');
+                var product_title = $(this).attr('data-title');
                 var parent = $(this).closest('tr');
 
                 if (
-                        typeof category_id !== typeof undefined && typeof category_title !== typeof undefined &&
-                        category_id.length > 0 && category_title.length > 0
+                        typeof product_id !== typeof undefined && typeof product_title !== typeof undefined &&
+                        product_id.length > 0 && product_title.length > 0
                 ) {
                     bootbox.dialog({
-                                       message: "<h4>{{trans('categories.category_remove')}}</h4> <strong>ID:</strong> " + category_id + " <br /><strong>{{trans('categories.title')}}:</strong> " + category_title,
+                                       message: "<h4>{{trans('products.product_remove')}}</h4> <strong>ID:</strong> " + product_id + " <br /><strong>{{trans('products.title')}}:</strong> " + product_title,
                                        title: "{{trans('global.confirm_action')}}",
                                        buttons: {
                                            cancel: {
@@ -110,7 +102,7 @@
                                                callback: function () {
                                                    $.ajax({
                                                               type: 'post',
-                                                              url: '/admin/categories/destroy/' + category_id,
+                                                              url: '/admin/products/destroy/' + product_id,
                                                               headers: {
                                                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                                               },
@@ -136,7 +128,7 @@
                 }
             });
 
-            $('#categories_list').DataTable({
+            $('#products_list').DataTable({
                                            responsive: true,
                                            order: [[0, 'asc']],
                                            stateSave: true,

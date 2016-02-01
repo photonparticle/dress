@@ -11,10 +11,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\BaseController;
 use Caffeinated\Themes\Facades\Theme;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use View;
 
 class Module_Categories extends BaseController
 {
+	private $active_module = '';
+
+	public function __construct(Request $request)
+	{
+		$modules = Config::get('system_settings.modules');
+		if(in_array('users', $modules)) {
+			$this->active_module = 'categories';
+			View::share('active_module', $this->active_module);
+		}
+		parent::__construct($request);
+	}
+
 	/**
 	 * Display a listing of categories
 	 * @return \Illuminate\Http\Response
@@ -202,7 +216,7 @@ class Module_Categories extends BaseController
 	 */
 	public function postUpdate(Request $request, $id)
 	{$response['status']  = 'error';
-		$response['message'] = trans('categories.not_created');
+		$response['message'] = trans('categories.not_updated');
 
 		if ( ! empty($_POST))
 		{

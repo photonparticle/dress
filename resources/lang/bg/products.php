@@ -1,7 +1,7 @@
 <?php
 return [
 	'products'                      => 'Продукти',
-	'edit_product'                  => 'Редакция на продукт',
+	'edit'                          => 'Редакция на продукт',
 	'main_info'                     => 'Основна информация',
 	'visualisation_and_positioning' => 'Визуализация и позициониране',
 	'title'                         => 'Заглавие',
@@ -23,8 +23,15 @@ return [
 	'product_remove'                => 'Премахване на продукт',
 	'select_catagories'             => 'Избери категории',
 	'parent_category'               => 'Категории родители',
-	'relationships'                 => 'Връзки',
+	'relationships'                 => 'Релации',
 	'sizes'                         => 'Размери',
 	'price_and_discounts'           => 'Цена и Намаления',
 	'images'                        => 'Изображения',
+	'original_price'                => 'Цена',
+	'price'                         => 'Цена за клиент',
+	'discount'                      => 'Намаление',
+	'discount_start'                => 'Намаление начало',
+	'discount_end'                  => 'Намаление край',
+	'created_at'                    => 'Създаден на',
+	'quantity'                      => 'Количество',
 ];
