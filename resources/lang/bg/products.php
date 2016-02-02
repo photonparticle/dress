@@ -34,4 +34,5 @@ return [
 	'discount_end'                  => 'Намаление край',
 	'created_at'                    => 'Създаден на',
 	'quantity'                      => 'Количество',
+	'select_sizes_group'            => 'Избери група',
 ];

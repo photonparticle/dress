@@ -149,6 +149,35 @@
                        });
             });
 
+            $('body').on('change', '#sizes_group', function () {
+                var
+                        group = $(this).val(),
+                        holder = $('#sizes_holder');
+
+                if (group) {
+                    $.ajax({
+                               type: 'get',
+                               url: '/admin/products/update/{{$product['id']}}}',
+                               data: {
+                                   'group': group,
+                               },
+                               headers: {
+                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                               },
+                               success: function (response) {
+                                   if (response) {
+                                       if (holder.length > 0) {
+                                           holder.html(response);
+                                       }
+                                   }
+                               },
+                               error: function () {
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                               }
+
+                           });
+                }
+            });
         });
     </script>
 @endsection

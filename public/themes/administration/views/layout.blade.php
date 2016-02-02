@@ -41,8 +41,14 @@
     <link href="/themes/administration/assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
     <link href="/themes/administration/assets/admin/layout2/css/layout.css" rel="stylesheet" type="text/css"/>
     <link href="/themes/administration/assets/admin/layout2/css/themes/grey.css" rel="stylesheet" type="text/css" id="style_color"/>
+    <link href="/themes/administration/assets/admin/layout2/css/themes/grey.css" rel="stylesheet" type="text/css" id="style_color"/>
     <link href="/themes/administration/assets/custom/css/custom.css" rel="stylesheet" type="text/css"/>
-    <!-- END THEME STYLES -->
+
+    {{--Ajax loader--}}
+    <link href="/themes/administration/assets/global/plugins/pace/themes/pace-theme-flash.css" rel="stylesheet" type="text/css"/>
+    <script src="/themes/administration/assets/global/plugins/pace/pace.min.js" type="text/javascript"></script>
+
+            <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
 </head>
 <!-- END HEAD -->

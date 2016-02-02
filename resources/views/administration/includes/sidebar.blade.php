@@ -88,7 +88,7 @@
             </li>
 
             <li class="@if(isset($active_module) && $active_module == 'modules') active @endif">
-                <a href="/modules">
+                <a href="/admin/modules">
                     <i class="fa fa-cogs"></i>
                     <span class="title">{{trans('global.modules')}}</span>
                     @if(isset($active_module) && $active_module == 'modules')

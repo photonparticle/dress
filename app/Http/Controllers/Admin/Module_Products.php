@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Admin\Model_Products;
 use App\Admin\Model_Categories;
+use App\Admin\Model_Sizes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -147,14 +148,19 @@ class Module_Products extends BaseController
 	}
 
 	/**
-	 * Display the specified resource.
+	 * Used to display partials
 	 *
-	 * @param  int $id
+	 * @param $partial
+	 * @param $param
 	 *
 	 * @return \Illuminate\Http\Response
+	 * @internal param int $id
 	 */
-	public function getShow($id)
+	public function getShow($partial, $param)
 	{
+		if(!empty($partial) && !empty($param)) {
+			
+		}
 	}
 
 	/**
@@ -193,6 +199,7 @@ class Module_Products extends BaseController
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 		$response['related_categories'] = Model_Products::getProductToCategory($id);
+		$response['groups'] = Model_Sizes::getSizes(TRUE);
 
 		$product = Model_Products::getProducts($id);
 		if ( ! empty($product[$id]))

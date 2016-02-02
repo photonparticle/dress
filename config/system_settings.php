@@ -13,4 +13,11 @@ return [
 		'categories',
 		'products',
 	],
+	'plug-ins' => [
+		'sizes' => [
+			'title' => 'Sizes',
+			'icon' => 'fa-arrows',
+			'color' => 'bg-red-sunglo'
+		]
+	]
 ];

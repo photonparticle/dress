@@ -2,7 +2,7 @@
 <div class="tab-pane" id="relationships">
     <form action="#">
 
-        <div class="col-xs-12 margin-top-20 categores-container">
+        <div class="col-xs-12 margin-top-20 categories-container">
             <label for="categories" class="control-label col-xs-12 default no-padding">
                 {{trans('products.parent_category')}}
             </label>
