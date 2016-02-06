@@ -55,7 +55,7 @@
 </head>
 <!-- END HEAD -->
 <body class="page-md page-boxed page-sidebar-closed-hide-logo page-header-fixed page-container-bg-solid">
-
+@if(!isset($blade_clean_render))
     @if(!isset($blade_hide_header))
     @include('administration.includes.header')
     @endif
@@ -84,6 +84,9 @@
     @if(!isset($blade_hide_footer))
     @include('administration.includes.footer')
     @endif
+@else
+    @yield('content')
+@endif
         <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>

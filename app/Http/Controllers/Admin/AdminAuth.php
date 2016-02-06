@@ -40,7 +40,7 @@ class AdminAuth extends BaseController
 				'blade_hide_header'  => TRUE,
 				'blade_hide_sidebar' => TRUE,
 				'blade_hide_footer'  => TRUE,
-				'blade_standalone'   => TRUE,
+				'blade_clean_render' => TRUE,
 				'blade_custom_css'   => $customCSS,
 				'blade_custom_js'    => $customJS,
 				'pageTitle'          => trans('users.login_admin_title'),
