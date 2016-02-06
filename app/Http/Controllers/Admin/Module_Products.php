@@ -26,7 +26,8 @@ class Module_Products extends BaseController
 	public function __construct(Request $request)
 	{
 		$modules = Config::get('system_settings.modules');
-		if(in_array('users', $modules)) {
+		if (in_array('users', $modules))
+		{
 			$this->active_module = 'products';
 			View::share('active_module', $this->active_module);
 		}
@@ -93,7 +94,7 @@ class Module_Products extends BaseController
 		$response['pageTitle'] = trans('global.create_product');
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['groups'] = Model_Sizes::getSizes(TRUE);
+		$response['groups']     = Model_Sizes::getSizes(TRUE);
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -116,6 +117,12 @@ class Module_Products extends BaseController
 				$response['message'] = trans('products.title_required');
 				$error               = TRUE;
 			}
+			if (empty(trim(Input::get('friendly_url'))))
+			{
+				$response['title'] = trans('global.warning');
+				$response['message'] = trans('products.url_required');
+				$error               = TRUE;
+			}
 
 			if ($error === FALSE)
 			{
@@ -131,11 +138,19 @@ class Module_Products extends BaseController
 					'discount_start' => Input::get('discount_start'),
 					'discount_end'   => Input::get('discount_end'),
 					'created_at'     => Input::get('created_at'),
-					'sizes'			 => Input::get('sizes')
+					'sizes'          => Input::get('sizes'),
 				];
 
-				if (Model_Products::createProduct($data) === TRUE)
+				if ($id = Model_Products::createProduct($data))
 				{
+					try
+					{
+						//Manage Friendly URL
+						Model_Products::setURL($id, Input::get('friendly_url'));
+					} catch (Exception $e)
+					{
+						$response['message'] = $e;
+					}
 					$response['status']  = 'success';
 					$response['message'] = trans('products.created');
 				}
@@ -150,25 +165,41 @@ class Module_Products extends BaseController
 	}
 
 	/**
-	 * Used to display partials
+	 * Used to display partials or do ajax requests
 	 *
-	 * @param $partial
+	 * @param $request
 	 * @param $param
 	 *
 	 * @return \Illuminate\Http\Response
 	 * @internal param int $id
 	 */
-	public function getShow($partial, $param)
+	public function getShow($request, $param)
 	{
-		$response['blade_standalone'] = TRUE;
+		if ( ! empty($request) && ! empty($param))
+		{
+			if ($request == 'sizes')
+			{
+				$response['blade_standalone'] = TRUE;
+				$response['sizes']            = Model_Sizes::getSizes(FALSE, $param);
 
-		if(!empty($partial) && !empty($param)) {
-			if($partial == 'sizes') {
-				$response['sizes'] = Model_Sizes::getSizes(FALSE, $param);
+				return Theme::View('products_partials.product_sizes_form', $response);
+			}
+
+			if ($request == 'check_url')
+			{
+				if (Model_Products::checkURL($param))
+				{
+					$response['status']  = 'error';
+					$response['message'] = trans('products.url_exists');
+
+					return response()->json($response);
+				}
+				else
+				{
+					return 'available';
+				}
 			}
 		}
-
-		return Theme::View('products_partials.product_sizes_form', $response);
 	}
 
 	/**
@@ -205,18 +236,21 @@ class Module_Products extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+		$response['categories']         = Model_Categories::getCategory(FALSE, ['title']);
 		$response['related_categories'] = Model_Products::getProductToCategory($id);
-		$response['groups'] = Model_Sizes::getSizes(TRUE);
+		$response['groups']             = Model_Sizes::getSizes(TRUE);
 
 		$product = Model_Products::getProducts($id);
+
 		if ( ! empty($product[$id]))
 		{
 			$response['product'] = $product[$id];
-			if(!empty($product[$id]['sizes'])) {
+			if ( ! empty($product[$id]['sizes']))
+			{
 				$response['sizes'] = json_decode($product[$id]['sizes'], TRUE);
 			}
 		}
+
 		$response['pageTitle'] = trans('products.edit');
 
 		return Theme::view('products.edit_product', $response);
@@ -245,6 +279,11 @@ class Module_Products extends BaseController
 				$response['message'] = trans('products.title_required');
 				$error               = TRUE;
 			}
+			if (empty(trim(Input::get('friendly_url'))))
+			{
+				$response['message'] = trans('products.url_required');
+				$error               = TRUE;
+			}
 
 			if ($error === FALSE)
 			{
@@ -260,7 +299,7 @@ class Module_Products extends BaseController
 					'discount_start' => Input::get('discount_start'),
 					'discount_end'   => Input::get('discount_end'),
 					'created_at'     => Input::get('created_at'),
-					'sizes'			 => Input::get('sizes')
+					'sizes'          => Input::get('sizes'),
 				];
 
 				if (Model_Products::updateProduct($id, $data) === TRUE)
@@ -268,9 +307,12 @@ class Module_Products extends BaseController
 					try
 					{
 						//Manage relations
-						if(!empty($_POST['categories']) && is_array($_POST['categories'])) {
+						if ( ! empty($_POST['categories']) && is_array($_POST['categories']))
+						{
 							Model_Products::setProductToCategory($id, $_POST['categories']);
 						}
+						//Manage Friendly URL
+						Model_Products::setURL($id, Input::get('friendly_url'));
 
 						$response['status']  = 'success';
 						$response['message'] = trans('products.updated');

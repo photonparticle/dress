@@ -3,7 +3,7 @@
     <form action="#">
 
         <div class="col-xs-12 margin-top-20 categories-container">
-            <label for="categories" class="control-label col-xs-12 default no-padding">
+            <label for="sizes_group" class="control-label col-xs-12 default no-padding">
                 {{trans('sizes.group')}}
             </label>
             <select id="sizes_group" name="sizes_group" class="form-control select2me input-lg no-padding" data-placeholder="{{trans('global.select_sizes_group')}}">

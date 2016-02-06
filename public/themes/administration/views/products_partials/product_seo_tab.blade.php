@@ -6,7 +6,7 @@
 
         <div class="form-group form-md-line-input has-success form-md-floating-label">
             <div class="input-icon right">
-                <input name="friendly_url" id="friendly_url" type="text" class="form-control input-lg"  value="{{isset($seo['friendly_url']) ? $seo['fridnly_url'] : ''}}"/>
+                <input name="friendly_url" id="friendly_url" type="text" class="form-control input-lg"  value="{{isset($seo['friendly_url']) ? $seo['friendly_url'] : ''}}"/>
 
                 <label for="friendly_url">{{trans('products.friendly_url')}}</label>
                 <span class="help-block"></span>
