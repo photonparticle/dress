@@ -115,6 +115,28 @@
                     var active = 0;
                 }
 
+                //Sizes
+                if($('.product_sizes').length > 0) {
+                    var sizes = {};
+
+                    $('.product_sizes').each( function () {
+                        var
+                                size_name = $(this).find('span.name').html(),
+                                size_quantity = $(this).find('.quantity input').val(),
+                                size_price = $(this).find('.price input').val(),
+                                size_discount = $(this).find('.discount input').val();
+
+                        if(size_name) {
+                            sizes[size_name] = {
+                                'name': size_name,
+                                'quantity': size_quantity,
+                                'price': size_price,
+                                'discount': size_discount
+                            }
+                        }
+                    });
+                }
+
                 $.ajax({
                            type: 'post',
                            url: '/admin/products/store',
@@ -130,7 +152,8 @@
                                'discount_start': $('#discount_start').val(),
                                'discount_end': $('#discount_end').val(),
                                'created_at': $('#created_at').val(),
-                               'categories': $('#categories').val()
+                               'categories': $('#categories').val(),
+                               'sizes': sizes
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -147,6 +170,33 @@
                            }
 
                        });
+            });
+
+            $('body').on('change', '#sizes_group', function () {
+                var
+                        group = $(this).val(),
+                        holder = $('#sizes_holder');
+
+                if (group) {
+                    $.ajax({
+                               type: 'get',
+                               url: '/admin/products/show/sizes/' + group,
+                               headers: {
+                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                               },
+                               success: function (response) {
+                                   if (response) {
+                                       if (holder.length > 0) {
+                                           holder.html(response);
+                                       }
+                                   }
+                               },
+                               error: function () {
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                               }
+
+                           });
+                }
             });
 
         });

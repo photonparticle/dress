@@ -228,6 +228,14 @@ class Model_Products extends Model
 				];
 			}
 
+			if ( ! empty($data['sizes']) && is_array($data['sizes']))
+			{
+				$objects['sizes'] = [
+					'value' => json_encode($data['sizes']),
+					'type'  => 'json',
+				];
+			}
+
 			//Determine update and insert objects
 			foreach ($objects as $name => $object)
 			{
@@ -358,14 +366,16 @@ class Model_Products extends Model
 	{
 		if ( ! empty($product_id) && ! empty($categories) && is_array($categories))
 		{
-			$current_categories = self::getProductToCategory($product_id);
-			$remove_categories  = [];
-			$insert_categories  = $categories;
-			$categories_ids = Model_Categories::getCategoriesIDs();
+			$current_categories  = self::getProductToCategory($product_id);
+			$remove_categories   = [];
+			$insert_categories   = $categories;
+			$categories_ids      = Model_Categories::getCategoriesIDs();
 			$existing_categories = [];
 
-			foreach($categories_ids as $cat) {
-				if(!empty($cat['id'])) {
+			foreach ($categories_ids as $cat)
+			{
+				if ( ! empty($cat['id']))
+				{
 					$existing_categories[] = $cat['id'];
 				}
 			}
@@ -376,18 +386,22 @@ class Model_Products extends Model
 			{
 				foreach ($current_categories as $category)
 				{
-					if (!array_key_exists($category, $categories))
+					if ( ! array_key_exists($category, $categories))
 					{
 						$remove_categories[] = $category;
 					}
-					elseif(!in_array($category, $existing_categories))
+					elseif ( ! in_array($category, $existing_categories))
 					{
 						$remove_categories[] = $category;
-					} elseif(array_key_exists($category, $insert_categories)) {
+					}
+					elseif (array_key_exists($category, $insert_categories))
+					{
 						unset($insert_categories[$category]);
 					}
 				}
-			} else {
+			}
+			else
+			{
 				$insert_categories = $categories;
 			}
 

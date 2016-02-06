@@ -47,6 +47,8 @@
     {{--Ajax loader--}}
     <link href="/themes/administration/assets/global/plugins/pace/themes/pace-theme-flash.css" rel="stylesheet" type="text/css"/>
     <script src="/themes/administration/assets/global/plugins/pace/pace.min.js" type="text/javascript"></script>
+    <script src="/themes/administration/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="/themes/administration/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 
             <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
@@ -88,8 +90,6 @@
 <script src="/themes/administration/assets/global/plugins/respond.min.js"></script>
 <script src="/themes/administration/assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
-<script src="/themes/administration/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-<script src="/themes/administration/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 <script src="/themes/administration/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="/themes/administration/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>

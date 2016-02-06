@@ -93,6 +93,7 @@ class Module_Products extends BaseController
 		$response['pageTitle'] = trans('global.create_product');
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+		$response['groups'] = Model_Sizes::getSizes(TRUE);
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -130,6 +131,7 @@ class Module_Products extends BaseController
 					'discount_start' => Input::get('discount_start'),
 					'discount_end'   => Input::get('discount_end'),
 					'created_at'     => Input::get('created_at'),
+					'sizes'			 => Input::get('sizes')
 				];
 
 				if (Model_Products::createProduct($data) === TRUE)
@@ -158,9 +160,15 @@ class Module_Products extends BaseController
 	 */
 	public function getShow($partial, $param)
 	{
+		$response['blade_standalone'] = TRUE;
+
 		if(!empty($partial) && !empty($param)) {
-			
+			if($partial == 'sizes') {
+				$response['sizes'] = Model_Sizes::getSizes(FALSE, $param);
+			}
 		}
+
+		return Theme::View('products_partials.product_sizes_form', $response);
 	}
 
 	/**
@@ -205,6 +213,9 @@ class Module_Products extends BaseController
 		if ( ! empty($product[$id]))
 		{
 			$response['product'] = $product[$id];
+			if(!empty($product[$id]['sizes'])) {
+				$response['sizes'] = json_decode($product[$id]['sizes'], TRUE);
+			}
 		}
 		$response['pageTitle'] = trans('products.edit');
 
@@ -249,6 +260,7 @@ class Module_Products extends BaseController
 					'discount_start' => Input::get('discount_start'),
 					'discount_end'   => Input::get('discount_end'),
 					'created_at'     => Input::get('created_at'),
+					'sizes'			 => Input::get('sizes')
 				];
 
 				if (Model_Products::updateProduct($id, $data) === TRUE)

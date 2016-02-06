@@ -47,7 +47,7 @@
         <div class="clearfix"></div>
 
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20">
-            <label for="input_price" class="control-label col-xs-12 default no-padding">
+            <label for="input_discount" class="control-label col-xs-12 default no-padding">
                 {{trans('products.discount')}}
             </label>
 

@@ -17,8 +17,8 @@
         </div>
         <div class="clearfix"></div>
 
-        <div class="sizes_holder">
-
+        <div id="sizes_holder" class="margin-top-20">
+            @include('products_partials.product_sizes_form')
         </div>
 
         <div class="margin-top-20">
