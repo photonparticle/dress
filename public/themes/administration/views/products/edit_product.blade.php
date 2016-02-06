@@ -240,6 +240,9 @@
                     }, 500);
                 }
             });
+
+            //DropZone File Uploader - Images Tab
+            FormDropzone.init();
         });
     </script>
 @endsection

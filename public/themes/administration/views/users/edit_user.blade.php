@@ -217,9 +217,7 @@
             var user_id = '{{$user_id}}';
 
             jQuery(document).ready(function () {
-                Metronic.init(); // init metronic core components
-                Layout.init(); // init current layout
-                Demo.init(); // init demo features
+
                 ComponentsDropdowns.init();
 
                 $('#save_personal_info, #change_password, #save_user_group').click(function (e) {

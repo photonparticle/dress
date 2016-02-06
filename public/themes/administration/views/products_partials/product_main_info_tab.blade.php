@@ -50,21 +50,22 @@
 
         <div class="clearfix"></div>
         
-        
-                <!--
+
         <div class="form-group form-md-line-input has-success form-md-floating-label">
             <div class="input-icon right">
-                <input type="text" class="form-control">
-                <label for="form_control_1">Regular input</label>
-                <span class="help-block">Some help goes here...</span>
-                <i class="icon-user"></i>
+                <input name="tags" id="tags" type="text" class="form-control input-lg"  value="{{isset($product['tags']) ? $product['tags'] : ''}}"/>
+
+                <label for="tags">{{trans('products.tags')}}</label>
+                <span class="help-block">{{trans('products.tags_help')}}</span>
+                <i class="fa fa-font"></i>
             </div>
-        </div> -->
+        </div>
+         
         
         <div class="clearfix"></div>
 
         <div class="margin-top-20">
-            <button class="btn green-haze save_category">
+            <button class="btn green-haze save_product">
                 {{trans('global.save')}} </button>
             <a href="/admin/products" class="btn default">
                 {{trans('global.cancel')}} </a>

@@ -75,9 +75,10 @@
 @section('customJS')
     <script type="text/javascript">
         jQuery(document).ready(function () {
+
             //Global vars
             var url_invalid = true;
-
+            
             //Init WYSIWYG
             $('#description').summernote({height: 300});
 
@@ -247,6 +248,8 @@
                 }
             });
 
+            //DropZone File Uploader - Images Tab
+            FormDropzone.init();
         });
     </script>
 @endsection
