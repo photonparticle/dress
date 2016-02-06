@@ -40,8 +40,8 @@ return [
     'tags'                          => 'Тагове',
     'meta_description'              => 'META Описание',
     'meta_keywords'                 => 'META Ключови думи',
-    ''                  => '',
-    ''                  => '',
+    'url_exists'                    => 'Този URL вече съществува',
+    'url_required'                  => 'Моля попълнете SEO URL адрес',
     ''                  => '',
     
 ];
