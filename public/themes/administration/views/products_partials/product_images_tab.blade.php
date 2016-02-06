@@ -1,12 +1,14 @@
-<!-- SEO TAB -->
+<!-- DROPZONE TAB -->
 <div class="tab-pane" id="images">
 
 
 
 
-        <form action="../../assets/global/plugins/dropzone/upload.php" class="dropzone dz-clickable" id="my-dropzone">
+        <form action="#" class="dropzone dz-clickable" id="my-dropzone">
             <div class="dz-default dz-message">
+                <!-- BEGIN ERROR MESSAGE -->
                 <span>Drop files here to upload</span>
+                <!-- END ERROR MESSAGE -->
             </div>
         </form>
 
@@ -24,4 +26,4 @@
 
 
 </div>
-<!-- END MAIN INFO TAB -->
+<!-- END DROPZONE TAB -->
