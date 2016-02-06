@@ -3,48 +3,19 @@
     <form action="#">
 
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+<!--
+        <label for="description" 
+               class="control-label col-xs-12 default no-padding">
+                Описание
+        </label>
 
-        <div class="form-group form-md-line-input has-success form-md-floating-label">
-            <div class="input-icon right">
-                <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+        <textarea class="form-control" 
+                  rows="3" 
+                  placeholder="Enter more text" 
+                  style="margin-top: 0px; margin-bottom: 0px; height: 79px;">
+        </textarea>
 
-                <label for="title">{{trans('products.title')}}</label>
-                <span class="help-block"></span>
-                <i class="fa fa-font"></i>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="description" class="control-label col-xs-12 default no-padding">
-                {{trans('products.description')}}
-            </label>
-            <div class="col-xs-12 no-padding">
-                <div id="description">
-                    {!!isset($product['description']) ? $product['description'] : ''!!}
-                </div>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20">
-            <label for="position" class="control-label col-xs-12 default no-padding">
-                {{trans('products.quantity')}}
-            </label>
-
-            <div id="quantity">
-                <div class="input-group" style="width:150px;">
-                    <input type="text" name="quantity" id="input_quantity" class="spinner-input form-control" maxlength="3" value="{{isset($product['quantity']) ? $product['quantity'] : ''}}">
-                    <div class="spinner-buttons input-group-btn">
-                        <button type="button" class="btn spinner-up default">
-                            <i class="fa fa-angle-up"></i>
-                        </button>
-                        <button type="button" class="btn spinner-down default">
-                            <i class="fa fa-angle-down"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        -->
 
         <div class="clearfix"></div>
 
@@ -59,3 +30,55 @@
 
 </div>
 <!-- END MAIN INFO TAB -->
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+            <div class="input-icon right">
+                <input name="meta_description" id="meta_description" type="text" class="form-control input-lg" value="{{isset($product['meta_description']) ? $product['meta_description'] : ''}}"/>
+
+                <label for="meta_description">Заглавие</label>
+                <span class="help-block"></span>
+                <i class="fa fa-font"></i>
+            </div>
+
+
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

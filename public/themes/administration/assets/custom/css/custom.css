@@ -36,3 +36,8 @@ label.default {
 .portlet.light > .portlet-title > .nav-tabs > li.disabled > a {
 	cursor: not-allowed;
 }
+
+textarea
+{
+    resize:vertical!important
+}
