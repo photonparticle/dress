@@ -1,21 +1,50 @@
-<!-- MAIN INFO TAB -->
+<!-- SEO TAB -->
 <div class="tab-pane active" id="seo">
     <form action="#">
 
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-<!--
-        <label for="description" 
-               class="control-label col-xs-12 default no-padding">
-                Описание
-        </label>
 
-        <textarea class="form-control" 
-                  rows="3" 
-                  placeholder="Enter more text" 
-                  style="margin-top: 0px; margin-bottom: 0px; height: 79px;">
-        </textarea>
+        <div class="form-group form-md-line-input has-success form-md-floating-label">
+            <div class="input-icon right">
+                <input name="fridnly_url" id="fridnly_url" type="text" class="form-control input-lg"  value="{{isset($seo['fridnly_url']) ? $seo['fridnly_url'] : ''}}"/>
 
-        -->
+                <label for="fridnly_url">{{trans('products.fridnly_url')}}</label>
+                <span class="help-block"></span>
+                <i class="fa fa-font"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="meta_description" class="control-label col-xs-12 default no-padding">
+                {{trans('products.meta_description')}}
+            </label>
+            <div class="col-xs-12 no-padding">
+                <textarea id="meta_description"
+                          class="form-control"
+                          rows="3" 
+                          placeholder="{{trans('products.meta_description')}}" 
+                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">
+                    {!!isset($seo['meta_description']) ? $seo['meta_description'] : ''!!}
+                </textarea>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="meta_keywords" class="control-label col-xs-12 default no-padding">
+                {{trans('products.meta_keywords')}}
+            </label>
+            <div class="col-xs-12 no-padding">
+                <textarea id="meta_keywords"
+                          class="form-control"
+                          rows="3" 
+                          placeholder="{{trans('products.meta_keywords')}}" 
+                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">
+                    {!!isset($seo['meta_keywords']) ? $seo['meta_keywords'] : ''!!}
+                </textarea>
+            </div>
+            <div class="clearfix"></div>
+        </div>
 
         <div class="clearfix"></div>
 
@@ -30,55 +59,3 @@
 
 </div>
 <!-- END MAIN INFO TAB -->
-
-
-
-
-
-
-
-
-
-
-
-<!--
-
-            <div class="input-icon right">
-                <input name="meta_description" id="meta_description" type="text" class="form-control input-lg" value="{{isset($product['meta_description']) ? $product['meta_description'] : ''}}"/>
-
-                <label for="meta_description">Заглавие</label>
-                <span class="help-block"></span>
-                <i class="fa fa-font"></i>
-            </div>
-
-
-
--->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
