@@ -23,9 +23,7 @@
                           class="form-control"
                           rows="3" 
                           placeholder="{{trans('products.meta_description')}}" 
-                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">
-                    {!!isset($seo['meta_description']) ? $seo['meta_description'] : ''!!}
-                </textarea>
+                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">{!!isset($seo['meta_description']) ? $seo['meta_description'] : ''!!}</textarea>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -39,9 +37,7 @@
                           class="form-control"
                           rows="3" 
                           placeholder="{{trans('products.meta_keywords')}}" 
-                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">
-                    {!!isset($seo['meta_keywords']) ? $seo['meta_keywords'] : ''!!}
-                </textarea>
+                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">{!!isset($seo['meta_keywords']) ? $seo['meta_keywords'] : ''!!}</textarea>
             </div>
             <div class="clearfix"></div>
         </div>
