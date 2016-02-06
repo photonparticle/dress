@@ -76,6 +76,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
 
+            FormDropzone.init(); //Dropzone
+
 
             //Init WYSIWYG
             $('#description').summernote({height: 300});

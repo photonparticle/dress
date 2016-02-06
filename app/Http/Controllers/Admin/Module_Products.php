@@ -188,6 +188,7 @@ class Module_Products extends BaseController
 			'global/plugins/jquery-multi-select/css/multi-select',
 			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+            'global/plugins/dropzone/css/dropzone',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
@@ -201,6 +202,8 @@ class Module_Products extends BaseController
 			'global/plugins/fuelux/js/spinner.min',
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
+            'global/plugins/dropzone/dropzone',
+            'admin/pages/scripts/form-dropzone',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;

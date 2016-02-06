@@ -159,6 +159,7 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
 
+            
 
             //Init WYSIWYG
             $('#description').summernote({height: 300});
