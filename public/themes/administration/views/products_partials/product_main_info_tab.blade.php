@@ -25,9 +25,11 @@
             </div>
             <div class="clearfix"></div>
         </div>
+        
+        <div class="clearfix"></div>
 
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20">
-            <label for="position" class="control-label col-xs-12 default no-padding">
+            <label for="quantity" class="control-label col-xs-12 default no-padding">
                 {{trans('products.quantity')}}
             </label>
 
@@ -46,6 +48,19 @@
             </div>
         </div>
 
+        <div class="clearfix"></div>
+        
+        
+                <!--
+        <div class="form-group form-md-line-input has-success form-md-floating-label">
+            <div class="input-icon right">
+                <input type="text" class="form-control">
+                <label for="form_control_1">Regular input</label>
+                <span class="help-block">Some help goes here...</span>
+                <i class="icon-user"></i>
+            </div>
+        </div> -->
+        
         <div class="clearfix"></div>
 
         <div class="margin-top-20">

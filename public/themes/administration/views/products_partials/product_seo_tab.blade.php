@@ -1,14 +1,14 @@
 <!-- SEO TAB -->
-<div class="tab-pane active" id="seo">
+<div class="tab-pane" id="seo">
     <form action="#">
 
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
         <div class="form-group form-md-line-input has-success form-md-floating-label">
             <div class="input-icon right">
-                <input name="fridnly_url" id="fridnly_url" type="text" class="form-control input-lg"  value="{{isset($seo['fridnly_url']) ? $seo['fridnly_url'] : ''}}"/>
+                <input name="friendly_url" id="friendly_url" type="text" class="form-control input-lg"  value="{{isset($seo['friendly_url']) ? $seo['fridnly_url'] : ''}}"/>
 
-                <label for="fridnly_url">{{trans('products.fridnly_url')}}</label>
+                <label for="friendly_url">{{trans('products.friendly_url')}}</label>
                 <span class="help-block"></span>
                 <i class="fa fa-font"></i>
             </div>
