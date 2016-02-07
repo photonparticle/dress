@@ -1,3 +1,4 @@
+<!--Homepage Moduls Management-->
 <!-- MAIN INFO TAB -->
 <div class="tab-pane active" id="main_info">
     <form action="#">
@@ -75,3 +76,4 @@
 
 </div>
 <!-- END MAIN INFO TAB -->
+<!--Homepage Moduls Management-->
