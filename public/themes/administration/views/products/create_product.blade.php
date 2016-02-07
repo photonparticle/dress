@@ -76,9 +76,9 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
 
-            FormDropzone.init(); //DropZone
-
-
+            //Global vars
+            var url_invalid = true;
+            
             //Init WYSIWYG
             $('#description').summernote({height: 300});
 
@@ -92,11 +92,11 @@
 
             // Init DateTime_Picker
             $(".discount_start, .discount_end, .created_at").datetimepicker({
-                                                   autoclose: true,
-                                                   isRTL: Metronic.isRTL(),
-                                                   format: "yyyy.mm.dd hh:ii",
-                                                   pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left")
-                                               });
+                                                                                autoclose: true,
+                                                                                isRTL: Metronic.isRTL(),
+                                                                                format: "yyyy.mm.dd hh:ii",
+                                                                                pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left")
+                                                                            });
 
             //Switcher
             $('#active').on('switch-change', function () {
@@ -106,8 +106,21 @@
                 $('#visible').bootstrapSwitch('toggleRadioStateAllowUncheck');
             });
 
-            $('.save_category').click(function (e) {
+            $('.save_product').click(function (e) {
                 e.preventDefault();
+
+                //Check URL
+                if ($('#friendly_url').val().length > 0) {
+                    if (url_invalid === true) {
+                        showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_exists')}}');
+
+                        return;
+                    }
+                } else {
+                    showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_required')}}');
+
+                    return;
+                }
 
                 if ($('#active').is(':checked')) {
                     var active = 1;
@@ -116,17 +129,17 @@
                 }
 
                 //Sizes
-                if($('.product_sizes').length > 0) {
+                if ($('.product_sizes').length > 0) {
                     var sizes = {};
 
-                    $('.product_sizes').each( function () {
+                    $('.product_sizes').each(function () {
                         var
                                 size_name = $(this).find('span.name').html(),
                                 size_quantity = $(this).find('.quantity input').val(),
                                 size_price = $(this).find('.price input').val(),
                                 size_discount = $(this).find('.discount input').val();
 
-                        if(size_name) {
+                        if (size_name) {
                             sizes[size_name] = {
                                 'name': size_name,
                                 'quantity': size_quantity,
@@ -152,6 +165,7 @@
                                'discount_start': $('#discount_start').val(),
                                'discount_end': $('#discount_end').val(),
                                'created_at': $('#created_at').val(),
+                               'friendly_url': $('#friendly_url').val(),
                                'categories': $('#categories').val(),
                                'sizes': sizes
                            },
@@ -199,6 +213,43 @@
                 }
             });
 
+            function checkURL(url) {
+                $.ajax({
+                           type: 'get',
+                           url: '/admin/products/show/check_url/' + url,
+                           headers: {
+                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                           },
+                           success: function (response) {
+                               if (typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['title'], response['message']);
+                                   url_invalid = true;
+                               } else {
+                                   url_invalid = false;
+                               }
+                           },
+                           error: function () {
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                           }
+
+                       });
+            }
+
+            var timer;
+
+            $('#friendly_url').on('keyup', function () {
+                clearTimeout(timer);
+                var url = $(this).val();
+
+                if (url) {
+                    timer = setTimeout(function () {
+                        checkURL(url);
+                    }, 500);
+                }
+            });
+
+            //DropZone File Uploader - Images Tab
+            FormDropzone.init();
         });
     </script>
 @endsection

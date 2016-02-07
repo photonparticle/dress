@@ -144,16 +144,13 @@
 @endif
 <!-- END PAGE LEVEL SCRIPTS -->
 
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-
-            Metronic.init(); // init metronic core components
-            Layout.init(); // init current layout
-            Demo.init(); // init demo features
-
-        });
-    </script>
-
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        Demo.init(); // init demo features
+    });
+</script>
             
 @yield('customJS');
 

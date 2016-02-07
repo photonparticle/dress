@@ -128,7 +128,7 @@ class Model_Products extends Model
 				self::setProductObjects($data, $product_id);
 			}
 
-			return TRUE;
+			return $product_id;
 		}
 		else
 		{
@@ -477,5 +477,47 @@ class Model_Products extends Model
 		}
 
 		return $response;
+	}
+
+	/**
+	 * @param $url
+	 *
+	 * @return bool
+	 */
+	public static function checkURL($url) {
+		if(DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'product')->where('slug', '=', $url)->count() > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 * @param $url
+	 */
+	public static function setURL($product_id, $url)
+	{
+		if ( ! empty($product_id) && ! empty($url))
+		{
+			$have_url = DB::table('seo_url')->select('type', 'object')->where('type', '=', 'product')->where('object', '=', $product_id)->count();
+
+			if ($have_url)
+			{
+				$response = DB::table('seo_url')
+							  ->update([
+										   'slug' => $url
+									   ])
+				->where('type', '=', 'product')
+				->where('object', '=', $product_id);
+			} else {
+				$response = DB::table('seo_url')
+							  ->insert([
+										   'slug' => $url,
+										   'type' => 'product',
+										   'object' => $product_id
+									   ]);
+			}
+		}
 	}
 }
