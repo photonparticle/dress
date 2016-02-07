@@ -15,34 +15,34 @@ class Model_Colors extends Model
 	 *
 	 * @return array
 	 */
-	public static function getManufacturers($id = FALSE)
+	public static function getColors($id = FALSE)
 	{
-		$manufacturer = DB::table('manufacturers');
+		$color = DB::table('colors');
 
 		if ($id != FALSE && intval($id) > 0)
 		{
-			$manufacturer = $manufacturer->where('id', '=', $id);
+			$color = $color->where('id', '=', $id);
 		}
 
-		$manufacturer = $manufacturer
+		$color = $color
 			->orderBy('title', 'ASC')
 			->get();
 
-		return $manufacturer;
+		return $color;
 	}
 
-	public static function insertManufacturer($manufacturer)
+	public static function insertColor($color)
 	{
-		if ( ! empty($manufacturer))
+		if ( ! empty($color))
 		{
-			$manufacturer = DB::table('manufacturers')
+			$color = DB::table('colors')
 							  ->insertGetId([
-												'title'    => $manufacturer['title'],
-												'position' => $manufacturer['position'],
-												'created_at' => $manufacturer['created_at']
+												'title'    => $color['title'],
+												'position' => $color['position'],
+												'created_at' => $color['created_at']
 											]);
 
-			return $manufacturer;
+			return $color;
 		}
 		else
 		{
@@ -56,13 +56,13 @@ class Model_Colors extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function updateManufacturer($id, $data)
+	public static function updateColor($id, $data)
 	{
 		if ( ! empty($data) && ! empty($id))
 		{
 			try
 			{
-				DB::table('manufacturers')
+				DB::table('colors')
 				  ->where('id', '=', $id)
 				  ->update($data);
 
@@ -83,13 +83,13 @@ class Model_Colors extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function removeManufacturer($id)
+	public static function removeColor($id)
 	{
 		if ( ! empty($id))
 		{
 			try
 			{
-				$query = DB::table('manufacturers');
+				$query = DB::table('colors');
 
 				if (is_array($id))
 				{
@@ -122,6 +122,6 @@ class Model_Colors extends Model
 	}
 
 	public static function checkTitleExists($title) {
-		return DB::table('manufacturers')->select('title')->where('title', '=', $title)->count();
+		return DB::table('colors')->select('title')->where('title', '=', $title)->count();
 	}
 }
