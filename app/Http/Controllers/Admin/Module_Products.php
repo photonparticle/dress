@@ -123,7 +123,7 @@ class Module_Products extends BaseController
 			}
 			if (empty(trim(Input::get('friendly_url'))))
 			{
-				$response['title'] = trans('global.warning');
+				$response['title']   = trans('global.warning');
 				$response['message'] = trans('products.url_required');
 				$error               = TRUE;
 			}
@@ -131,18 +131,20 @@ class Module_Products extends BaseController
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'          => trim(Input::get('title')),
-					'description'    => Input::get('description'),
-					'quantity'       => Input::get('quantity'),
-					'position'       => Input::get('position'),
-					'active'         => Input::get('active'),
-					'original_price' => Input::get('original_price'),
-					'price'          => Input::get('price'),
-					'discount_price' => Input::get('discount_price'),
-					'discount_start' => Input::get('discount_start'),
-					'discount_end'   => Input::get('discount_end'),
-					'created_at'     => Input::get('created_at'),
-					'sizes'          => Input::get('sizes'),
+					'title'            => trim(Input::get('title')),
+					'description'      => Input::get('description'),
+					'quantity'         => Input::get('quantity'),
+					'position'         => Input::get('position'),
+					'active'           => Input::get('active'),
+					'original_price'   => Input::get('original_price'),
+					'price'            => Input::get('price'),
+					'discount_price'   => Input::get('discount_price'),
+					'discount_start'   => Input::get('discount_start'),
+					'discount_end'     => Input::get('discount_end'),
+					'created_at'       => Input::get('created_at'),
+					'sizes'            => Input::get('sizes'),
+					'meta_description' => Input::get('meta_description'),
+					'meta_keywords'    => Input::get('meta_keywords'),
 				];
 
 				if ($id = Model_Products::createProduct($data))
@@ -194,7 +196,7 @@ class Module_Products extends BaseController
 				if (Model_Products::checkURL($param))
 				{
 					$response['status']  = 'error';
-					$response['title'] = trans('global.warning');
+					$response['title']   = trans('global.warning');
 					$response['message'] = trans('products.url_exists');
 
 					return response()->json($response);
@@ -224,7 +226,7 @@ class Module_Products extends BaseController
 			'global/plugins/jquery-multi-select/css/multi-select',
 			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
-            'global/plugins/dropzone/css/dropzone',
+			'global/plugins/dropzone/css/dropzone',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
@@ -238,10 +240,10 @@ class Module_Products extends BaseController
 			'global/plugins/fuelux/js/spinner.min',
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
-            'global/plugins/dropzone/dropzone',
-            'admin/pages/scripts/form-dropzone',
-            'global/plugins/jquery-slugify/speakingurl',
-            'global/plugins/jquery-slugify/slugify.min',
+			'global/plugins/dropzone/dropzone',
+			'admin/pages/scripts/form-dropzone',
+			'global/plugins/jquery-slugify/speakingurl',
+			'global/plugins/jquery-slugify/slugify.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
@@ -261,8 +263,19 @@ class Module_Products extends BaseController
 			}
 		}
 
-		if(($slug = Model_Products::getURL($id)) != FALSE) {
+		//SEO Tab
+		if (($slug = Model_Products::getURL($id)) != FALSE)
+		{
 			$response['seo']['friendly_url'] = $slug;
+		}
+
+		if(!empty($response['product']['meta_description'])) {
+			$response['seo']['meta_description'] = $response['product']['meta_description'];
+			unset($response['product']['meta_description']);
+		}
+		if(!empty($response['product']['meta_keywords'])) {
+			$response['seo']['meta_keywords'] = $response['product']['meta_keywords'];
+			unset($response['product']['meta_keywords']);
 		}
 
 		$response['pageTitle'] = trans('products.edit');
@@ -314,6 +327,8 @@ class Module_Products extends BaseController
 					'discount_end'   => Input::get('discount_end'),
 					'created_at'     => Input::get('created_at'),
 					'sizes'          => Input::get('sizes'),
+					'meta_description' => Input::get('meta_description'),
+					'meta_keywords'    => Input::get('meta_keywords'),
 				];
 
 				if (Model_Products::updateProduct($id, $data) === TRUE)

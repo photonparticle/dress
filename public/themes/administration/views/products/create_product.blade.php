@@ -252,13 +252,18 @@
             }
 
             function slugify(string) {
-                var slug = $.slugify(string);
-                if ($slug.length > 0) {
-                    $slug.addClass('edited');
-                    $slug.val(slug);
-                }
+                if (string) {
+                    var slug = $.slugify(string);
+                    if ($slug.length > 0) {
+                        $slug.addClass('edited');
+                        $slug.val(slug);
+                        checkURL(slug);
+                    }
 
-                return slug;
+                    return slug;
+                } else {
+                    return '';
+                }
             }
 
             if ($('#title').length > 0) {
@@ -269,7 +274,7 @@
 
                         timeout = setTimeout(function () {
                             slugify(title);
-                        }, 250);
+                        }, 500);
                     }
                 });
             }
@@ -278,7 +283,6 @@
                 $slug.on('keyup', function () {
                     clearTimeout(timer);
                     var url = $(this).val();
-
 
                     if (typeof url === typeof undefined || url === null || url.length == 0 || url == '') {
                         url_from_name = true;

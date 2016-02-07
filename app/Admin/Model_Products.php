@@ -236,6 +236,22 @@ class Model_Products extends Model
 				];
 			}
 
+			if ( ! empty($data['meta_description']))
+			{
+				$objects['meta_description'] = [
+					'value' => $data['meta_description'],
+					'type'  => 'text',
+				];
+			}
+
+			if ( ! empty($data['meta_keywords']))
+			{
+				$objects['meta_keywords'] = [
+					'value' => $data['meta_keywords'],
+					'type'  => 'text',
+				];
+			}
+
 			//Determine update and insert objects
 			foreach ($objects as $name => $object)
 			{
