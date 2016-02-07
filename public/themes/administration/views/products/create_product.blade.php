@@ -75,9 +75,10 @@
 @section('customJS')
     <script type="text/javascript">
         jQuery(document).ready(function () {
-
             //Global vars
             var url_invalid = true;
+            var current_slug = '{{$seo['friendly_url'] or ''}}';
+            var url_from_name = true;
 
             //Init WYSIWYG
             $('#description').summernote({height: 300});
@@ -213,7 +214,19 @@
                 }
             });
 
-            var timer;
+
+
+            //Seo URL
+            var
+                    timer,
+                    timeout,
+                    $slug = $('#friendly_url');
+
+            if (($slug.val().length > 0)) {
+                url_from_name = false;
+            } else {
+                url_from_name = true;
+            }
 
             function checkURL(url) {
                 clearTimeout(timer);
@@ -238,16 +251,51 @@
                        });
             }
 
-            $('#friendly_url').on('keyup', function () {
-                clearTimeout(timer);
-                var url = $(this).val();
-
-                if (url) {
-                    timer = setTimeout(function () {
-                        checkURL(url);
-                    }, 500);
+            function slugify(string) {
+                var slug = $.slugify(string);
+                if ($slug.length > 0) {
+                    $slug.addClass('edited');
+                    $slug.val(slug);
                 }
-            });
+
+                return slug;
+            }
+
+            if ($('#title').length > 0) {
+                $('#title').on('keyup', function () {
+                    if (url_from_name === true) {
+                        clearTimeout(timeout);
+                        var title = $(this).val();
+
+                        timeout = setTimeout(function () {
+                            slugify(title);
+                        }, 250);
+                    }
+                });
+            }
+
+            if ($slug.length > 0) {
+                $slug.on('keyup', function () {
+                    clearTimeout(timer);
+                    var url = $(this).val();
+
+
+                    if (typeof url === typeof undefined || url === null || url.length == 0 || url == '') {
+                        url_from_name = true;
+                        $slug.removeClass('edited');
+                    }
+
+                    if (url) {
+                        if ((current_slug.length > 0 && current_slug != url) || current_slug.length == 0) {
+                            timer = setTimeout(function () {
+                                url = slugify(url);
+                                checkURL(url);
+                                url_from_name = false;
+                            }, 500);
+                        }
+                    }
+                });
+            }
 
             //DropZone File Uploader - Images Tab
             FormDropzone.init();

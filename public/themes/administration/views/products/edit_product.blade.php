@@ -115,7 +115,6 @@
                 //Check URL
                 if (slug.length > 0) {
                     if (current_slug.length > 0 && current_slug != slug) {
-                        console.log(current_slug);
                         if (url_invalid === true) {
                             showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_exists')}}');
 
@@ -222,89 +221,6 @@
                            });
                 }
             });
-
-            //Seo URL
-            var
-                    timer,
-                    timeout,
-                    $slug = $('#friendly_url');
-
-            if (($slug.val().length > 0)) {
-                url_from_name = false;
-            } else {
-                url_from_name = true;
-            }
-
-            function checkURL(url) {
-                clearTimeout(timer);
-                $.ajax({
-                           type: 'get',
-                           url: '/admin/products/show/check_url/' + url,
-                           headers: {
-                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                           },
-                           success: function (response) {
-                               if (typeof response == typeof {} && response['status'] && response['message']) {
-                                   showNotification(response['status'], response['title'], response['message']);
-                                   url_invalid = true;
-                               } else {
-                                   url_invalid = false;
-                               }
-                           },
-                           error: function () {
-                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
-                           }
-
-                       });
-            }
-
-            function slugify(string) {
-                var slug = $.slugify(string);
-                if ($slug.length > 0) {
-                    $slug.addClass('edited');
-                    $slug.val(slug);
-                }
-
-                return slug;
-            }
-
-            if ($('#title').length > 0) {
-                $('#title').on('keyup', function () {
-                    console.log('Title change');
-                    if (url_from_name === true) {
-                        console.log('Title change url');
-                        clearTimeout(timeout);
-                        var title = $(this).val();
-
-                        timeout = setTimeout(function () {
-                            slugify(title);
-                        }, 250);
-                    }
-                });
-            }
-
-            if ($slug.length > 0) {
-                $slug.on('keyup', function () {
-                    clearTimeout(timer);
-                    var url = $(this).val();
-
-
-                    if (typeof url === typeof undefined || url === null || url.length == 0 || url == '') {
-                        url_from_name = true;
-                        $slug.removeClass('edited');
-                    }
-
-                    if (url) {
-                        if ((current_slug.length > 0 && current_slug != url) || current_slug.length == 0) {
-                            timer = setTimeout(function () {
-                                url = slugify(url);
-                                checkURL(url);
-                                url_from_name = false;
-                            }, 500);
-                        }
-                    }
-                });
-            }
 
             //DropZone File Uploader - Images Tab
             FormDropzone.init();

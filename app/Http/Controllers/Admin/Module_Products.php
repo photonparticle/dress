@@ -87,6 +87,10 @@ class Module_Products extends BaseController
 			'global/plugins/fuelux/js/spinner.min',
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
+			'global/plugins/dropzone/dropzone',
+			'admin/pages/scripts/form-dropzone',
+			'global/plugins/jquery-slugify/speakingurl',
+			'global/plugins/jquery-slugify/slugify.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
