@@ -1,19 +1,13 @@
 @extends('administration::layout')
 
 @section('content')
-    <div class="portlet box blue-madison">
-        <div class="portlet-title">
-            <div class="caption">
-                <i class="fa fa-gears"></i>{{$pageTitle}}
-            </div>
-        </div>
-        <div class="portlet-body">
+<h3 class="page-title">{{$pageTitle}}</h3>
             <div class="tiles">
                 <!-- BEGIN PROFILE CONTENT -->
                 @if(!empty($modules) && is_array($modules))
                     @foreach($modules as $name => $module)
                         <a href="/admin/module/{{$name}}" title="{{$module['title'] or ''}}">
-                            <div class="tile {{$module['color'] or 'bg-blue-steel'}}">
+                            <div class="tile {{$module['color'] or 'bg-blue-steel'}} {{$module['tile-size'] or ''}}">
                                 <div class="tile-body">
                                     <i class="fa {{$module['icon'] or 'fa-gears'}}"></i>
                                 </div>
@@ -30,7 +24,5 @@
                         @endif
                                 <!-- END PROFILE CONTENT -->
             </div>
-        </div>
-    </div>
 @endsection
 
