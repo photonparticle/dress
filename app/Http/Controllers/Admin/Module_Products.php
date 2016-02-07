@@ -99,6 +99,7 @@ class Module_Products extends BaseController
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 		$response['groups']     = Model_Sizes::getSizes(TRUE);
+		$response['products']   = Model_Products::getProducts(FALSE, ['title']);
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -250,6 +251,7 @@ class Module_Products extends BaseController
 
 		$response['categories']         = Model_Categories::getCategory(FALSE, ['title']);
 		$response['related_categories'] = Model_Products::getProductToCategory($id);
+		$response['products']           = Model_Products::getProducts(FALSE, ['title']);
 		$response['groups']             = Model_Sizes::getSizes(TRUE);
 
 		$product = Model_Products::getProducts($id);
@@ -269,11 +271,13 @@ class Module_Products extends BaseController
 			$response['seo']['friendly_url'] = $slug;
 		}
 
-		if(!empty($response['product']['meta_description'])) {
+		if ( ! empty($response['product']['meta_description']))
+		{
 			$response['seo']['meta_description'] = $response['product']['meta_description'];
 			unset($response['product']['meta_description']);
 		}
-		if(!empty($response['product']['meta_keywords'])) {
+		if ( ! empty($response['product']['meta_keywords']))
+		{
 			$response['seo']['meta_keywords'] = $response['product']['meta_keywords'];
 			unset($response['product']['meta_keywords']);
 		}
@@ -315,18 +319,18 @@ class Module_Products extends BaseController
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'          => trim(Input::get('title')),
-					'description'    => Input::get('description'),
-					'quantity'       => Input::get('quantity'),
-					'position'       => Input::get('position'),
-					'active'         => Input::get('active'),
-					'original_price' => Input::get('original_price'),
-					'price'          => Input::get('price'),
-					'discount_price' => Input::get('discount_price'),
-					'discount_start' => Input::get('discount_start'),
-					'discount_end'   => Input::get('discount_end'),
-					'created_at'     => Input::get('created_at'),
-					'sizes'          => Input::get('sizes'),
+					'title'            => trim(Input::get('title')),
+					'description'      => Input::get('description'),
+					'quantity'         => Input::get('quantity'),
+					'position'         => Input::get('position'),
+					'active'           => Input::get('active'),
+					'original_price'   => Input::get('original_price'),
+					'price'            => Input::get('price'),
+					'discount_price'   => Input::get('discount_price'),
+					'discount_start'   => Input::get('discount_start'),
+					'discount_end'     => Input::get('discount_end'),
+					'created_at'       => Input::get('created_at'),
+					'sizes'            => Input::get('sizes'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
 				];

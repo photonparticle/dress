@@ -152,8 +152,7 @@
     });
 </script>
             
-@yield('customJS');
-
+@yield('customJS')
 <!-- END JAVASCRIPTS -->
         </div>
     </div>

@@ -230,7 +230,7 @@
 
             //Seo URL
 
-            if (($slug.val().length > 0)) {
+            if ($slug.val().length > 0) {
                 url_from_name = false;
             } else {
                 url_from_name = true;
