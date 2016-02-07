@@ -78,7 +78,7 @@
 
             //Global vars
             var url_invalid = true;
-            
+
             //Init WYSIWYG
             $('#description').summernote({height: 300});
 
@@ -213,7 +213,10 @@
                 }
             });
 
+            var timer;
+
             function checkURL(url) {
+                clearTimeout(timer);
                 $.ajax({
                            type: 'get',
                            url: '/admin/products/show/check_url/' + url,
@@ -234,8 +237,6 @@
 
                        });
             }
-
-            var timer;
 
             $('#friendly_url').on('keyup', function () {
                 clearTimeout(timer);

@@ -190,6 +190,7 @@ class Module_Products extends BaseController
 				if (Model_Products::checkURL($param))
 				{
 					$response['status']  = 'error';
+					$response['title'] = trans('global.warning');
 					$response['message'] = trans('products.url_exists');
 
 					return response()->json($response);
@@ -235,6 +236,8 @@ class Module_Products extends BaseController
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
             'global/plugins/dropzone/dropzone',
             'admin/pages/scripts/form-dropzone',
+            'global/plugins/jquery-slugify/speakingurl',
+            'global/plugins/jquery-slugify/slugify.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
@@ -252,6 +255,10 @@ class Module_Products extends BaseController
 			{
 				$response['sizes'] = json_decode($product[$id]['sizes'], TRUE);
 			}
+		}
+
+		if(($slug = Model_Products::getURL($id)) != FALSE) {
+			$response['seo']['friendly_url'] = $slug;
 		}
 
 		$response['pageTitle'] = trans('products.edit');

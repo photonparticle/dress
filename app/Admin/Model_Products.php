@@ -492,6 +492,16 @@ class Model_Products extends Model
 		}
 	}
 
+	public static function getURL($product_id) {
+		$response = DB::table('seo_url')->where('type', '=', 'product')->where('object', '=', $product_id)->get();
+
+		if(!empty($response[0]['slug'])) {
+			return $response[0]['slug'];
+		} else {
+			return FALSE;
+		}
+	}
+
 	/**
 	 * @param $product_id
 	 * @param $url
@@ -505,11 +515,11 @@ class Model_Products extends Model
 			if ($have_url)
 			{
 				$response = DB::table('seo_url')
+							  ->where('type', '=', 'product')
+							  ->where('object', '=', $product_id)
 							  ->update([
 										   'slug' => $url
-									   ])
-				->where('type', '=', 'product')
-				->where('object', '=', $product_id);
+									   ]);
 			} else {
 				$response = DB::table('seo_url')
 							  ->insert([
