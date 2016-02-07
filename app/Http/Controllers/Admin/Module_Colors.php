@@ -17,7 +17,7 @@ use Mockery\CountValidator\Exception;
 use Symfony\Component\DomCrawler\Form;
 use View;
 
-class Module_Manufacturers extends BaseController
+class Module_Colors extends BaseController
 {
 	private $active_module = '';
 
