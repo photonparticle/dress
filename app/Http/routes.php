@@ -38,6 +38,9 @@ Route::group(
 		//Modules routes
 		Route::controller('/modules', 'Modules');
 		Route::controller('/module/sizes', 'Module_Sizes');
+		Route::controller('/module/manufacturers', 'Module_Manufacturers');
+		Route::controller('/module/colors', 'Module_Colors');
+		Route::controller('/module/materials', 'Module_Materials');
 
 		//Resources
 //		Route::resource('/users', 'Module_Users');

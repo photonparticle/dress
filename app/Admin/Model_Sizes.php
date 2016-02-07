@@ -62,7 +62,7 @@ class Model_Sizes extends Model
 		return $response;
 	}
 
-	public static function insetSize($data)
+	public static function insertSize($data)
 	{
 		if ( ! empty($data))
 		{

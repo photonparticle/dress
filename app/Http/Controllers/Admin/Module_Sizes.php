@@ -26,7 +26,7 @@ class Module_Sizes extends BaseController
 	public function __construct(Request $request)
 	{
 		$modules = Config::get('system_settings.modules');
-		if (in_array('users', $modules))
+		if (in_array('modules', $modules))
 		{
 			$this->active_module = 'modules';
 			View::share('active_module', $this->active_module);
@@ -91,7 +91,7 @@ class Module_Sizes extends BaseController
 	public function postStore()
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('products.not_created');
+		$response['message'] = trans('sizes.not_saved');
 
 		if ( ! empty($_POST))
 		{
@@ -122,11 +122,11 @@ class Module_Sizes extends BaseController
 				if (Model_Products::createProduct($data) === TRUE)
 				{
 					$response['status']  = 'success';
-					$response['message'] = trans('products.created');
+					$response['message'] = trans('sizes.saved');
 				}
 				else
 				{
-					$response['message'] = trans('products.not_created');
+					$response['message'] = trans('sizes.not_saved');
 				}
 			}
 		}
@@ -144,19 +144,6 @@ class Module_Sizes extends BaseController
 	public function getShow($id)
 	{
 		$response['pageTitle'] = trans('sizes.edit_group');
-
-		$customCSS = [
-			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
-		];
-
-		$customJS = [
-			'global/plugins/datatables/media/js/jquery.dataTables.min',
-			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
-			'global/plugins/bootbox/bootbox.min',
-		];
-
-		$response['blade_custom_css'] = $customCSS;
-		$response['blade_custom_js']  = $customJS;
 
 		//Sizes load
 		$response['sizes'] = Model_Sizes::getSizes(FALSE, $id);
