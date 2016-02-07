@@ -75,10 +75,14 @@
 @section('customJS')
     <script type="text/javascript">
         jQuery(document).ready(function () {
-            //Global vars
-            var url_invalid = true;
-            var current_slug = '{{$seo['friendly_url'] or ''}}';
-            var url_from_name = true;
+            //SEO URL vars
+            var
+                    timer,
+                    timeout,
+                    $slug = $('#friendly_url'),
+                    url_from_name = true,
+                    current_slug = '{{$seo['friendly_url'] or ''}}',
+                    url_invalid = true;
 
             //Init WYSIWYG
             $('#description').summernote({height: 300});
@@ -111,7 +115,7 @@
                 e.preventDefault();
 
                 //Check URL
-                if ($('#friendly_url').val().length > 0) {
+                if ($slug.val().length > 0) {
                     if (url_invalid === true) {
                         showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_exists')}}');
 
@@ -166,7 +170,9 @@
                                'discount_start': $('#discount_start').val(),
                                'discount_end': $('#discount_end').val(),
                                'created_at': $('#created_at').val(),
-                               'friendly_url': $('#friendly_url').val(),
+                               'friendly_url': $slug.val(),
+                               'meta_description': $('#meta_description').val(),
+                               'meta_keywords': $('#meta_keywords').val(),
                                'categories': $('#categories').val(),
                                'sizes': sizes
                            },
@@ -214,13 +220,7 @@
                 }
             });
 
-
-
             //Seo URL
-            var
-                    timer,
-                    timeout,
-                    $slug = $('#friendly_url');
 
             if (($slug.val().length > 0)) {
                 url_from_name = false;
