@@ -17,13 +17,13 @@ return [
 		'slider' => [
 			'title' => 'Slider',
 			'icon' => 'fa-image',
-			'color' => 'bg-blue-hoki',
+			'color' => 'bg-blue-steel',
 			'tile-size' => 'double-down',
 		],
 		'carousel' => [
 			'title' => 'Carousel',
 			'icon' => 'fa-arrows-h',
-			'color' => 'bg-green-turquoise',
+			'color' => 'bg-green-seagreen',
 			'tile-size' => 'double-down',
 		],
 		'manufacturers' => [
@@ -35,26 +35,32 @@ return [
 		'colors' => [
 			'title' => 'Colors',
 			'icon' => 'fa-paint-brush',
-			'color' => 'bg-yellow-lemon',
+			'color' => 'bg-yellow-casablanca',
 			'tile-size' => '',
 		],
 		'sizes' => [
 			'title' => 'Sizes',
 			'icon' => 'fa-arrows',
-			'color' => 'bg-red-sunglo',
+			'color' => 'bg-purple-plum',
 			'tile-size' => '',
 		],
 		'tables' => [
 			'title' => 'Tables',
 			'icon' => 'fa-table',
-			'color' => 'bg-grey-cascade',
+			'color' => 'bg-grey-gallery',
 			'tile-size' => 'double',
 		],
 		'materials' => [
 			'title' => 'Materials',
 			'icon' => 'fa-info-circle',
 			'color' => 'bg-green',
-			'tile-size' => 'double',
+			'tile-size' => '',
+		],
+		'tags' => [
+			'title' => 'Tags',
+			'icon' => 'fa-tags',
+			'color' => 'bg-red-sunglo',
+			'tile-size' => '',
 		],
 	]
 ];
