@@ -30,28 +30,12 @@ class Admin extends BaseController
 
     public function index() {
 		$customCSS = [
-			'admin/pages/css/tasks'
+            
 		];
 		$customJS = [
-			'global/plugins/jqvmap/jqvmap/jquery.vmap',
-			'global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia',
-			'global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world',
-			'global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world',
-			'global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe',
-			'global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany',
-			'global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa',
-			'global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata',
-			'global/plugins/flot/jquery.flot.min',
-			'global/plugins/flot/jquery.flot.resize.min',
-			'global/plugins/flot/jquery.flot.categories.min',
-			'global/plugins/jquery.pulsate.min',
-			'global/plugins/bootstrap-daterangepicker/moment.min',
-			'global/plugins/bootstrap-daterangepicker/daterangepicker',
-			'global/plugins/fullcalendar/fullcalendar.min',
-			'global/plugins/jquery-easypiechart/jquery.easypiechart.min',
-			'global/plugins/jquery.sparkline.min',
-			'admin/pages/scripts/tasks',
-			'admin/pages/scripts/index',
+            
+            'admin/pages/scripts/ecommerce-index',
+            
 		];
 
 		$data = [
