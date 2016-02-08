@@ -41,6 +41,7 @@ Route::group(
 		Route::controller('/module/manufacturers', 'Module_Manufacturers');
 		Route::controller('/module/colors', 'Module_Colors');
 		Route::controller('/module/materials', 'Module_Materials');
+        Route::controller('/module/tags', 'Module_Tags');
 
 		//Resources
 //		Route::resource('/users', 'Module_Users');
