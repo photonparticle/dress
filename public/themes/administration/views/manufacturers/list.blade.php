@@ -126,9 +126,10 @@
                         e.preventDefault();
 
                         var
+                                parent = $(this).closest('.portlet'),
                                 id = $(this).attr('data-id'),
-                                title = $(this).closest('.portlet').find('#title').val(),
-                                position = $(this).closest('.portlet').find('#position').val();
+                                title = parent.find('#title').val(),
+                                position = parent.find('#position').val();
 
                         if(id == 'new') {
                             var url = 'store';
@@ -154,6 +155,12 @@
                                            showNotification(response['status'], response['message']);
                                        } else {
                                            showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                           
+                                           if ( response['status'] == 'success')
+                                           {
+                                               
+                                               parent.find('.caption span').html(title);
+                                           }
                                        }
                                    },
                                    error: function () {

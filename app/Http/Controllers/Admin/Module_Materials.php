@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Admin\Model_Manufacturers;
+use App\Admin\Model_Materials;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -33,20 +33,20 @@ class Module_Materials extends BaseController
 	}
 
 	/**
-	 * Display a listing of manufacturers
+	 * Display a listing of materials
 	 * @return \Illuminate\Http\Response
 	 */
 	public function getIndex()
 	{
-		$response['pageTitle'] = trans('manufacturers.manufacturers');
+		$response['pageTitle'] = trans('materials.materials');
 
-		$response['manufacturers'] = Model_Manufacturers::getManufacturers();
+		$response['materials'] = Model_Materials::getMaterials();
 
 		$response['blade_custom_js'] = [
 			'global/plugins/bootbox/bootbox.min',
 		];
 
-		return Theme::view('manufacturers.list', $response);
+		return Theme::view('materials.list', $response);
 	}
 
 	/**
@@ -56,7 +56,7 @@ class Module_Materials extends BaseController
 	public function postStore()
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('manufacturers.not_saved');
+		$response['message'] = trans('materials.not_saved');
 
 		if ( ! empty($_POST))
 		{
@@ -64,12 +64,12 @@ class Module_Materials extends BaseController
 
 			if (empty(trim(Input::get('title'))))
 			{
-				$response['message'] = trans('manufacturers.title_required');
+				$response['message'] = trans('materials.title_required');
 				$error               = TRUE;
 			}
-			elseif ( ! empty(trim(Input::get('title'))) && Model_Manufacturers::checkTitleExists(trim(Input::get('title'))) > 0)
+			elseif ( ! empty(trim(Input::get('title'))) && Model_Materials::checkTitleExists(trim(Input::get('title'))) > 0)
 			{
-				$response['message'] = trans('manufacturers.exists');
+				$response['message'] = trans('materials.exists');
 				$error               = TRUE;
 			}
 
@@ -81,10 +81,10 @@ class Module_Materials extends BaseController
 					'created_at' => time(),
 				];
 
-				if (Model_Manufacturers::insertManufacturer($data) != FALSE)
+				if (Model_Materials::insertMaterial($data) != FALSE)
 				{
 					$response['status']  = 'success';
-					$response['message'] = trans('manufacturers.saved');
+					$response['message'] = trans('materials.saved');
 				}
 			}
 		}
@@ -103,13 +103,13 @@ class Module_Materials extends BaseController
 	{
 		$response['blade_standalone'] = TRUE;
 
-		//Manufacturer load
+		//Material load
 		if ($id !== FALSE)
 		{
-			$response['manufacturer'] = Model_Manufacturers::getManufacturers($id);
+			$response['material'] = Model_Materials::getMaterials($id);
 		}
 
-		return Theme::view('manufacturers.manufacturer_partial', $response);
+		return Theme::view('materials.material_partial', $response);
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Module_Materials extends BaseController
 	public function postUpdate(Request $request)
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('manufacturers.not_saved');
+		$response['message'] = trans('materials.not_saved');
 
 		if ( ! empty($_POST))
 		{
@@ -132,7 +132,7 @@ class Module_Materials extends BaseController
 			if (empty(Input::get('title')))
 			{
 				$error               = TRUE;
-				$response['message'] = trans('manufacturers.title_required');
+				$response['message'] = trans('materials.title_required');
 			}
 
 			if ($error == FALSE)
@@ -143,12 +143,12 @@ class Module_Materials extends BaseController
 					'updated_at' => time(),
 				];
 
-				$result = Model_Manufacturers::updateManufacturer(Input::get('id'), $data);
+				$result = Model_Materials::updateMaterial(Input::get('id'), $data);
 
 				if ($result === TRUE)
 				{
 					$response['status']  = 'success';
-					$response['message'] = trans('manufacturers.saved');
+					$response['message'] = trans('materials.saved');
 				}
 			}
 		}
@@ -166,14 +166,14 @@ class Module_Materials extends BaseController
 	public function postDestroy($id = FALSE)
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('manufacturers.not_removed');
+		$response['message'] = trans('materials.not_removed');
 
 		if ( ! empty($id) && intval($id) > 0)
 		{
-			if (Model_Manufacturers::removeManufacturer($id) === TRUE)
+			if (Model_Materials::removeMaterial($id) === TRUE)
 			{
 				$response['status']  = 'success';
-				$response['message'] = trans('manufacturers.removed');
+				$response['message'] = trans('materials.removed');
 			}
 		}
 

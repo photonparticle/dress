@@ -14,17 +14,17 @@
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
                                 <div class="actions">
-                                    <a href="#" class="btn btn-success add_manufacturer" title="{{trans('manufacturers.add')}}">
+                                    <a href="#" class="btn btn-success add_material" title="{{trans('materials.add')}}">
                                         <i class="fa fa-plus"></i>
-                                        {{trans('manufacturers.add')}}
+                                        {{trans('materials.add')}}
                                     </a>
                                 </div>
                             </div>
-                            <div class="portlet-body" id="manufacturers_portlet">
+                            <div class="portlet-body" id="materials_portlet">
 
-                                @if(isset($manufacturers) && is_array($manufacturers))
-                                    @foreach($manufacturers as $manufacturer)
-                                        @include('manufacturers.manufacturer_partial', $manufacturer)
+                                @if(isset($materials) && is_array($materials))
+                                    @foreach($materials as $material)
+                                        @include('materials.material_partial', $material)
                                     @endforeach
                                 @endif
 
@@ -50,19 +50,19 @@
                 new_group_name = $(this).val();
             });
 
-            $('body').on('click', '.add_manufacturer', function (e) {
+            $('body').on('click', '.add_material', function (e) {
                 e.preventDefault();
 
                 $.ajax({
                            type: 'get',
-                           url: '/admin/module/manufacturers/show/',
+                           url: '/admin/module/materials/show/',
                            async: 'true',
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                            },
                            success: function (response) {
                                if (response) {
-                                   $('#manufacturers_portlet').append(response);
+                                   $('#materials_portlet').append(response);
                                }
                            },
                            error: function () {
@@ -73,16 +73,16 @@
             });
 
             $('.remove_btn').click(function () {
-                var manufacturer_id = $(this).attr('data-id');
-                var manufacturer_title = $(this).attr('data-title');
+                var material_id = $(this).attr('data-id');
+                var material_title = $(this).attr('data-title');
                 var parent = $(this).closest('.portlet');
 
                 if (
-                        typeof manufacturer_id !== typeof undefined && typeof manufacturer_title !== typeof undefined &&
-                        manufacturer_title.length > 0 && manufacturer_title.length > 0
+                        typeof material_id !== typeof undefined && typeof material_title !== typeof undefined &&
+                        material_title.length > 0 && material_title.length > 0
                 ) {
                     bootbox.dialog({
-                                       message: "<h4>{{trans('manufacturers.remove')}}</h4> <strong>ID:</strong> " + manufacturer_id + " <br /><strong>{{trans('manufacturers.title')}}:</strong> " + manufacturer_title,
+                                       message: "<h4>{{trans('materials.remove')}}</h4> <strong>ID:</strong> " + material_id + " <br /><strong>{{trans('materials.title')}}:</strong> " + material_title,
                                        title: "{{trans('global.confirm_action')}}",
                                        buttons: {
                                            cancel: {
@@ -95,7 +95,7 @@
                                                callback: function () {
                                                    $.ajax({
                                                               type: 'post',
-                                                              url: '/admin/module/manufacturers/destroy/' + manufacturer_id,
+                                                              url: '/admin/module/materials/destroy/' + material_id,
                                                               headers: {
                                                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                                               },
@@ -126,9 +126,10 @@
                         e.preventDefault();
 
                         var
+                                parent = $(this).closest('.portlet'),
                                 id = $(this).attr('data-id'),
-                                title = $(this).closest('.portlet').find('#title').val(),
-                                position = $(this).closest('.portlet').find('#position').val();
+                                title = parent.find('#title').val(),
+                                position = parent.find('#position').val();
 
                         if(id == 'new') {
                             var url = 'store';
@@ -136,11 +137,11 @@
                             var url = 'update/' + id;
                         }
 
-                        console.log(title);
+                        // console.log(title);
 
                         $.ajax({
                                    type: 'post',
-                                   url: '/admin/module/manufacturers/' + url,
+                                   url: '/admin/module/materials/' + url,
                                    data: {
                                        'id': id,
                                        'title': title,
@@ -152,6 +153,13 @@
                                    success: function (response) {
                                        if (typeof response == typeof {} && response['status'] && response['message']) {
                                            showNotification(response['status'], response['message']);
+                                           
+                                           if ( response['status'] == 'success')
+                                           {
+                                               
+                                               parent.find('.caption span').html(title);
+                                           }
+                                           
                                        } else {
                                            showNotification('error', translate('request_not_completed'), translate('contact_support'));
                                        }

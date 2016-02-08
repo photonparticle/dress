@@ -15,34 +15,34 @@ class Model_Materials extends Model
 	 *
 	 * @return array
 	 */
-	public static function getManufacturers($id = FALSE)
+	public static function getMaterials($id = FALSE)
 	{
-		$manufacturer = DB::table('manufacturers');
+		$material = DB::table('materials');
 
 		if ($id != FALSE && intval($id) > 0)
 		{
-			$manufacturer = $manufacturer->where('id', '=', $id);
+			$material = $material->where('id', '=', $id);
 		}
 
-		$manufacturer = $manufacturer
+		$material = $material
 			->orderBy('title', 'ASC')
 			->get();
 
-		return $manufacturer;
+		return $material;
 	}
 
-	public static function insertManufacturer($manufacturer)
+	public static function insertMaterial($material)
 	{
-		if ( ! empty($manufacturer))
+		if ( ! empty($material))
 		{
-			$manufacturer = DB::table('manufacturers')
+			$material = DB::table('materials')
 							  ->insertGetId([
-												'title'    => $manufacturer['title'],
-												'position' => $manufacturer['position'],
-												'created_at' => $manufacturer['created_at']
+												'title'    => $material['title'],
+												'position' => $material['position'],
+												'created_at' => $material['created_at']
 											]);
 
-			return $manufacturer;
+			return $material;
 		}
 		else
 		{
@@ -56,13 +56,13 @@ class Model_Materials extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function updateManufacturer($id, $data)
+	public static function updateMaterial($id, $data)
 	{
 		if ( ! empty($data) && ! empty($id))
 		{
 			try
 			{
-				DB::table('manufacturers')
+				DB::table('materials')
 				  ->where('id', '=', $id)
 				  ->update($data);
 
@@ -83,13 +83,13 @@ class Model_Materials extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function removeManufacturer($id)
+	public static function removeMaterial($id)
 	{
 		if ( ! empty($id))
 		{
 			try
 			{
-				$query = DB::table('manufacturers');
+				$query = DB::table('materials');
 
 				if (is_array($id))
 				{
@@ -122,6 +122,6 @@ class Model_Materials extends Model
 	}
 
 	public static function checkTitleExists($title) {
-		return DB::table('manufacturers')->select('title')->where('title', '=', $title)->count();
+		return DB::table('materials')->select('title')->where('title', '=', $title)->count();
 	}
 }
