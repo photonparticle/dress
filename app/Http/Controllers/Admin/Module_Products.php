@@ -22,6 +22,7 @@ use View;
 class Module_Products extends BaseController
 {
 	private $active_module = '';
+	private $images_path = '';
 
 	public function __construct(Request $request)
 	{
@@ -32,6 +33,8 @@ class Module_Products extends BaseController
 			View::share('active_module', $this->active_module);
 		}
 		parent::__construct($request);
+
+		$this->images_path = public_path().'/images/products/';
 	}
 
 	/**
@@ -74,6 +77,7 @@ class Module_Products extends BaseController
 			'global/plugins/jquery-multi-select/css/multi-select',
 			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+			'global/plugins/dropzone/css/dropzone',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
@@ -96,6 +100,15 @@ class Module_Products extends BaseController
 		$response['blade_custom_js']  = $customJS;
 
 		$response['pageTitle'] = trans('global.create_product');
+
+		$response['images_dir'] = uniqid('product_');
+		//Make the main image folder
+		mkdir($this->images_path.$response['temp_name']);
+		//Create images directories
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.full_size'));
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.lg_icon_size'));
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.md_icon_size'));
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.sm_icon_size'));
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 		$response['groups']     = Model_Sizes::getSizes(TRUE);
@@ -154,6 +167,12 @@ class Module_Products extends BaseController
 					{
 						//Manage Friendly URL
 						Model_Products::setURL($id, Input::get('friendly_url'));
+
+						//Manage images
+						if(!empty(Input::get('images_dir')) && is_dir($this->images_path . Input::get('images_dir'))) {
+							rename($this->images_path . Input::get('images_dir'), $this->images_path . $id);
+						}
+
 					} catch (Exception $e)
 					{
 						$response['message'] = $e;

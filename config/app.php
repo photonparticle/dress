@@ -136,6 +136,7 @@ return [
 		Illuminate\Translation\TranslationServiceProvider::class,
 		Illuminate\Validation\ValidationServiceProvider::class,
 		Illuminate\View\ViewServiceProvider::class,
+		Illuminate\Html\HtmlServiceProvider::class,
 
 		/*
 		 * Application Service Providers...
@@ -146,7 +147,7 @@ return [
 		App\Providers\RouteServiceProvider::class,
 		Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class, //A modern and framework agnostic authorization and authentication package featuring roles, permissions, custom hashing algorithms and additional security features.
 		Caffeinated\Themes\ThemesServiceProvider::class, //Caffeinated Themes gives the means to group together a set of views and assets for Laravel 5.0 and Laravel 5.1. This gives an easy way to further decouple the way your web application looks from your code base.
-		Barryvdh\Debugbar\ServiceProvider::class, //Includes a ServiceProvider to register the debugbar and attach it to the output.
+		Barryvdh\Debugbar\ServiceProvider::class, //Includes a ServiceProvider to register the debugbar and attach it to the output.,
 	],
 
 	/*
@@ -195,6 +196,8 @@ return [
 		'URL'       => Illuminate\Support\Facades\URL::class,
 		'Validator' => Illuminate\Support\Facades\Validator::class,
 		'View'      => Illuminate\Support\Facades\View::class,
+		'Form'      => Illuminate\Html\FormFacade::class,
+		'Html'      => Illuminate\Html\HtmlFacade::class,
 
 		'Activation' => Cartalyst\Sentinel\Laravel\Facades\Activation::class,
 		'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class,

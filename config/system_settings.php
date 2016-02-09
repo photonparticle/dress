@@ -7,60 +7,61 @@
  */
 
 return [
-	'modules' => [
+	'product_upload_path' => public_path() . '/images/products/',
+	'modules'             => [
 		'dashboard',
 		'users',
 		'categories',
 		'products',
 	],
-	'plug-ins' => [
-		'slider' => [
-			'title' => 'Slider',
-			'icon' => 'fa-image',
-			'color' => 'bg-blue-steel',
+	'plug-ins'            => [
+		'slider'        => [
+			'title'     => 'Slider',
+			'icon'      => 'fa-image',
+			'color'     => 'bg-blue-steel',
 			'tile-size' => 'double-down',
 		],
-		'carousel' => [
-			'title' => 'Carousel',
-			'icon' => 'fa-arrows-h',
-			'color' => 'bg-green-seagreen',
+		'carousel'      => [
+			'title'     => 'Carousel',
+			'icon'      => 'fa-arrows-h',
+			'color'     => 'bg-green-seagreen',
 			'tile-size' => 'double-down',
 		],
 		'manufacturers' => [
-			'title' => 'Manufacturers',
-			'icon' => 'fa-link',
-			'color' => 'bg-purple-studio',
+			'title'     => 'Manufacturers',
+			'icon'      => 'fa-link',
+			'color'     => 'bg-purple-studio',
 			'tile-size' => 'double',
 		],
-		'colors' => [
-			'title' => 'Colors',
-			'icon' => 'fa-paint-brush',
-			'color' => 'bg-yellow-casablanca',
+		'colors'        => [
+			'title'     => 'Colors',
+			'icon'      => 'fa-paint-brush',
+			'color'     => 'bg-yellow-casablanca',
 			'tile-size' => '',
 		],
-		'sizes' => [
-			'title' => 'Sizes',
-			'icon' => 'fa-arrows',
-			'color' => 'bg-purple-plum',
+		'sizes'         => [
+			'title'     => 'Sizes',
+			'icon'      => 'fa-arrows',
+			'color'     => 'bg-purple-plum',
 			'tile-size' => '',
 		],
-		'tables' => [
-			'title' => 'Tables',
-			'icon' => 'fa-table',
-			'color' => 'bg-grey-gallery',
+		'tables'        => [
+			'title'     => 'Tables',
+			'icon'      => 'fa-table',
+			'color'     => 'bg-grey-gallery',
 			'tile-size' => 'double',
 		],
-		'materials' => [
-			'title' => 'Materials',
-			'icon' => 'fa-info-circle',
-			'color' => 'bg-green',
+		'materials'     => [
+			'title'     => 'Materials',
+			'icon'      => 'fa-info-circle',
+			'color'     => 'bg-green',
 			'tile-size' => '',
 		],
-		'tags' => [
-			'title' => 'Tags',
-			'icon' => 'fa-tags',
-			'color' => 'bg-red-sunglo',
+		'tags'          => [
+			'title'     => 'Tags',
+			'icon'      => 'fa-tags',
+			'color'     => 'bg-red-sunglo',
 			'tile-size' => '',
 		],
-	]
+	],
 ];
