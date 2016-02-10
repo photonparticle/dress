@@ -11,6 +11,8 @@ use Intervention\Image\ImageManager;
 
 class ImageRepository
 {
+	private $temp_name = '';
+
 	public function upload( $form_data )
 	{
 
@@ -27,11 +29,11 @@ class ImageRepository
 		}
 
 		$photo = $form_data['file'];
-		$temp_name = $form_data['temp_key'];
+		$this->temp_name = $form_data['temp_key'];
 		$originalName = $photo->getClientOriginalName();
 		$originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - 4);
 
-		$filename = $temp_name . '/' . basename($originalNameWithoutExt);
+		$filename = basename($originalNameWithoutExt);
 		$allowed_filename = $filename;
 
 		$filenameExt = $allowed_filename .'.jpg';
@@ -42,7 +44,7 @@ class ImageRepository
 		$uploadSuccess3 = $this->md_icon( $photo, $filenameExt );
 		$uploadSuccess4 = $this->lg_icon( $photo, $filenameExt );
 
-		if( !$uploadSuccess1 || !$uploadSuccess2 || $uploadSuccess3 || !$uploadSuccess4) {
+		if( !$uploadSuccess1 || !$uploadSuccess2 || !$uploadSuccess3 || !$uploadSuccess4) {
 
 			return Response::json([
 									  'error' => true,
@@ -86,7 +88,7 @@ class ImageRepository
 	{
 		$manager = new ImageManager();
 		$dir = Config::get('system_settings.product_upload_path');
-		$image = $manager->make( $photo )->encode('jpg', 100)->save($dir . Config::get('images.full_size') . '/' . $filename );
+		$image = $manager->make( $photo )->encode('jpg', 100)->save($dir . $this->temp_name . '/' . Config::get('images.full_size') . '/' . $filename );
 
 		return $image;
 	}
@@ -94,11 +96,11 @@ class ImageRepository
 	/**
 	 * Create Icon From Original
 	 */
-	public function sm_icon( $photo, $filename )
+	public function lg_icon( $photo, $filename )
 	{
 		$manager = new ImageManager();
 		$dir = Config::get('system_settings.product_upload_path');
-		$image = $manager->make( $photo )->encode('jpg')->resize(200, null, function($constraint){$constraint->aspectRatio();})->save($dir . Config::get('images.sm_icon_size')  . '/' . $filename );
+		$image = $manager->make( $photo )->encode('jpg')->resize(intval(Config::get('images.lg_icon_size')), null, function($constraint){$constraint->aspectRatio();})->save($dir . $this->temp_name . '/' . Config::get('images.lg_icon_size') . '/' . $filename );
 
 		return $image;
 	}
@@ -106,15 +108,15 @@ class ImageRepository
 	{
 		$manager = new ImageManager();
 		$dir = Config::get('system_settings.product_upload_path');
-		$image = $manager->make( $photo )->encode('jpg')->resize(200, null, function($constraint){$constraint->aspectRatio();})->save($dir . Config::get('images.md_icon_size')  . '/' . $filename );
+		$image = $manager->make( $photo )->encode('jpg')->resize(intval(Config::get('images.md_icon_size')), null, function($constraint){$constraint->aspectRatio();})->save($dir . $this->temp_name . '/' . Config::get('images.md_icon_size') . '/' . $filename  );
 
 		return $image;
 	}
-	public function lg_icon( $photo, $filename )
+	public function sm_icon( $photo, $filename )
 	{
 		$manager = new ImageManager();
 		$dir = Config::get('system_settings.product_upload_path');
-		$image = $manager->make( $photo )->encode('jpg')->resize(200, null, function($constraint){$constraint->aspectRatio();})->save($dir . Config::get('images.lg_icon_size')  . '/' . $filename );
+		$image = $manager->make( $photo )->encode('jpg')->resize(intval(Config::get('images.sm_icon_size')), null, function($constraint){$constraint->aspectRatio();})->save($dir . $this->temp_name . '/' . Config::get('images.sm_icon_size') . '/' . $filename   );
 
 		return $image;
 	}

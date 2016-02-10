@@ -174,7 +174,8 @@
                                'meta_description': $('#meta_description').val(),
                                'meta_keywords': $('#meta_keywords').val(),
                                'categories': $('#categories').val(),
-                               'sizes': sizes
+                               'sizes': sizes,
+                               'images_dir': '{{ $images_dir }}'
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -302,7 +303,16 @@
             }
 
             //DropZone File Uploader - Images Tab
-            FormDropzone.init();
+//            FormDropzone.init();
+
+        });
+
+        $.ajaxPrefilter(function( options ) {
+            if ( !options.beforeSend) {
+                options.beforeSend = function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+                }
+            }
         });
     </script>
 @endsection

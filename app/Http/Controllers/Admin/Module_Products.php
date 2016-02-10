@@ -34,7 +34,7 @@ class Module_Products extends BaseController
 		}
 		parent::__construct($request);
 
-		$this->images_path = public_path() . '/images/product/';
+		$this->images_path = public_path().'/images/products/';
 	}
 
 	/**
@@ -101,8 +101,14 @@ class Module_Products extends BaseController
 
 		$response['pageTitle'] = trans('global.create_product');
 
-		$response['temp_name'] = uniqid('product_');
-		mkdir($this->images_path . $response['temp_name']);
+		$response['images_dir'] = uniqid('product_');
+		//Make the main image folder
+		mkdir($this->images_path.$response['temp_name']);
+		//Create images directories
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.full_size'));
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.lg_icon_size'));
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.md_icon_size'));
+		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.sm_icon_size'));
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 		$response['groups']     = Model_Sizes::getSizes(TRUE);
@@ -115,82 +121,68 @@ class Module_Products extends BaseController
 	 * Store a newly created resource in storage.
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postStore($images = FALSE)
+	public function postStore()
 	{
-		if ( ! empty($images) && $images == 'images')
+		$response['status']  = 'error';
+		$response['message'] = trans('products.not_created');
+
+		if ( ! empty($_POST))
 		{
-			if(!empty($_POST) && !empty($_POST['dir'])) {
-				$photos = Input::all();
-				if(!empty($photos['dir'])) {
-					$dir = $photos['dir'];
-					unset($photos['dir']);
-				}
+			$error = FALSE;
 
-				foreach($photos as $key => $photo) {
-					Imageupload::upload($photo, '', '/uploads/products/' .$dir. '/');
-				}
-
-				return 'success';
-			}
-		}
-		else
-		{
-
-			$response['status']  = 'error';
-			$response['message'] = trans('products.not_created');
-
-			if ( ! empty($_POST))
+			if (empty(trim(Input::get('title'))))
 			{
-				$error = FALSE;
+				$response['message'] = trans('products.title_required');
+				$error               = TRUE;
+			}
+			if (empty(trim(Input::get('friendly_url'))))
+			{
+				$response['title']   = trans('global.warning');
+				$response['message'] = trans('products.url_required');
+				$error               = TRUE;
+			}
 
-				if (empty(trim(Input::get('title'))))
-				{
-					$response['message'] = trans('products.title_required');
-					$error               = TRUE;
-				}
-				if (empty(trim(Input::get('friendly_url'))))
-				{
-					$response['title']   = trans('global.warning');
-					$response['message'] = trans('products.url_required');
-					$error               = TRUE;
-				}
+			if ($error === FALSE)
+			{
+				$data = [
+					'title'            => trim(Input::get('title')),
+					'description'      => Input::get('description'),
+					'quantity'         => Input::get('quantity'),
+					'position'         => Input::get('position'),
+					'active'           => Input::get('active'),
+					'original_price'   => Input::get('original_price'),
+					'price'            => Input::get('price'),
+					'discount_price'   => Input::get('discount_price'),
+					'discount_start'   => Input::get('discount_start'),
+					'discount_end'     => Input::get('discount_end'),
+					'created_at'       => Input::get('created_at'),
+					'sizes'            => Input::get('sizes'),
+					'meta_description' => Input::get('meta_description'),
+					'meta_keywords'    => Input::get('meta_keywords'),
+				];
 
-				if ($error === FALSE)
+				if ($id = Model_Products::createProduct($data))
 				{
-					$data = [
-						'title'            => trim(Input::get('title')),
-						'description'      => Input::get('description'),
-						'quantity'         => Input::get('quantity'),
-						'position'         => Input::get('position'),
-						'active'           => Input::get('active'),
-						'original_price'   => Input::get('original_price'),
-						'price'            => Input::get('price'),
-						'discount_price'   => Input::get('discount_price'),
-						'discount_start'   => Input::get('discount_start'),
-						'discount_end'     => Input::get('discount_end'),
-						'created_at'       => Input::get('created_at'),
-						'sizes'            => Input::get('sizes'),
-						'meta_description' => Input::get('meta_description'),
-						'meta_keywords'    => Input::get('meta_keywords'),
-					];
-
-					if ($id = Model_Products::createProduct($data))
+					try
 					{
-						try
-						{
-							//Manage Friendly URL
-							Model_Products::setURL($id, Input::get('friendly_url'));
-						} catch (Exception $e)
-						{
-							$response['message'] = $e;
+						//Manage Friendly URL
+						Model_Products::setURL($id, Input::get('friendly_url'));
+
+						//Manage images
+						if(!empty(Input::get('images_dir')) && is_dir($this->images_path . Input::get('images_dir'))) {
+							rename($this->images_path . Input::get('images_dir'), $this->images_path . $id);
 						}
-						$response['status']  = 'success';
-						$response['message'] = trans('products.created');
-					}
-					else
+
+					} catch (Exception $e)
 					{
-						$response['message'] = trans('products.not_created');
+						$response['message'] = $e;
 					}
+					$response['status']  = 'success';
+					$response['message'] = trans('products.created');
+				}
+				else
+				{
+					$response['message'] = trans('products.not_created');
 				}
 			}
 		}
