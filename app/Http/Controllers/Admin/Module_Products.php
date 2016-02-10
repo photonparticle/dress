@@ -22,6 +22,7 @@ use View;
 class Module_Products extends BaseController
 {
 	private $active_module = '';
+	private $images_path = '';
 
 	public function __construct(Request $request)
 	{
@@ -32,6 +33,8 @@ class Module_Products extends BaseController
 			View::share('active_module', $this->active_module);
 		}
 		parent::__construct($request);
+
+		$this->images_path = public_path() . '/images/product/';
 	}
 
 	/**
@@ -74,6 +77,7 @@ class Module_Products extends BaseController
 			'global/plugins/jquery-multi-select/css/multi-select',
 			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+			'global/plugins/dropzone/css/dropzone',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
@@ -97,6 +101,9 @@ class Module_Products extends BaseController
 
 		$response['pageTitle'] = trans('global.create_product');
 
+		$response['temp_name'] = uniqid('product_');
+		mkdir($this->images_path . $response['temp_name']);
+
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 		$response['groups']     = Model_Sizes::getSizes(TRUE);
 		$response['products']   = Model_Products::getProducts(FALSE, ['title']);
@@ -108,62 +115,82 @@ class Module_Products extends BaseController
 	 * Store a newly created resource in storage.
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postStore()
+	public function postStore($images = FALSE)
 	{
-		$response['status']  = 'error';
-		$response['message'] = trans('products.not_created');
-
-		if ( ! empty($_POST))
+		if ( ! empty($images) && $images == 'images')
 		{
-			$error = FALSE;
-
-			if (empty(trim(Input::get('title'))))
-			{
-				$response['message'] = trans('products.title_required');
-				$error               = TRUE;
-			}
-			if (empty(trim(Input::get('friendly_url'))))
-			{
-				$response['title']   = trans('global.warning');
-				$response['message'] = trans('products.url_required');
-				$error               = TRUE;
-			}
-
-			if ($error === FALSE)
-			{
-				$data = [
-					'title'            => trim(Input::get('title')),
-					'description'      => Input::get('description'),
-					'quantity'         => Input::get('quantity'),
-					'position'         => Input::get('position'),
-					'active'           => Input::get('active'),
-					'original_price'   => Input::get('original_price'),
-					'price'            => Input::get('price'),
-					'discount_price'   => Input::get('discount_price'),
-					'discount_start'   => Input::get('discount_start'),
-					'discount_end'     => Input::get('discount_end'),
-					'created_at'       => Input::get('created_at'),
-					'sizes'            => Input::get('sizes'),
-					'meta_description' => Input::get('meta_description'),
-					'meta_keywords'    => Input::get('meta_keywords'),
-				];
-
-				if ($id = Model_Products::createProduct($data))
-				{
-					try
-					{
-						//Manage Friendly URL
-						Model_Products::setURL($id, Input::get('friendly_url'));
-					} catch (Exception $e)
-					{
-						$response['message'] = $e;
-					}
-					$response['status']  = 'success';
-					$response['message'] = trans('products.created');
+			if(!empty($_POST) && !empty($_POST['dir'])) {
+				$photos = Input::all();
+				if(!empty($photos['dir'])) {
+					$dir = $photos['dir'];
+					unset($photos['dir']);
 				}
-				else
+
+				foreach($photos as $key => $photo) {
+					Imageupload::upload($photo, '', '/uploads/products/' .$dir. '/');
+				}
+
+				return 'success';
+			}
+		}
+		else
+		{
+
+			$response['status']  = 'error';
+			$response['message'] = trans('products.not_created');
+
+			if ( ! empty($_POST))
+			{
+				$error = FALSE;
+
+				if (empty(trim(Input::get('title'))))
 				{
-					$response['message'] = trans('products.not_created');
+					$response['message'] = trans('products.title_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('friendly_url'))))
+				{
+					$response['title']   = trans('global.warning');
+					$response['message'] = trans('products.url_required');
+					$error               = TRUE;
+				}
+
+				if ($error === FALSE)
+				{
+					$data = [
+						'title'            => trim(Input::get('title')),
+						'description'      => Input::get('description'),
+						'quantity'         => Input::get('quantity'),
+						'position'         => Input::get('position'),
+						'active'           => Input::get('active'),
+						'original_price'   => Input::get('original_price'),
+						'price'            => Input::get('price'),
+						'discount_price'   => Input::get('discount_price'),
+						'discount_start'   => Input::get('discount_start'),
+						'discount_end'     => Input::get('discount_end'),
+						'created_at'       => Input::get('created_at'),
+						'sizes'            => Input::get('sizes'),
+						'meta_description' => Input::get('meta_description'),
+						'meta_keywords'    => Input::get('meta_keywords'),
+					];
+
+					if ($id = Model_Products::createProduct($data))
+					{
+						try
+						{
+							//Manage Friendly URL
+							Model_Products::setURL($id, Input::get('friendly_url'));
+						} catch (Exception $e)
+						{
+							$response['message'] = $e;
+						}
+						$response['status']  = 'success';
+						$response['message'] = trans('products.created');
+					}
+					else
+					{
+						$response['message'] = trans('products.not_created');
+					}
 				}
 			}
 		}
