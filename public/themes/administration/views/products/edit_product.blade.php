@@ -314,37 +314,35 @@
 
             //Images save
             $('body').on('click', '.product-images a.save_btn', function () {
-                    var images = getImages();
+                var images = getImages();
 
-                    //If images found, ajax save
-                if(images) {
-                    $.ajax({
-                               type: 'post',
-                               url: '/admin/products/update/{{$product['id']}}',
-                               data: {
-                                   'images': images
-                               },
-                               headers: {
-                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                               },
-                               success: function (response) {
-                                   if (typeof response == typeof {} && response['status'] && response['message']) {
-                                       showNotification(response['status'], response['message']);
+                $.ajax({
+                           type: 'post',
+                           url: '/admin/products/update/{{$product['id']}}',
+                           data: {
+                               'images': images,
+                               'image_sync': true
+                           },
+                           headers: {
+                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                           },
+                           success: function (response) {
+                               if (typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['message']);
 
-                                       if(response['status'] == 'success') {
-                                           window.location.replace('/admin/products/edit/{{$product['id']}}#images');
-                                           location.reload();
-                                       }
-                                   } else {
-                                       showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                   if(response['status'] == 'success') {
+                                       window.location.replace('/admin/products/edit/{{$product['id']}}#images');
+                                       location.reload();
                                    }
-                               },
-                               error: function () {
+                               } else {
                                    showNotification('error', translate('request_not_completed'), translate('contact_support'));
                                }
+                           },
+                           error: function () {
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                           }
 
-                           });
-                }
+                       });
             });
 
             //Image delete
@@ -353,35 +351,33 @@
                         remove_image = $(this).attr('data-image'),
                         parent = $(this).closest('.product-image-holder');
 
-                //If images found, ajax save
-                if(images) {
-                    console.log('Remove image');
-                    $.ajax({
-                               type: 'post',
-                               url: '/admin/products/update/{{$product['id']}}',
-                               data: {
-                                   'images': images,
-                                   'remove_image': remove_image
-                               },
-                               headers: {
-                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                               },
-                               success: function (response) {
-                                   if (typeof response == typeof {} && response['status'] && response['message']) {
-                                       showNotification(response['status'], response['message']);
-                                       if(response['status'] == 'success') {
-                                           parent.remove();
-                                       }
-                                   } else {
-                                       showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                //If images found remove
+                $.ajax({
+                           type: 'post',
+                           url: '/admin/products/update/{{$product['id']}}',
+                           data: {
+                               'images': images,
+                               'image_sync': true,
+                               'remove_image': remove_image
+                           },
+                           headers: {
+                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                           },
+                           success: function (response) {
+                               if (typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['message']);
+                                   if(response['status'] == 'success') {
+                                       parent.remove();
                                    }
-                               },
-                               error: function () {
+                               } else {
                                    showNotification('error', translate('request_not_completed'), translate('contact_support'));
                                }
+                           },
+                           error: function () {
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                           }
 
-                           });
-                }
+                       });
             });
 
             function getImages() {

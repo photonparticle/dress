@@ -20,15 +20,15 @@
 
     <div class="clearfix"></div>
 
-    @if(!empty($product['images']) && is_array($product['images']))
-        <div class="product-images">
-            <a href="#"
-               class="btn green save_btn pull-right margin-top-20 padding-10"
-               title="{{trans('global.save')}}"
-            >
-                <i class="fa fa-refresh"></i>
-                {{trans('products.sync_images')}}
-            </a>
+    <div class="product-images">
+        <a href="javascript:;"
+           class="btn green save_btn pull-right margin-top-20 padding-10"
+           title="{{trans('global.save')}}"
+        >
+            <i class="fa fa-refresh"></i>
+            {{trans('products.sync_images')}}
+        </a>
+        @if(!empty($product['images']) && is_array($product['images']))
             <div class="clearfix"></div>
             @foreach($product['images'] as $image => $position)
                 @if($image)
@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
                                 <div class="actions col-xs-12 col-sm-12 col-md-4 col-lg-4 text-center no-margin no-padding">
-                                    <a href="#"
+                                    <a href="javascript:;"
                                        class="btn btn-icon-only red remove_btn"
                                        title="{{trans('global.remove')}}"
                                        data-image="{{isset($image) ? $image : ''}}"
@@ -66,9 +66,9 @@
                     </div>
                 @endif
             @endforeach
-            <div class="clearfix"></div>
-        </div>
-    @endif
+        @endif
+        <div class="clearfix"></div>
+    </div>
 
     <div class="clearfix"></div>
 

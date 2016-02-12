@@ -367,83 +367,90 @@ class Module_Products extends BaseController
 
 		if ( ! empty($_POST))
 		{
-			if ( ! empty(($images = json_decode(Input::get('images'), TRUE))))
+			if ( ! empty(Input::get('image_sync')))
 			{
-				$response['message'] = trans('products.images_not_saved');
+				if (empty(($images = json_decode(Input::get('images'), TRUE))))
+				{
+					$images = [];
+				}
+				$response['message'] = trans('products.images_not_synced');
+
+				//Get current local images
+				$images_array = [];
+
+				if ( ! empty($id) &&
+					is_dir($this->images_path.$id) &&
+					is_dir($this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size'))
+				)
+				{
+					$local_images = array_diff(scandir($this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
+
+					if ( ! empty($local_images) && is_array($local_images))
+					{
+						foreach ($local_images as $key => $data)
+						{
+							$images_array[$data] = 0;
+						}
+					}
+				}
+
+				//Remove image
+				if ( ! empty($remove_image = Input::get('remove_image')))
+				{
+					if (isset($images[$remove_image]))
+					{
+
+						//Remove local files
+						$images_to_remove = [
+							$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size').DIRECTORY_SEPARATOR.$remove_image,
+							$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.lg_icon_size').DIRECTORY_SEPARATOR.$remove_image,
+							$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.md_icon_size').DIRECTORY_SEPARATOR.$remove_image,
+							$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.sm_icon_size').DIRECTORY_SEPARATOR.$remove_image,
+						];
+						foreach ($images_to_remove as $image)
+						{
+							if (file_exists($image))
+							{
+								unlink($image);
+							}
+						}
+
+						//Remove message
+						$message_success = trans('products.image_removed');
+					}
+				}
+				else
+				{
+					//Images save message
+					$message_success = trans('products.images_synced');
+				}
 
 				if (is_array($images))
 				{
-					//Get current local images
-					$images_array = [];
-
-					if ( ! empty($id) &&
-						is_dir($this->images_path.$id) &&
-						is_dir($this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size'))
-					)
-					{
-						$local_images = array_diff(scandir($this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
-
-						if ( ! empty($local_images) && is_array($local_images))
-						{
-							foreach ($local_images as $key => $data)
-							{
-								$images_array[$data] = 0;
-							}
-						}
-					}
-
-					//Remove image
-					if ( ! empty($remove_image = Input::get('remove_image')))
-					{
-						if (isset($images[$remove_image]))
-						{
-
-							//Remove local files
-							$images_to_remove = [
-								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size').DIRECTORY_SEPARATOR.$remove_image,
-								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.lg_icon_size').DIRECTORY_SEPARATOR.$remove_image,
-								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.md_icon_size').DIRECTORY_SEPARATOR.$remove_image,
-								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.sm_icon_size').DIRECTORY_SEPARATOR.$remove_image,
-							];
-							foreach ($images_to_remove as $image)
-							{
-								if (file_exists($image))
-								{
-									unlink($image);
-								}
-							}
-
-							//Remove message
-							$message_success = trans('products.image_removed');
-						}
-					}
-					else
-					{
-						//Images save message
-						$message_success = trans('products.images_saved');
-					}
-
 					$images = array_merge($images_array, $images);
+				} else {
+					$images = $images_array;
+				}
 
-					if (isset($images[$remove_image]))
+				if (isset($images[$remove_image]))
+				{
+					unset($images[$remove_image]);
+				}
+				if ( ! empty($images))
+				{
+					Model_Products::deleteAllImages($id);
+					if (Model_Products::setProductObjects(['images' => $images], $id) === TRUE)
 					{
-						unset($images[$remove_image]);
+						$response['status']  = 'success';
+						$response['message'] = $message_success;
 					}
-
-					if ( ! empty($images))
+				}
+				else
+				{
+					if (Model_Products::deleteAllImages($id) === TRUE)
 					{
-						Model_Products::deleteAllImages($id);
-						if (Model_Products::setProductObjects(['images' => $images], $id) === TRUE)
-						{
-							$response['status']  = 'success';
-							$response['message'] = $message_success;
-						}
-					} else {
-						if (Model_Products::deleteAllImages($id) === TRUE)
-						{
-							$response['status']  = 'success';
-							$response['message'] = $message_success;
-						}
+						$response['status']  = 'success';
+						$response['message'] = $message_success;
 					}
 				}
 			}
