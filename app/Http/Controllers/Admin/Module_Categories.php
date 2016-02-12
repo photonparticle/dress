@@ -13,6 +13,7 @@ use Caffeinated\Themes\Facades\Theme;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Mockery\CountValidator\Exception;
 use View;
 
 class Module_Categories extends BaseController
@@ -22,7 +23,8 @@ class Module_Categories extends BaseController
 	public function __construct(Request $request)
 	{
 		$modules = Config::get('system_settings.modules');
-		if(in_array('users', $modules)) {
+		if (in_array('users', $modules))
+		{
 			$this->active_module = 'categories';
 			View::share('active_module', $this->active_module);
 		}
@@ -37,7 +39,7 @@ class Module_Categories extends BaseController
 	{
 		$response['pageTitle'] = trans('global.categories');
 
-		$response['categories']           = Model_Categories::getCategory(FALSE, ['title']);
+		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -46,7 +48,7 @@ class Module_Categories extends BaseController
 		$customJS = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
-			'global/plugins/bootbox/bootbox.min'
+			'global/plugins/bootbox/bootbox.min',
 		];
 
 		$response['blade_custom_css'] = $customCSS;
@@ -81,12 +83,14 @@ class Module_Categories extends BaseController
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
 			'global/plugins/fuelux/js/spinner.min',
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
+			'global/plugins/jquery-slugify/speakingurl',
+			'global/plugins/jquery-slugify/slugify.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['pageTitle'] = trans('global.create_category');
+		$response['pageTitle']  = trans('global.create_category');
 
 		return Theme::view('categories.create_category', $response);
 	}
@@ -124,19 +128,31 @@ class Module_Categories extends BaseController
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'       => trim(Input::get('title')),
-					'description' => Input::get('description'),
-					'level'       => $category_level,
-					'parent'      => $parent,
-					'position'    => Input::get('position'),
-					'visible'     => Input::get('visible'),
-					'active'      => Input::get('active'),
+					'title'            => trim(Input::get('title')),
+					'description'      => Input::get('description'),
+					'level'            => $category_level,
+					'parent'           => $parent,
+					'position'         => Input::get('position'),
+					'visible'          => Input::get('visible'),
+					'active'           => Input::get('active'),
+					'meta_description' => Input::get('meta_description'),
+					'meta_keywords'    => Input::get('meta_keywords'),
 				];
 
-				if (Model_Categories::createCategory($data) === TRUE)
+				if (($id = Model_Categories::createCategory($data)) > 0)
 				{
-					$response['status']  = 'success';
-					$response['message'] = trans('categories.created');
+					try
+					{
+						//Manage Friendly URL
+						Model_Categories::setURL($id, Input::get('friendly_url'));
+
+						$response['status']      = 'success';
+						$response['message']     = trans('categories.created');
+						$response['category_id'] = $id;
+					} catch (Exception $e)
+					{
+						$response['message'] = $e;
+					}
 				}
 				else
 				{
@@ -149,14 +165,43 @@ class Module_Categories extends BaseController
 	}
 
 	/**
-	 * Display the specified resource.
+	 * Used to display partials or do ajax requests
 	 *
-	 * @param  int $id
+	 * @param $request
+	 * @param $param
 	 *
 	 * @return \Illuminate\Http\Response
+	 * @internal param int $id
 	 */
-	public function getShow($id)
+	public function getShow($request, $param)
 	{
+		if ( ! empty($request) && ! empty($param))
+		{
+
+			if ($request == 'check_url')
+			{
+				if (Model_Categories::checkURL($param))
+				{
+					$response['status']  = 'error';
+					$response['title']   = trans('global.warning');
+					$response['message'] = trans('products.url_exists');
+
+					return response()->json($response);
+				}
+				else
+				{
+					return 'available';
+				}
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	/**
@@ -187,19 +232,34 @@ class Module_Categories extends BaseController
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
 			'global/plugins/fuelux/js/spinner.min',
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
+			'global/plugins/jquery-slugify/speakingurl',
+			'global/plugins/jquery-slugify/slugify.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['pageTitle'] = trans('categories.edit_category');
+		$response['pageTitle']  = trans('categories.edit_category');
 
-		if(!empty($response['categories']) && is_array($response['categories'])) {
-			foreach($response['categories'] as $category) {
-				if(!empty($category['id']) && $category['id'] == $id) {
-					$response['category'] = $category;
-				}
-			}
+		$category_data        = Model_Categories::getCategory($id);
+		$response['category'] = $category_data[$id];
+		unset($response['categories'][$id]);
+
+		//SEO Tab
+		if (($slug = Model_Categories::getURL($id)) != FALSE)
+		{
+			$response['seo']['friendly_url'] = $slug;
+		}
+
+		if ( ! empty($response['category']['meta_description']))
+		{
+			$response['seo']['meta_description'] = $response['category']['meta_description'];
+			unset($response['category']['meta_description']);
+		}
+		if ( ! empty($response['category']['meta_keywords']))
+		{
+			$response['seo']['meta_keywords'] = $response['category']['meta_keywords'];
+			unset($response['product']['meta_keywords']);
 		}
 
 		return Theme::view('categories.edit_category', $response);
@@ -215,7 +275,8 @@ class Module_Categories extends BaseController
 	 * @return \Illuminate\Http\Response
 	 */
 	public function postUpdate(Request $request, $id)
-	{$response['status']  = 'error';
+	{
+		$response['status']  = 'error';
 		$response['message'] = trans('categories.not_updated');
 
 		if ( ! empty($_POST))
@@ -250,12 +311,23 @@ class Module_Categories extends BaseController
 					'position'    => Input::get('position'),
 					'visible'     => Input::get('visible'),
 					'active'      => Input::get('active'),
+					'meta_description' => Input::get('meta_description'),
+					'meta_keywords'    => Input::get('meta_keywords'),
 				];
 
 				if (Model_Categories::updateCategory($id, $data) === TRUE)
 				{
-					$response['status']  = 'success';
-					$response['message'] = trans('categories.updated');
+					try
+					{
+						//Manage Friendly URL
+						Model_Categories::setURL($id, Input::get('friendly_url'));
+
+						$response['status']  = 'success';
+						$response['message'] = trans('categories.updated');
+					} catch (Exception $e)
+					{
+						$response['message'] = $e;
+					}
 				}
 				else
 				{

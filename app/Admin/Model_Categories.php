@@ -152,7 +152,7 @@ class Model_Categories extends Model
 				self::setCategoryObjects($data, $category_id);
 			}
 
-			return TRUE;
+			return $category_id;
 		}
 		else
 		{
@@ -240,6 +240,22 @@ class Model_Categories extends Model
 			{
 				$objects['description'] = [
 					'value' => $data['description'],
+					'type'  => 'text',
+				];
+			}
+
+			if ( ! empty($data['meta_description']))
+			{
+				$objects['meta_description'] = [
+					'value' => $data['meta_description'],
+					'type'  => 'text',
+				];
+			}
+
+			if ( ! empty($data['meta_keywords']))
+			{
+				$objects['meta_keywords'] = [
+					'value' => $data['meta_keywords'],
 					'type'  => 'text',
 				];
 			}
@@ -440,5 +456,78 @@ class Model_Categories extends Model
 
 		return $response;
 
+	}
+
+	/**
+	 * @param $url
+	 *
+	 * @return bool
+	 */
+	public static function checkURL($url)
+	{
+		if (DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'category')->where('slug', '=', $url)->count() > 0)
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $category_id
+	 *
+	 * @return bool
+	 */
+	public static function getURL($category_id)
+	{
+		$response = DB::table('seo_url')->where('type', '=', 'category')->where('object', '=', $category_id)->get();
+
+		if ( ! empty($response[0]['slug']))
+		{
+			return $response[0]['slug'];
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $category_id
+	 * @param $url
+	 */
+	public static function setURL($category_id, $url)
+	{
+		if ( ! empty($category_id) && ! empty($url))
+		{
+			$have_url = DB::table('seo_url')->select('type', 'object')->where('type', '=', 'category')->where('object', '=', $category_id)->count();
+
+			if ($have_url)
+			{
+				$response = DB::table('seo_url')
+							  ->where('type', '=', 'category')
+							  ->where('object', '=', $category_id)
+							  ->update([
+										   'slug' => $url,
+									   ]);
+			}
+			else
+			{
+				$response = DB::table('seo_url')
+							  ->insert([
+										   'slug'   => $url,
+										   'type'   => 'category',
+										   'object' => $category_id,
+									   ]);
+			}
+
+			if($response) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
+		}
 	}
 }

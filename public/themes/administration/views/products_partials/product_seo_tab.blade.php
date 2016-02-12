@@ -54,4 +54,4 @@
     </form>
 
 </div>
-<!-- END MAIN INFO TAB -->
+<!-- END SEO TAB -->

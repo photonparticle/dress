@@ -20,6 +20,9 @@
                                     <li>
                                         <a href="#data" data-toggle="tab">{{trans('categories.data')}}</a>
                                     </li>
+                                    <li>
+                                        <a href="#seo" data-toggle="tab">SEO</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="portlet-body">
@@ -101,7 +104,7 @@
 
                                                 <div id="position">
                                                     <div class="input-group" style="width:150px;">
-                                                        <input type="text" name="position" class="spinner-input form-control" maxlength="2" readonly="" value="{{isset($category['position']) ? $category['position'] : ''}}">
+                                                        <input type="text" name="position" id="position" class="spinner-input form-control" maxlength="2" readonly="" value="{{isset($category['position']) ? $category['position'] : ''}}">
                                                         <div class="spinner-buttons input-group-btn">
                                                             <button type="button" class="btn spinner-up default">
                                                                 <i class="fa fa-angle-up"></i>
@@ -144,6 +147,65 @@
                                     </div>
                                     <!-- END DATA TAB -->
 
+
+                                    <!-- SEO TAB -->
+                                    <div class="tab-pane" id="seo">
+                                        <form action="#">
+
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                                            <div class="form-group form-md-line-input has-success form-md-floating-label">
+                                                <div class="input-icon right">
+                                                    <input name="friendly_url" id="friendly_url" type="text" class="form-control input-lg" value="{{isset($seo['friendly_url']) ? $seo['friendly_url'] : ''}}"/>
+
+                                                    <label for="friendly_url">{{trans('products.friendly_url')}}</label>
+                                                    <span class="help-block"></span>
+                                                    <i class="fa fa-font"></i>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="meta_description" class="control-label col-xs-12 default no-padding">
+                                                    {{trans('products.meta_description')}}
+                                                </label>
+                                                <div class="col-xs-12 no-padding">
+                <textarea id="meta_description"
+                          class="form-control"
+                          rows="3"
+                          placeholder="{{trans('products.meta_description')}}"
+                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">{!!isset($seo['meta_description']) ? $seo['meta_description'] : ''!!}</textarea>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="meta_keywords" class="control-label col-xs-12 default no-padding">
+                                                    {{trans('products.meta_keywords')}}
+                                                </label>
+                                                <div class="col-xs-12 no-padding">
+                <textarea id="meta_keywords"
+                          class="form-control"
+                          rows="3"
+                          placeholder="{{trans('products.meta_keywords')}}"
+                          style="margin-top: 0px; margin-bottom: 0px; height: 79px;">{!!isset($seo['meta_keywords']) ? $seo['meta_keywords'] : ''!!}</textarea>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+
+                                            <div class="clearfix"></div>
+
+                                            <div class="margin-top-10">
+                                                <button class="btn green-haze save_category">
+                                                    {{trans('global.save')}} </button>
+                                                <a href="/admin/categories" class="btn default">
+                                                    {{trans('global.cancel')}} </a>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                    <!-- END MAIN INFO TAB -->
+
                                 </div>
                             </div>
                         </div>
@@ -159,7 +221,14 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
 
-            
+            //SEO URL vars
+            var
+                    timer,
+                    timeout,
+                    $slug = $('#friendly_url'),
+                    url_from_name = true,
+                    current_slug = '{{$seo['friendly_url'] or ''}}',
+                    url_invalid = true;
 
             //Init WYSIWYG
             $('#description').summernote({height: 300});
@@ -178,29 +247,52 @@
             //Change category level event
             $('body').on('change', '#level', function () {
                 var level = $(this).val();
+                levelLockParents(level);
+            });
+            levelLockParents('{{$category['level']}}');
 
-                if(level == '1' || level == '2') {
+            function levelLockParents(level) {
+                if (level == '1' || level == '2') {
                     $('.parent-container').removeClass('hidden');
 
-                    $('#parent').find('option').each( function () {
+                    $('#parent option').each(function () {
                         var opt_level = $(this).data('level');
 
-                        if(typeof opt_level != typeof undefined && opt_level != null) {
-                            if(opt_level == level - 1) {
-                                console.log('Disabled level: ' + opt_level);
-                                $(this).removeAttr('disabled');
-                            } else {
+                        if (typeof opt_level != typeof undefined && opt_level != null && (opt_level == '0' || opt_level == '1')) {
+                            if (opt_level != level - 1) {
                                 $(this).attr('disabled', 'disabled');
+                            } else {
+                                $(this).removeAttr('disabled');
                             }
+                        } else if(opt_level == '2') {
+                            $(this).attr('disabled', 'disabled');
                         }
                     });
                 } else {
                     $('.parent-container').addClass('hidden');
                 }
-            });
+            }
 
             $('.save_category').click( function(e) {
                 e.preventDefault();
+
+                var slug = $slug.val();
+
+                //Check URL
+                if (slug.length > 0) {
+                    if (current_slug.length > 0 && current_slug != slug) {
+                        if (url_invalid === true) {
+                            showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_exists')}}');
+
+                            return;
+                        }
+                    }
+                } else {
+                    showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_required')}}');
+
+                    return;
+                }
+
 
                 if($('#visible').is(':checked')) {
                     var visible = 1;
@@ -221,9 +313,12 @@
                                'description': $('#description').code(),
                                'level': $('#level').val(),
                                'parent': $('#parent').val(),
-                               'position': $('#position').val(),
+                               'position': $('#position').spinner('value'),
                                'visible': visible,
                                'active': active,
+                               'friendly_url': $slug.val(),
+                               'meta_description': $('#meta_description').val(),
+                               'meta_keywords': $('#meta_keywords').val(),
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -241,6 +336,89 @@
 
                        });
             });
+
+
+
+            //Seo URL
+
+            if ($slug.val().length > 0) {
+                url_from_name = false;
+            } else {
+                url_from_name = true;
+            }
+
+            function checkURL(url) {
+                clearTimeout(timer);
+                $.ajax({
+                           type: 'get',
+                           url: '/admin/categories/show/check_url/' + url,
+                           headers: {
+                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                           },
+                           success: function (response) {
+                               if (typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['title'], response['message']);
+                                   url_invalid = true;
+                               } else {
+                                   url_invalid = false;
+                               }
+                           },
+                           error: function () {
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                           }
+
+                       });
+            }
+
+            function slugify(string) {
+                if (string) {
+                    var slug = $.slugify(string);
+                    if ($slug.length > 0) {
+                        $slug.addClass('edited');
+                        $slug.val(slug);
+                        checkURL(slug);
+                    }
+
+                    return slug;
+                } else {
+                    return '';
+                }
+            }
+
+            if ($('#title').length > 0) {
+                $('#title').on('keyup', function () {
+                    if (url_from_name === true) {
+                        clearTimeout(timeout);
+                        var title = $(this).val();
+
+                        timeout = setTimeout(function () {
+                            slugify(title);
+                        }, 500);
+                    }
+                });
+            }
+
+            if ($slug.length > 0) {
+                $slug.on('keyup', function () {
+                    clearTimeout(timer);
+                    var url = $(this).val();
+
+                    if (typeof url === typeof undefined || url === null || url.length == 0 || url == '') {
+                        url_from_name = true;
+                        $slug.removeClass('edited');
+                    }
+
+                    if (url) {
+                        if ((current_slug.length > 0 && current_slug != url) || current_slug.length == 0) {
+                            timer = setTimeout(function () {
+                                url = slugify(url);
+                                checkURL(url);
+                                url_from_name = false;
+                            }, 500);
+                        }
+                    }
+                });
+            }
 
         });
     </script>
