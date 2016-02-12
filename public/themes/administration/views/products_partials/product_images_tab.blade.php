@@ -20,16 +20,18 @@
 
     <div class="clearfix"></div>
 
+    <a href="javascript:;"
+       class="btn green save_btn pull-right margin-top-20 padding-10"
+       title="{{trans('global.save')}}"
+    >
+        <i class="fa fa-refresh"></i>
+        {{trans('products.sync_images')}}
+    </a>
+
+    <div class="clearfix"></div>
+
     <div class="product-images">
-        <a href="javascript:;"
-           class="btn green save_btn pull-right margin-top-20 padding-10"
-           title="{{trans('global.save')}}"
-        >
-            <i class="fa fa-refresh"></i>
-            {{trans('products.sync_images')}}
-        </a>
         @if(!empty($product['images']) && is_array($product['images']))
-            <div class="clearfix"></div>
             @foreach($product['images'] as $image => $position)
                 @if($image)
                     <div class="product-image-holder margin-top-20 padding-20 col-xs-12 col-sm-6 col-md-4 col-lg-3" data-image="{{isset($image) ? $image : ''}}">

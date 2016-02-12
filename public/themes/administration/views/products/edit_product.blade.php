@@ -313,7 +313,7 @@
             imagesGrid();
 
             //Images save
-            $('body').on('click', '.product-images a.save_btn', function () {
+            $('body').on('click', 'a.save_btn', function () {
                 var images = getImages();
 
                 $.ajax({
@@ -368,6 +368,7 @@
                                    showNotification(response['status'], response['message']);
                                    if(response['status'] == 'success') {
                                        parent.remove();
+                                       imagesGrid();
                                    }
                                } else {
                                    showNotification('error', translate('request_not_completed'), translate('contact_support'));
@@ -427,7 +428,9 @@
                 //Clear last grid
                 images_container.find('.clearfix').each(function () {
                 });
-                images_container.remove('.clearfix');
+                images_container.find('.clearfix').each(function () {
+                    $(this).remove();
+                });
                 images_container.find('hr').each(function () {
                     $(this).remove();
                 });
