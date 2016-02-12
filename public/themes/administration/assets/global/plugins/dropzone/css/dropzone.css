@@ -216,6 +216,9 @@
   box-shadow: 1px 1px 4px rgba(0,0,0,0.16);
   font-size: 14px;
 }
+.dropzone .dz-preview.dz-error {
+  display: none;
+}
 .dropzone .dz-preview.dz-image-preview:hover .dz-details img,
 .dropzone-previews .dz-preview.dz-image-preview:hover .dz-details img {
   display: block;

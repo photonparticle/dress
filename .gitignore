@@ -4,4 +4,6 @@ Homestead.yaml
 Homestead.json
 .env
 
+/public/images
+/public/images/*
 config/database.php

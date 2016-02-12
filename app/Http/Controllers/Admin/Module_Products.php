@@ -102,13 +102,6 @@ class Module_Products extends BaseController
 		$response['pageTitle'] = trans('global.create_product');
 
 		$response['images_dir'] = uniqid('product_');
-		//Make the main image folder
-		mkdir($this->images_path.$response['temp_name']);
-		//Create images directories
-		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.full_size'));
-		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.lg_icon_size'));
-		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.md_icon_size'));
-		mkdir($this->images_path.$response['temp_name']. '/' . Config::get('images.sm_icon_size'));
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 		$response['groups']     = Model_Sizes::getSizes(TRUE);
@@ -144,6 +137,25 @@ class Module_Products extends BaseController
 
 			if ($error === FALSE)
 			{
+				//Get images
+				$images_array = [];
+
+				if ( ! empty(Input::get('images_dir')) &&
+					is_dir($this->images_path.Input::get('images_dir')) &&
+					is_dir($this->images_path.Input::get('images_dir').'/'.Config::get('images.full_size'))
+				)
+				{
+					$images = array_diff(scandir($this->images_path.Input::get('images_dir').'/'.Config::get('images.full_size')), array('..', '.'));
+
+					if ( ! empty($images) && is_array($images))
+					{
+						foreach ($images as $key => $data)
+						{
+							$images_array[$data] = 0;
+						}
+					}
+				}
+
 				$data = [
 					'title'            => trim(Input::get('title')),
 					'description'      => Input::get('description'),
@@ -159,6 +171,7 @@ class Module_Products extends BaseController
 					'sizes'            => Input::get('sizes'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
+					'images'           => $images_array,
 				];
 
 				if ($id = Model_Products::createProduct($data))
@@ -168,17 +181,20 @@ class Module_Products extends BaseController
 						//Manage Friendly URL
 						Model_Products::setURL($id, Input::get('friendly_url'));
 
-						//Manage images
-						if(!empty(Input::get('images_dir')) && is_dir($this->images_path . Input::get('images_dir'))) {
-							rename($this->images_path . Input::get('images_dir'), $this->images_path . $id);
+						//Rename images directory
+						if ( ! empty(Input::get('images_dir')) && is_dir($this->images_path.Input::get('images_dir')))
+						{
+							//Loop trough uploaded images and insert them to the database
+							rename($this->images_path.Input::get('images_dir'), $this->images_path.$id);
 						}
 
 					} catch (Exception $e)
 					{
 						$response['message'] = $e;
 					}
-					$response['status']  = 'success';
-					$response['message'] = trans('products.created');
+					$response['status']     = 'success';
+					$response['message']    = trans('products.created');
+					$response['product_id'] = $id;
 				}
 				else
 				{
@@ -210,22 +226,32 @@ class Module_Products extends BaseController
 
 				return Theme::View('products_partials.product_sizes_form', $response);
 			}
-
-			if ($request == 'check_url')
+			else
 			{
-				if (Model_Products::checkURL($param))
+				if ($request == 'check_url')
 				{
-					$response['status']  = 'error';
-					$response['title']   = trans('global.warning');
-					$response['message'] = trans('products.url_exists');
+					if (Model_Products::checkURL($param))
+					{
+						$response['status']  = 'error';
+						$response['title']   = trans('global.warning');
+						$response['message'] = trans('products.url_exists');
 
-					return response()->json($response);
+						return response()->json($response);
+					}
+					else
+					{
+						return 'available';
+					}
 				}
 				else
 				{
-					return 'available';
+					return FALSE;
 				}
 			}
+		}
+		else
+		{
+			return FALSE;
 		}
 	}
 
@@ -300,6 +326,25 @@ class Module_Products extends BaseController
 			$response['seo']['meta_keywords'] = $response['product']['meta_keywords'];
 			unset($response['product']['meta_keywords']);
 		}
+		//Images Tab
+		if ( ! empty($response['product']['images']))
+		{
+			$response['product']['images'] = json_decode($response['product']['images'], TRUE);
+
+			if (is_array($response['product']['images']))
+			{
+				$response['thumbs_path'] = Config::get('system_settings.product_public_path').$id.'/'.Config::get('images.sm_icon_size').'/';
+				uasort($response['product']['images'], function ($a, $b)
+				{
+					if ($a == $b)
+					{
+						return 0;
+					}
+
+					return ($a < $b) ? -1 : 1;
+				});
+			}
+		}
 
 		$response['pageTitle'] = trans('products.edit');
 
@@ -322,60 +367,143 @@ class Module_Products extends BaseController
 
 		if ( ! empty($_POST))
 		{
-			$error = FALSE;
-
-			if (empty(trim(Input::get('title'))))
+			if ( ! empty(($images = json_decode(Input::get('images'), TRUE))))
 			{
-				$response['message'] = trans('products.title_required');
-				$error               = TRUE;
-			}
-			if (empty(trim(Input::get('friendly_url'))))
-			{
-				$response['message'] = trans('products.url_required');
-				$error               = TRUE;
-			}
+				$response['message'] = trans('products.images_not_saved');
 
-			if ($error === FALSE)
-			{
-				$data = [
-					'title'            => trim(Input::get('title')),
-					'description'      => Input::get('description'),
-					'quantity'         => Input::get('quantity'),
-					'position'         => Input::get('position'),
-					'active'           => Input::get('active'),
-					'original_price'   => Input::get('original_price'),
-					'price'            => Input::get('price'),
-					'discount_price'   => Input::get('discount_price'),
-					'discount_start'   => Input::get('discount_start'),
-					'discount_end'     => Input::get('discount_end'),
-					'created_at'       => Input::get('created_at'),
-					'sizes'            => Input::get('sizes'),
-					'meta_description' => Input::get('meta_description'),
-					'meta_keywords'    => Input::get('meta_keywords'),
-				];
-
-				if (Model_Products::updateProduct($id, $data) === TRUE)
+				if (is_array($images))
 				{
-					try
-					{
-						//Manage relations
-						if ( ! empty($_POST['categories']) && is_array($_POST['categories']))
-						{
-							Model_Products::setProductToCategory($id, $_POST['categories']);
-						}
-						//Manage Friendly URL
-						Model_Products::setURL($id, Input::get('friendly_url'));
+					//Get current local images
+					$images_array = [];
 
-						$response['status']  = 'success';
-						$response['message'] = trans('products.updated');
-					} catch (Exception $e)
+					if ( ! empty($id) &&
+						is_dir($this->images_path.$id) &&
+						is_dir($this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size'))
+					)
 					{
-						$response['message'] = $e;
+						$local_images = array_diff(scandir($this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
+
+						if ( ! empty($local_images) && is_array($local_images))
+						{
+							foreach ($local_images as $key => $data)
+							{
+								$images_array[$data] = 0;
+							}
+						}
+					}
+
+					//Remove image
+					if ( ! empty($remove_image = Input::get('remove_image')))
+					{
+						if (isset($images[$remove_image]))
+						{
+
+							//Remove local files
+							$images_to_remove = [
+								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size').DIRECTORY_SEPARATOR.$remove_image,
+								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.lg_icon_size').DIRECTORY_SEPARATOR.$remove_image,
+								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.md_icon_size').DIRECTORY_SEPARATOR.$remove_image,
+								$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.sm_icon_size').DIRECTORY_SEPARATOR.$remove_image,
+							];
+							foreach ($images_to_remove as $image)
+							{
+								if (file_exists($image))
+								{
+									unlink($image);
+								}
+							}
+
+							//Remove message
+							$message_success = trans('products.image_removed');
+						}
+					}
+					else
+					{
+						//Images save message
+						$message_success = trans('products.images_saved');
+					}
+
+					$images = array_merge($images_array, $images);
+
+					if (isset($images[$remove_image]))
+					{
+						unset($images[$remove_image]);
+					}
+
+					if ( ! empty($images))
+					{
+						Model_Products::deleteAllImages($id);
+						if (Model_Products::setProductObjects(['images' => $images], $id) === TRUE)
+						{
+							$response['status']  = 'success';
+							$response['message'] = $message_success;
+						}
+					} else {
+						if (Model_Products::deleteAllImages($id) === TRUE)
+						{
+							$response['status']  = 'success';
+							$response['message'] = $message_success;
+						}
 					}
 				}
-				else
+			}
+			else
+			{
+				$error = FALSE;
+
+				if (empty(trim(Input::get('title'))))
 				{
-					$response['message'] = trans('products.not_updated');
+					$response['message'] = trans('products.title_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('friendly_url'))))
+				{
+					$response['message'] = trans('products.url_required');
+					$error               = TRUE;
+				}
+
+				if ($error === FALSE)
+				{
+					$data = [
+						'title'            => trim(Input::get('title')),
+						'description'      => Input::get('description'),
+						'quantity'         => Input::get('quantity'),
+						'position'         => Input::get('position'),
+						'active'           => Input::get('active'),
+						'original_price'   => Input::get('original_price'),
+						'price'            => Input::get('price'),
+						'discount_price'   => Input::get('discount_price'),
+						'discount_start'   => Input::get('discount_start'),
+						'discount_end'     => Input::get('discount_end'),
+						'created_at'       => Input::get('created_at'),
+						'sizes'            => Input::get('sizes'),
+						'meta_description' => Input::get('meta_description'),
+						'meta_keywords'    => Input::get('meta_keywords'),
+					];
+
+					if (Model_Products::updateProduct($id, $data) === TRUE)
+					{
+						try
+						{
+							//Manage relations
+							if ( ! empty($_POST['categories']) && is_array($_POST['categories']))
+							{
+								Model_Products::setProductToCategory($id, $_POST['categories']);
+							}
+							//Manage Friendly URL
+							Model_Products::setURL($id, Input::get('friendly_url'));
+
+							$response['status']  = 'success';
+							$response['message'] = trans('products.updated');
+						} catch (Exception $e)
+						{
+							$response['message'] = $e;
+						}
+					}
+					else
+					{
+						$response['message'] = trans('products.not_updated');
+					}
 				}
 			}
 		}
@@ -406,4 +534,23 @@ class Module_Products extends BaseController
 
 		return response()->json($response);
 	}
+
+	private function compareArrayKeys($arr, $col, $dir = SORT_ASC)
+	{
+		if ( ! empty($arr) && ! empty($col) && is_array($arr))
+		{
+			$sort_col = array();
+			foreach ($arr as $key => $row)
+			{
+				$sort_col[$key] = $row[$col];
+			}
+
+			return array_multisort($sort_col, $dir, $arr);
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
 }

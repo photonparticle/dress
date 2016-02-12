@@ -7,7 +7,8 @@
  */
 
 return [
-	'product_upload_path' => public_path() . '/images/products/',
+	'product_upload_path' => public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products' . DIRECTORY_SEPARATOR,
+	'product_public_path' => '/images/products/',
 	'modules'             => [
 		'dashboard',
 		'users',

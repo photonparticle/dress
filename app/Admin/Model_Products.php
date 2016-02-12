@@ -190,6 +190,8 @@ class Model_Products extends Model
 						   'updated_at'     => date('Y-m-d H:i:s'),
 					   ]);
 
+			//Loop trough images
+
 			if ( ! empty($product_id) && ! empty($data) && is_array($data))
 			{
 				self::setProductObjects($data, $product_id);
@@ -249,6 +251,14 @@ class Model_Products extends Model
 				$objects['meta_keywords'] = [
 					'value' => $data['meta_keywords'],
 					'type'  => 'text',
+				];
+			}
+
+			if ( ! empty($data['images']))
+			{
+				$objects['images'] = [
+					'value' => json_encode($data['images']),
+					'type'  => 'json',
 				];
 			}
 
@@ -500,20 +510,28 @@ class Model_Products extends Model
 	 *
 	 * @return bool
 	 */
-	public static function checkURL($url) {
-		if(DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'product')->where('slug', '=', $url)->count() > 0) {
+	public static function checkURL($url)
+	{
+		if (DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'product')->where('slug', '=', $url)->count() > 0)
+		{
 			return TRUE;
-		} else {
+		}
+		else
+		{
 			return FALSE;
 		}
 	}
 
-	public static function getURL($product_id) {
+	public static function getURL($product_id)
+	{
 		$response = DB::table('seo_url')->where('type', '=', 'product')->where('object', '=', $product_id)->get();
 
-		if(!empty($response[0]['slug'])) {
+		if ( ! empty($response[0]['slug']))
+		{
 			return $response[0]['slug'];
-		} else {
+		}
+		else
+		{
 			return FALSE;
 		}
 	}
@@ -534,16 +552,74 @@ class Model_Products extends Model
 							  ->where('type', '=', 'product')
 							  ->where('object', '=', $product_id)
 							  ->update([
-										   'slug' => $url
-									   ]);
-			} else {
-				$response = DB::table('seo_url')
-							  ->insert([
 										   'slug' => $url,
-										   'type' => 'product',
-										   'object' => $product_id
 									   ]);
 			}
+			else
+			{
+				$response = DB::table('seo_url')
+							  ->insert([
+										   'slug'   => $url,
+										   'type'   => 'product',
+										   'object' => $product_id,
+									   ]);
+			}
+		}
+	}
+
+	/**
+	 * @param $images
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function storeImages($images, $product_id)
+	{
+		if ( ! empty($images) && is_array($images) && ! empty($product_id))
+		{
+			$images_update = [];
+
+			//Get current images
+			if (($current_images = self::getProductObjects($product_id, ['images'])) != FALSE)
+			{
+				$images_update = json_decode($current_images, TRUE);
+			}
+
+			//Merge images
+			array_merge($images_update, $images);
+
+			if (self::setProductObjects(
+					['images' => $images_update],
+					$product_id
+				) == TRUE
+			)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public static function deleteAllImages($product_id)
+	{
+		$query = DB::table('products_data')
+				   ->where('product_id', '=', $product_id)
+				   ->where('object', '=', 'images')
+				   ->delete();
+		if ($query)
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
 		}
 	}
 }

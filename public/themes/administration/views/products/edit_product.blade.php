@@ -309,8 +309,159 @@
                 });
             }
 
-            //DropZone File Uploader - Images Tab
-            FormDropzone.init();
+            //Images grid
+            imagesGrid();
+
+            //Images save
+            $('body').on('click', '.product-images a.save_btn', function () {
+                    var images = getImages();
+
+                    //If images found, ajax save
+                if(images) {
+                    $.ajax({
+                               type: 'post',
+                               url: '/admin/products/update/{{$product['id']}}',
+                               data: {
+                                   'images': images
+                               },
+                               headers: {
+                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                               },
+                               success: function (response) {
+                                   if (typeof response == typeof {} && response['status'] && response['message']) {
+                                       showNotification(response['status'], response['message']);
+
+                                       if(response['status'] == 'success') {
+                                           window.location.replace('/admin/products/edit/{{$product['id']}}#images');
+                                           location.reload();
+                                       }
+                                   } else {
+                                       showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                   }
+                               },
+                               error: function () {
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                               }
+
+                           });
+                }
+            });
+
+            //Image delete
+            $('body').on('click', '.product-images a.remove_btn', function () {
+                    var images = getImages(),
+                        remove_image = $(this).attr('data-image'),
+                        parent = $(this).closest('.product-image-holder');
+
+                //If images found, ajax save
+                if(images) {
+                    console.log('Remove image');
+                    $.ajax({
+                               type: 'post',
+                               url: '/admin/products/update/{{$product['id']}}',
+                               data: {
+                                   'images': images,
+                                   'remove_image': remove_image
+                               },
+                               headers: {
+                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                               },
+                               success: function (response) {
+                                   if (typeof response == typeof {} && response['status'] && response['message']) {
+                                       showNotification(response['status'], response['message']);
+                                       if(response['status'] == 'success') {
+                                           parent.remove();
+                                       }
+                                   } else {
+                                       showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                   }
+                               },
+                               error: function () {
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                               }
+
+                           });
+                }
+            });
+
+            function getImages() {
+                var image_holder = $('.product-image-holder');
+
+                if (image_holder.length > 0) {
+                    var images = {};
+                    //Loop trough images, get position, populate array
+                    image_holder.each(function () {
+                        var
+                                position = $(this).find('.input-position').val(),
+                                image = $(this).attr('data-image');
+
+                        if (image) {
+                            if (!position) {
+                                position = 0;
+                            }
+
+                            images[image] = position;
+                        }
+
+                    });
+                }
+
+                if(images) {
+                    return JSON.stringify(images);
+                } else {
+                    return false;
+                }
+            }
+
         });
+
+        $(window).resize(function () {
+            imagesGrid();
+        });
+
+        $(window).on('orientationchange', function () {
+            imagesGrid();
+        });
+
+        //Images grid
+        function imagesGrid() {
+            var image_holder = $('.product-image-holder'),
+                    images_container = $('.product-images');
+            if (images_container.length > 0) {
+                //Clear last grid
+                images_container.find('.clearfix').each(function () {
+                });
+                images_container.remove('.clearfix');
+                images_container.find('hr').each(function () {
+                    $(this).remove();
+                });
+            }
+            if (image_holder.length > 0) {
+                var images_count = 0,
+                        w_width = $(window).width(),
+                        per_line = 1;
+
+                //Mobile sizes
+                if (w_width >= 768) {
+                    per_line = 2
+                }
+                if (w_width >= 992) {
+                    per_line = 3;
+                }
+                if (w_width >= 1200) {
+                    per_line = 4;
+                }
+
+                $(image_holder).each(function () {
+                    images_count++;
+
+                    if (images_count == per_line) {
+                        $(this).after('<div class="clearfix"></div> <hr />');
+                        images_count = 0;
+                    }
+                });
+            }
+        }
+
     </script>
 @endsection

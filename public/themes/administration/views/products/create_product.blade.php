@@ -183,6 +183,12 @@
                            success: function (response) {
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['message']);
+
+                                   if(response['status'] == 'success' && response['product_id']) {
+                                       setTimeout(function () {
+                                           window.location.href = "/admin/products/edit/" + response['product_id'];
+                                       }, 2000);
+                                   }
                                } else {
                                    showNotification('error', translate('request_not_completed'), translate('contact_support'));
                                }
@@ -301,10 +307,6 @@
                     }
                 });
             }
-
-            //DropZone File Uploader - Images Tab
-//            FormDropzone.init();
-
         });
 
         $.ajaxPrefilter(function( options ) {

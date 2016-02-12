@@ -51,7 +51,7 @@
     <script src="/themes/administration/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 
             <!-- END THEME STYLES -->
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="/favicon.ico"/>
 </head>
 <!-- END HEAD -->
 <body class="page-md page-boxed page-sidebar-closed-hide-logo page-header-fixed page-container-bg-solid">
