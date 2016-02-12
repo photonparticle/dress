@@ -39,12 +39,21 @@ class Module_Tags extends BaseController
 	public function getIndex()
 	{
 		$response['pageTitle'] = trans('tags.tags');
-/**
-		$response['tags'] = Model_tags::gettags();
-*/
-		$response['blade_custom_js'] = [
-			'global/plugins/bootbox/bootbox.min',
+
+		$response['tags'] = Model_Tags::getTags();
+
+		$customCSS = [
+			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
+
+		$customJS = [
+			'global/plugins/datatables/media/js/jquery.dataTables.min',
+			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
+			'global/plugins/bootbox/bootbox.min'
+		];
+
+		$response['blade_custom_css'] = $customCSS;
+		$response['blade_custom_js']  = $customJS;
 
 		return Theme::view('tags.list', $response);
 	}
