@@ -104,6 +104,7 @@ class Model_Tags extends Model
 
 				if ($query)
 				{
+					DB::table('product_to_tag')->select('tag_id')->where('tag_id', '=', $id)->delete();
 					return TRUE;
 				}
 				else

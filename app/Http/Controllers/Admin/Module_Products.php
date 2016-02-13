@@ -121,6 +121,7 @@ class Module_Products extends BaseController
 
 		if ( ! empty($_POST))
 		{
+
 			$error = FALSE;
 
 			if (empty(trim(Input::get('title'))))
@@ -186,6 +187,13 @@ class Module_Products extends BaseController
 						{
 							//Loop trough uploaded images and insert them to the database
 							rename($this->images_path.Input::get('images_dir'), $this->images_path.$id);
+						}
+
+						//Manage tags
+						$tags = Input::get('tags');
+						if(!empty($tags)) {
+							$tags = explode(',', $tags);
+							Model_Products::saveTags($id, $tags);
 						}
 
 					} catch (Exception $e)
@@ -346,6 +354,17 @@ class Module_Products extends BaseController
 			}
 		}
 
+		//Tags
+		$tags = Model_Products::getTags($id);
+
+		if(!empty($tags) && is_array($tags)) {
+			foreach($tags as $key => $tag) {
+				$response['product']['tags'][] = $tag['title'];
+			}
+
+			$response['product']['tags'] = implode(',', $response['product']['tags']);
+		}
+
 		$response['pageTitle'] = trans('products.edit');
 
 		return Theme::view('products.edit_product', $response);
@@ -499,6 +518,15 @@ class Module_Products extends BaseController
 							}
 							//Manage Friendly URL
 							Model_Products::setURL($id, Input::get('friendly_url'));
+
+							//Manage tags
+							$tags = Input::get('tags');
+							if(!empty($tags)) {
+								$tags = explode(',', $tags);
+								Model_Products::saveTags($id, $tags);
+							} else {
+								Model_Products::removeAllTags($id);
+							}
 
 							$response['status']  = 'success';
 							$response['message'] = trans('products.updated');

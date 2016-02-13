@@ -175,7 +175,8 @@
                                'meta_keywords': $('#meta_keywords').val(),
                                'categories': $('#categories').val(),
                                'sizes': sizes,
-                               'images_dir': '{{ $images_dir }}'
+                               'images_dir': '{{ $images_dir }}',
+                               'tags': $('#tags').val()
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

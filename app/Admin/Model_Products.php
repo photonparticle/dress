@@ -622,4 +622,87 @@ class Model_Products extends Model
 			return FALSE;
 		}
 	}
+
+	/**
+	 * @param $product_id
+	 * @param $tags
+	 *
+	 * @return bool
+	 */
+	public static function saveTags($product_id, $tags)
+	{
+		if ( ! empty($product_id) && ! empty($tags) && is_array($tags))
+		{
+			self::removeAllTags($product_id);
+
+			foreach ($tags as $key => $tag)
+			{
+				$tag = trim($tag);
+
+				//Create the tag if is missing
+				$tag_id = DB::table('tags')->select(['id', 'title'])->where('title', '=', $tag)->get();
+
+				if ( ! empty($tag_id) && is_array($tag_id))
+				{
+					$tag_id = $tag_id[0]['id'];
+				}
+
+				if ( ! $tag_id)
+				{
+					$tag_id = DB::table('tags')->insertGetId(['title' => $tag, 'created_at' => date('Y-m-d H:i:s')]);
+				}
+
+				//Create the relation if doesn't exists already
+				$exists = DB::table('product_to_tag')->select(['product_id', 'tag_id'])->where('product_id', '=', $tag)->where('tag_id', '=', $tag_id)->count();
+
+				if ( ! $exists)
+				{
+					DB::table('product_to_tag')->insert(['product_id' => $product_id, 'tag_id' => $tag_id]);
+				}
+			}
+
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function getTags($product_id)
+	{
+		if(!empty($product_id)) {
+			$response = DB::table('product_to_tag')
+						->join('tags', 'product_to_tag.tag_id', '=', 'tags.id')
+						->select('product_to_tag.product_id', 'product_to_tag.tag_id', 'tags.title')
+						->where('product_to_tag.product_id', '=', $product_id)
+						->orderBy('product_to_tag.id', 'ASC')
+						->get();
+
+			if($response) {
+				return $response;
+			} else {
+				return FALSE;
+			}
+		} else {
+			return FALSE;
+		}
+	}
+
+	public static function removeAllTags($product_id) {
+		if(!empty($product_id)) {
+			//Remove all current tags
+			DB::table('product_to_tag')->where('product_id', '=', $product_id)->delete();
+
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 }
