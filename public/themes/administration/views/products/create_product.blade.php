@@ -176,7 +176,8 @@
                                'categories': $('#categories').val(),
                                'sizes': sizes,
                                'images_dir': '{{ $images_dir }}',
-                               'tags': $('#tags').val()
+                               'tags': $('#tags').val(),
+                               'manufacturer': $('#manufacturer').val(),
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

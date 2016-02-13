@@ -179,7 +179,8 @@
                                'meta_keywords': $('#meta_keywords').val(),
                                'categories': $('#categories').val(),
                                'sizes': sizes,
-                               'tags': $('#tags').val()
+                               'tags': $('#tags').val(),
+                               'manufacturer': $('#manufacturer').val(),
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

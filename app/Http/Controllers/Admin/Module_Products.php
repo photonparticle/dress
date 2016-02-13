@@ -106,6 +106,7 @@ class Module_Products extends BaseController
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 		$response['groups']     = Model_Sizes::getSizes(TRUE);
 		$response['products']   = Model_Products::getProducts(FALSE, ['title']);
+		$response['manufacturers'] = Model_Products::getManufacturers();
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -194,6 +195,12 @@ class Module_Products extends BaseController
 						if(!empty($tags)) {
 							$tags = explode(',', $tags);
 							Model_Products::saveTags($id, $tags);
+						}
+
+						//Manage manufacturer
+						$manufacturer = Input::get('manufacturer');
+						if(!empty($manufacturer)) {
+							Model_Products::setManufacturer($id, $manufacturer);
 						}
 
 					} catch (Exception $e)
@@ -365,6 +372,10 @@ class Module_Products extends BaseController
 			$response['product']['tags'] = implode(',', $response['product']['tags']);
 		}
 
+		//Manufacturer
+		$response['manufacturers'] = Model_Products::getManufacturers();
+		$response['product']['manufacturer'] = Model_Products::getManufacturer($id);
+
 		$response['pageTitle'] = trans('products.edit');
 
 		return Theme::view('products.edit_product', $response);
@@ -526,6 +537,12 @@ class Module_Products extends BaseController
 								Model_Products::saveTags($id, $tags);
 							} else {
 								Model_Products::removeAllTags($id);
+							}
+
+							//Manage manufacturer
+							$manufacturer = Input::get('manufacturer');
+							if(!empty($manufacturer)) {
+								Model_Products::setManufacturer($id, $manufacturer);
 							}
 
 							$response['status']  = 'success';

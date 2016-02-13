@@ -677,31 +677,92 @@ class Model_Products extends Model
 	 */
 	public static function getTags($product_id)
 	{
-		if(!empty($product_id)) {
+		if ( ! empty($product_id))
+		{
 			$response = DB::table('product_to_tag')
-						->join('tags', 'product_to_tag.tag_id', '=', 'tags.id')
-						->select('product_to_tag.product_id', 'product_to_tag.tag_id', 'tags.title')
-						->where('product_to_tag.product_id', '=', $product_id)
-						->orderBy('product_to_tag.id', 'ASC')
-						->get();
+						  ->join('tags', 'product_to_tag.tag_id', '=', 'tags.id')
+						  ->select('product_to_tag.product_id', 'product_to_tag.tag_id', 'tags.title')
+						  ->where('product_to_tag.product_id', '=', $product_id)
+						  ->orderBy('product_to_tag.id', 'ASC')
+						  ->get();
 
-			if($response) {
+			if ($response)
+			{
 				return $response;
-			} else {
+			}
+			else
+			{
 				return FALSE;
 			}
-		} else {
+		}
+		else
+		{
 			return FALSE;
 		}
 	}
 
-	public static function removeAllTags($product_id) {
-		if(!empty($product_id)) {
+	public static function removeAllTags($product_id)
+	{
+		if ( ! empty($product_id))
+		{
 			//Remove all current tags
 			DB::table('product_to_tag')->where('product_id', '=', $product_id)->delete();
 
 			return TRUE;
-		} else {
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public static function setManufacturer($product_id, $manufacturer_id)
+	{
+		if ( ! empty($product_id) && ! empty($manufacturer_id))
+		{
+			DB::table('product_to_manufacturer')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+
+			DB::table('product_to_manufacturer')
+			  ->insert(
+				  [
+					  'product_id'      => $product_id,
+					  'manufacturer_id' => $manufacturer_id,
+				  ]
+			  );
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public static function getManufacturers()
+	{
+		return DB::table('manufacturers')
+				 ->select(['id', 'title'])
+				 ->orderBy('title', 'ASC')
+				 ->get();
+	}
+
+	public static function getManufacturer($product_id)
+	{
+		if ( ! empty($product_id))
+		{
+			$response = DB::table('product_to_manufacturer')
+					 ->select(['product_id', 'manufacturer_id'])
+					 ->where('product_id', '=', $product_id)
+					 ->get();
+
+			if($response) {
+				return $response[0]['manufacturer_id'];
+			} else {
+				return FALSE;
+			}
+		}
+		else
+		{
 			return FALSE;
 		}
 	}
