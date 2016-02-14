@@ -14,9 +14,9 @@
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
                                 <div class="actions">
-                                    <a href="#" class="btn btn-success add_manufacturer" title="{{trans('orders.empty')}}">
-                                        <i class="fa fa-plus"></i>
-                                        {{trans('orders.empty')}}
+                                    <a href="#" class="btn btn-info add_manufacturer" title="{{trans('orders.orders_list')}}">
+                                        <i class="fa fa-arrow-left"></i>
+                                        {{trans('orders.orders_list')}}
                                     </a>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
 														<div class="portlet-body">
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 {{trans('orders.order')}}:
+																	 {{trans('orders.order_n')}}:
 																</div>
 																<div class="col-md-7 value">
 																	 12313232 <span class="label label-info label-sm">
@@ -70,14 +70,6 @@
 																	 $175.25
 																</div>
 															</div>
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.payment_info')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 CreditCard
-																</div>
-															</div>
 														</div>
 													</div>
 												</div>
@@ -107,14 +99,6 @@
 																</div>
 																<div class="col-md-7 value">
 																	 jhon@doe.com
-																</div>
-															</div>
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.state')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 New York
 																</div>
 															</div>
 															<div class="row static-info">

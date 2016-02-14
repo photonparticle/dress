@@ -15,8 +15,8 @@ return [
     'order'                     => 'Поръчка',
     'order_n'                   => 'Номер на поръчка',
     'order_d_t'                 => 'Дата и час на поръчка',
+    'orders_list'               => 'Списък с поръчки',
     'order_status'              => 'Статус на поръчка',
-    'payment_info'              => 'Инфо',
     // CUSTOMER
     'name'                      => 'Име',
     'email'                     => 'Email',
@@ -26,5 +26,4 @@ return [
     'sub_total'                 => 'Стойност',
     'shipping'                  => 'Цена на доставка',
     'grand_total'               => 'Обща сума',
-    'cc'                        => 'Карта по сметка',
 ];
