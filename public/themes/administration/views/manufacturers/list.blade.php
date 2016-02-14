@@ -10,7 +10,7 @@
                         <div class="portlet light">
                             <div class="portlet-title tabbable-line">
                                 <div class="caption caption-md">
-                                    <i class="fa fa-arrows"></i>
+                                    <i class="fa fa-link"></i>
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
                                 <div class="actions">
