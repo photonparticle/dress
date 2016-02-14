@@ -13,7 +13,8 @@ return [
     'shipping_addr'             => 'Адрес на доставка',
     'shopping_cart'             => 'Продукти',
     'order'                     => 'Поръчка',
-    'order_d_t'                 => 'Дата и час на поръчката',
+    'order_n'                   => 'Номер на поръчка',
+    'order_d_t'                 => 'Дата и час на поръчка',
     'order_status'              => 'Статус на поръчка',
     'payment_info'              => 'Инфо',
     // CUSTOMER

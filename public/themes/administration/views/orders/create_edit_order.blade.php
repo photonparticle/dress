@@ -38,7 +38,7 @@
 														<div class="portlet-body">
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 {{trans('orders.order')}} #:
+																	 {{trans('orders.order')}}:
 																</div>
 																<div class="col-md-7 value">
 																	 12313232 <span class="label label-info label-sm">
@@ -47,7 +47,7 @@
 															</div>
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 {{trans('orders._d_t')}}:
+																	 {{trans('orders.order_d_t')}}:
 																</div>
 																<div class="col-md-7 value">
 																	 Dec 27, 2013 7:16:25 PM
