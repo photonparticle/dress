@@ -30,10 +30,6 @@
 															<div class="caption">
 																<i class="fa fa-shopping-cart"></i>{{trans('orders.order_details')}}
 															</div>
-															<div class="actions">
-																<a href="javascript:;" class="btn btn-default btn-sm">
-																<i class="fa fa-pencil"></i> Edit </a>
-															</div>
 														</div>
 														<div class="portlet-body">
 															<div class="row static-info">
@@ -79,10 +75,6 @@
 															<div class="caption">
 																<i class="fa fa-shopping-cart"></i>{{trans('orders.customer_info')}}
 															</div>
-															<div class="actions">
-																<a href="javascript:;" class="btn btn-default btn-sm">
-																<i class="fa fa-pencil"></i> Edit </a>
-															</div>
 														</div>
 														<div class="portlet-body">
 															<div class="row static-info">
@@ -120,10 +112,6 @@
 															<div class="caption">
 																<i class="fa fa-shopping-cart"></i>{{trans('orders.shipping_addr')}}
 															</div>
-															<div class="actions">
-																<a href="javascript:;" class="btn btn-default btn-sm">
-																<i class="fa fa-pencil"></i> Edit </a>
-															</div>
 														</div>
 														<div class="portlet-body">
 															<div class="row static-info">
@@ -147,10 +135,6 @@
 														<div class="portlet-title">
 															<div class="caption">
 																<i class="fa fa-shopping-cart"></i>{{trans('orders.shopping_cart')}}
-															</div>
-															<div class="actions">
-																<a href="javascript:;" class="btn btn-default btn-sm">
-																<i class="fa fa-pencil"></i> Edit </a>
 															</div>
 														</div>
 													</div>
