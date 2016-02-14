@@ -38,7 +38,7 @@
 														<div class="portlet-body">
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 Order #:
+																	 {{trans('orders.order')}} #:
 																</div>
 																<div class="col-md-7 value">
 																	 12313232 <span class="label label-info label-sm">
@@ -47,7 +47,7 @@
 															</div>
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 Order Date &amp; Time:
+																	 {{trans('orders._d_t')}}:
 																</div>
 																<div class="col-md-7 value">
 																	 Dec 27, 2013 7:16:25 PM
@@ -55,7 +55,7 @@
 															</div>
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 Order Status:
+																	 {{trans('orders.order_status')}}:
 																</div>
 																<div class="col-md-7 value">
 																	<span class="label label-success">
@@ -64,7 +64,7 @@
 															</div>
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 Grand Total:
+																	 {{trans('orders.grand_total')}}:
 																</div>
 																<div class="col-md-7 value">
 																	 $175.25
@@ -72,10 +72,10 @@
 															</div>
 															<div class="row static-info">
 																<div class="col-md-5 name">
-																	 Payment Information:
+																	 {{trans('orders.payment_info')}}:
 																</div>
 																<div class="col-md-7 value">
-																	 Credit Card
+																	 CreditCard
 																</div>
 															</div>
 														</div>
