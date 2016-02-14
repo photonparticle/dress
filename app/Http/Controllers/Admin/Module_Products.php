@@ -103,10 +103,11 @@ class Module_Products extends BaseController
 
 		$response['images_dir'] = uniqid('product_');
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['groups']     = Model_Sizes::getSizes(TRUE);
-		$response['products']   = Model_Products::getProducts(FALSE, ['title']);
+		$response['categories']    = Model_Categories::getCategory(FALSE, ['title']);
+		$response['groups']        = Model_Sizes::getSizes(TRUE);
+		$response['products']      = Model_Products::getProducts(FALSE, ['title']);
 		$response['manufacturers'] = Model_Products::getManufacturers();
+		$response['colors']        = Model_Products::getColors();
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -173,6 +174,7 @@ class Module_Products extends BaseController
 					'sizes'            => Input::get('sizes'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
+					'related_products' => Input::get('related_products'),
 					'images'           => $images_array,
 				];
 
@@ -180,6 +182,12 @@ class Module_Products extends BaseController
 				{
 					try
 					{
+						//Manage categories relations
+						if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
+						{
+							Model_Products::setProductToCategory($id, Input::get('categories'));
+						}
+
 						//Manage Friendly URL
 						Model_Products::setURL($id, Input::get('friendly_url'));
 
@@ -192,15 +200,23 @@ class Module_Products extends BaseController
 
 						//Manage tags
 						$tags = Input::get('tags');
-						if(!empty($tags)) {
+						if ( ! empty($tags))
+						{
 							$tags = explode(',', $tags);
 							Model_Products::saveTags($id, $tags);
 						}
 
 						//Manage manufacturer
 						$manufacturer = Input::get('manufacturer');
-						if(!empty($manufacturer)) {
+						if ( ! empty($manufacturer))
+						{
 							Model_Products::setManufacturer($id, $manufacturer);
+						}
+
+						//Manage colors
+						if ( ! empty(Input::get('colors')) && is_array(Input::get('colors')))
+						{
+							Model_Products::setColors($id, Input::get('colors'));
 						}
 
 					} catch (Exception $e)
@@ -313,6 +329,8 @@ class Module_Products extends BaseController
 		$response['related_categories'] = Model_Products::getProductToCategory($id);
 		$response['products']           = Model_Products::getProducts(FALSE, ['title']);
 		$response['groups']             = Model_Sizes::getSizes(TRUE);
+		$response['colors']             = Model_Products::getColors();
+		$response['related_colors']     = Model_Products::getColor($id);
 
 		$product = Model_Products::getProducts($id);
 
@@ -364,8 +382,10 @@ class Module_Products extends BaseController
 		//Tags
 		$tags = Model_Products::getTags($id);
 
-		if(!empty($tags) && is_array($tags)) {
-			foreach($tags as $key => $tag) {
+		if ( ! empty($tags) && is_array($tags))
+		{
+			foreach ($tags as $key => $tag)
+			{
 				$response['product']['tags'][] = $tag['title'];
 			}
 
@@ -373,8 +393,15 @@ class Module_Products extends BaseController
 		}
 
 		//Manufacturer
-		$response['manufacturers'] = Model_Products::getManufacturers();
+		$response['manufacturers']           = Model_Products::getManufacturers();
 		$response['product']['manufacturer'] = Model_Products::getManufacturer($id);
+
+		//Related products
+		if ( ! empty($response['product']['related_products']))
+		{
+			$response['related_products'] = json_decode($response['product']['related_products'], TRUE);
+			unset($response['product']['related_products']);
+		}
 
 		$response['pageTitle'] = trans('products.edit');
 
@@ -458,7 +485,9 @@ class Module_Products extends BaseController
 				if (is_array($images))
 				{
 					$images = array_merge($images_array, $images);
-				} else {
+				}
+				else
+				{
 					$images = $images_array;
 				}
 
@@ -516,6 +545,7 @@ class Module_Products extends BaseController
 						'sizes'            => Input::get('sizes'),
 						'meta_description' => Input::get('meta_description'),
 						'meta_keywords'    => Input::get('meta_keywords'),
+						'related_products' => Input::get('related_products'),
 					];
 
 					if (Model_Products::updateProduct($id, $data) === TRUE)
@@ -523,25 +553,29 @@ class Module_Products extends BaseController
 						try
 						{
 							//Manage relations
-							if ( ! empty($_POST['categories']) && is_array($_POST['categories']))
+							if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
 							{
-								Model_Products::setProductToCategory($id, $_POST['categories']);
+								Model_Products::setProductToCategory($id, Input::get('categories'));
 							}
 							//Manage Friendly URL
 							Model_Products::setURL($id, Input::get('friendly_url'));
 
 							//Manage tags
 							$tags = Input::get('tags');
-							if(!empty($tags)) {
+							if ( ! empty($tags))
+							{
 								$tags = explode(',', $tags);
 								Model_Products::saveTags($id, $tags);
-							} else {
+							}
+							else
+							{
 								Model_Products::removeAllTags($id);
 							}
 
 							//Manage manufacturer
 							$manufacturer = Input::get('manufacturer');
-							if(!empty($manufacturer)) {
+							if ( ! empty($manufacturer))
+							{
 								Model_Products::setManufacturer($id, $manufacturer);
 							}
 

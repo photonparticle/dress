@@ -16,7 +16,7 @@
         </div>
         <div class="clearfix"></div>
 
-        <div class="col-xs-12 margin-top-20 categories-container">
+        <div class="col-xs-12 margin-top-20">
             <label for="manufacturer" class="control-label col-xs-12 default no-padding">
                 {{trans('products.manufacturer')}}
             </label>
@@ -34,7 +34,21 @@
         </div>
         <div class="clearfix"></div>
 
-        <div class="col-xs-12 margin-top-20 categories-container">
+        <div class="col-xs-12 margin-top-20">
+            <label for="colors" class="control-label col-xs-12 default no-padding">
+                {{trans('products.colors')}}
+            </label>
+            <select id="colors" name="colors[]" class="form-control select2me input-lg no-padding" multiple="multiple" data-placeholder="{{trans('products.select_colors')}}">
+                @if(isset($colors) && is_array($colors))
+                    @foreach($colors as $key => $color)
+                        <option value="{{$color['id']}}" @if(!empty($related_colors) && in_array($color['id'], $related_colors)) selected="selected" @endif>{{$color['title']}}</option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="col-xs-12 margin-top-20">
             <label for="related_products" class="control-label col-xs-12 default no-padding">
                 {{trans('products.related_products')}}
             </label>

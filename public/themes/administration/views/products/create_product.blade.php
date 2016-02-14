@@ -174,10 +174,12 @@
                                'meta_description': $('#meta_description').val(),
                                'meta_keywords': $('#meta_keywords').val(),
                                'categories': $('#categories').val(),
+                               'related_products': $('#related_products').val(),
                                'sizes': sizes,
                                'images_dir': '{{ $images_dir }}',
                                'tags': $('#tags').val(),
                                'manufacturer': $('#manufacturer').val(),
+                               'colors': $('#colors').val(),
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

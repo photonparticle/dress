@@ -177,10 +177,12 @@
                                'friendly_url': slug,
                                'meta_description': $('#meta_description').val(),
                                'meta_keywords': $('#meta_keywords').val(),
+                               'related_products': $('#related_products').val(),
                                'categories': $('#categories').val(),
                                'sizes': sizes,
                                'tags': $('#tags').val(),
                                'manufacturer': $('#manufacturer').val(),
+                               'colors': $('#colors').val(),
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

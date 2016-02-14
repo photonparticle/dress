@@ -49,6 +49,4 @@ Route::group(
 );
 
 //Image upload
-Route::get('/', ['as' => 'upload', 'uses' => 'ImageController@getUpload']);
 Route::post('upload', ['as' => 'upload-post', 'uses' =>'ImageController@postUpload']);
-Route::post('upload/delete', ['as' => 'upload-remove', 'uses' =>'ImageController@deleteUpload']);

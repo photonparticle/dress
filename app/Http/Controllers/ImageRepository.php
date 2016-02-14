@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Logic\Image;
+namespace App\Http\Controllers;
 
 use App\Admin\Image;
 use App\Admin\Model_Products;

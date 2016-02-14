@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Logic\Image\ImageRepository;
+use App\Http\Controllers\Admin\BaseController;
+use App\Http\Controllers\ImageRepository;
 use Illuminate\Support\Facades\Input;
 
-class ImageController extends Controller
+class ImageController extends BaseController
 {
 	protected $image;
 
@@ -14,31 +15,11 @@ class ImageController extends Controller
 		$this->image = $imageRepository;
 	}
 
-	public function getUpload()
-	{
-		return view('pages.upload');
-	}
-
 	public function postUpload()
 	{
 		$photo = Input::all();
 		$response = $this->image->upload($photo);
 		return $response;
 
-	}
-
-	public function deleteUpload()
-	{
-
-		$filename = Input::get('id');
-
-		if(!$filename)
-		{
-			return 0;
-		}
-
-		$response = $this->image->delete( $filename );
-
-		return $response;
 	}
 }

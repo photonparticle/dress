@@ -238,6 +238,14 @@ class Model_Products extends Model
 				];
 			}
 
+			if ( ! empty($data['related_products']) && is_array($data['related_products']))
+			{
+				$objects['related_products'] = [
+					'value' => json_encode($data['related_products']),
+					'type'  => 'json',
+				];
+			}
+
 			if ( ! empty($data['meta_description']))
 			{
 				$objects['meta_description'] = [
@@ -751,12 +759,91 @@ class Model_Products extends Model
 		if ( ! empty($product_id))
 		{
 			$response = DB::table('product_to_manufacturer')
-					 ->select(['product_id', 'manufacturer_id'])
-					 ->where('product_id', '=', $product_id)
-					 ->get();
+						  ->select(['product_id', 'manufacturer_id'])
+						  ->where('product_id', '=', $product_id)
+						  ->get();
 
-			if($response) {
+			if ($response)
+			{
 				return $response[0]['manufacturer_id'];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public static function getColors()
+	{
+		return DB::table('colors')
+				 ->select(['id', 'title'])
+				 ->orderBy('title', 'ASC')
+				 ->get();
+	}
+
+	/**
+	 * @param $product_id
+	 * @param $colors
+	 *
+	 * @return bool
+	 */
+	public static function setColors($product_id, $colors)
+	{
+		if ( ! empty($product_id) && $product_id > 0 && ! empty($colors) && is_array($colors))
+		{
+
+			foreach($colors as $color_id) {
+				$insertColors[] = [
+					'product_id' => $product_id,
+					'color_id' => $color_id
+				];
+			}
+
+			//Remove current relations
+			DB::table('product_to_color')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+
+			DB::table('product_to_color')
+			  ->insert($insertColors);
+
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function getColor($product_id)
+	{
+		if ( ! empty($product_id) && $product_id > 0)
+		{
+			$query = DB::table('product_to_color')
+						  ->select('product_to_color.color_id')
+						  ->where('product_to_color.product_id', '=', $product_id)
+						  ->orderBy('product_to_color.id', 'ASC')
+						  ->get();
+
+			if($query && is_array($query)) {
+				foreach($query as $key => $value) {
+					$response[] = $value['color_id'];
+				}
+
+				return $response;
 			} else {
 				return FALSE;
 			}
