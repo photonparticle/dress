@@ -80,8 +80,6 @@
             </select>
         </div>
         <div class="clearfix"></div>
-
-        
     </form>
 </div>
 <!-- END Relationships TAB -->

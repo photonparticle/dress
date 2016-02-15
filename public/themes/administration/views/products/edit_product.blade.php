@@ -79,7 +79,6 @@
                                         {{trans('global.cancel')}} </a>
 
                                 </div>
-                                    
                             </div>
                         </div>
                     </div>

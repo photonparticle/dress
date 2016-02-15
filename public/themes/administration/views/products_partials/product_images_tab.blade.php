@@ -73,9 +73,5 @@
     </div>
 
     <div class="clearfix"></div>
-
-    
-
-
 </div>
 <!-- END DROPZONE TAB -->
