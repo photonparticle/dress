@@ -81,12 +81,7 @@
         </div>
         <div class="clearfix"></div>
 
-        <div class="margin-top-20">
-            <button class="btn green-haze save_product">
-                {{trans('global.save')}} </button>
-            <a href="/admin/products" class="btn default">
-                {{trans('global.cancel')}} </a>
-        </div>
+        
     </form>
 </div>
 <!-- END Relationships TAB -->
