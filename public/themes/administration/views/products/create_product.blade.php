@@ -61,6 +61,9 @@
 
                                     {{--Images tab--}}
                                     @include('products_partials.product_images_tab')
+                                    
+                                <div clas="clearfix" ></div>hr
+                                    <div
 
                                 </div>
                             </div>
