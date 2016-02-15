@@ -9,7 +9,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="portlet light">
                             <div class="portlet-title tabbable-line">
-                                <div class="caption caption-md">
+                                <div class="caption caption-lg margin-top-10">
                                     <i class="fa fa-arrows"></i>
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
@@ -218,7 +218,7 @@
                                        'title': $('#table_title').val(),
                                        'cols': cols,
                                        'rows': rows,
-                                       'image_name': '{{$image_name . '.png' or ''}}',
+                                       'image_name': '@if(!empty($image_name)){{$image_name . ".png"}}@endif',
                                        'id': '{{$table['id'] or ''}}'
                                    },
                                    headers: {
