@@ -21,8 +21,8 @@
 
                                 </div>
                                 <div class="clearfix"></div>
-                                <ul class="nav nav-tabs">
-                                    <li class="active pull-left">
+                                <ul class="nav nav-tabs pull-left">
+                                    <li class="active">
                                         <a href="#main_info" data-toggle="tab">{{trans('products.main_info')}}</a>
                                     </li>
                                     <li>

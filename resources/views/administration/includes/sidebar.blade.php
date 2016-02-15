@@ -87,6 +87,26 @@
                 </ul>
             </li>
 
+            <li class="@if(isset($active_module) && $active_module == 'pages') active @endif">
+                <a href="javascript:;">
+                    <i class="fa fa-file-text-o"></i>
+                    <span class="title">{{trans('global.pages')}}</span>
+                    <span class="arrow "></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="/admin/pages">
+                            {{trans('global.pages_list')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/pages/create">
+                            {{trans('global.create_pages')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="@if(isset($active_module) && $active_module == 'modules') active @endif">
                 <a href="/admin/modules">
                     <i class="fa fa-cogs"></i>

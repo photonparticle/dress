@@ -38,7 +38,7 @@ class Module_Pages extends BaseController
 	 */
 	public function getIndex()
 	{
-		$response['pageTitle'] = trans('pages.pages');
+		$response['pageTitle'] = trans('global.pages');
 
 		$response['blade_custom_css'] = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -61,12 +61,14 @@ class Module_Pages extends BaseController
 		$response['pageTitle'] = trans('pages.create_page');
 
 		$response['blade_custom_css'] = [
-			'global/plugins/dropzone/css/dropzone',
+			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
+			'global/plugins/bootstrap-summernote/summernote',
 		];
 
 		$response['blade_custom_js'] = [
-			'global/plugins/dropzone/dropzone',
-			'admin/pages/scripts/form-dropzone',
+			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
+			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
+			'global/plugins/bootstrap-summernote/summernote.min',
 		];
 
 		return Theme::view('pages.create_edit_page', $response);

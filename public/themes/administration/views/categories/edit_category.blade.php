@@ -13,7 +13,7 @@
                                     <i class="fa fa-tasks"></i>
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
-                                <ul class="nav nav-tabs">
+                                <ul class="nav nav-tabs pull-left">
                                     <li class="active">
                                         <a href="#main_info" data-toggle="tab">{{trans('categories.main_info')}}</a>
                                     </li>
