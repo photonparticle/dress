@@ -35,6 +35,7 @@ Route::group(
 		Route::controller('/categories', 'Module_Categories');
 		Route::controller('/products', 'Module_Products');
         Route::controller('/orders', 'Module_Orders');
+		Route::controller('/pages', 'Module_Pages');
 
 		//Modules routes
 		Route::controller('/modules', 'Modules');

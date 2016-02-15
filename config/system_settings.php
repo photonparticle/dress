@@ -16,6 +16,7 @@ return [
 		'users',
 		'categories',
 		'products',
+		'pages'
 	],
 	'plug-ins'            => [
 		'slider'        => [
