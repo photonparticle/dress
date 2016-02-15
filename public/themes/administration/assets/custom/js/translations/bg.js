@@ -3,6 +3,7 @@
 var translateData = {
 	'request_not_completed': 'Невалидна заявка',
 	'contact_support': 'Свържете се с нас на office@dressplace.net',
+	'title_required': 'Заглавието е задължително',
 	'dataTable': {
 		"sProcessing":   "Обработка на резултатите...",
 		"sLengthMenu":   "Показване на _MENU_ резултата",

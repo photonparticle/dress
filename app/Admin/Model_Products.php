@@ -800,10 +800,11 @@ class Model_Products extends Model
 		if ( ! empty($product_id) && $product_id > 0 && ! empty($colors) && is_array($colors))
 		{
 
-			foreach($colors as $color_id) {
+			foreach ($colors as $color_id)
+			{
 				$insertColors[] = [
 					'product_id' => $product_id,
-					'color_id' => $color_id
+					'color_id'   => $color_id,
 				];
 			}
 
@@ -833,18 +834,101 @@ class Model_Products extends Model
 		if ( ! empty($product_id) && $product_id > 0)
 		{
 			$query = DB::table('product_to_color')
-						  ->select('product_to_color.color_id')
-						  ->where('product_to_color.product_id', '=', $product_id)
-						  ->orderBy('product_to_color.id', 'ASC')
-						  ->get();
+					   ->select('product_to_color.color_id')
+					   ->where('product_to_color.product_id', '=', $product_id)
+					   ->orderBy('product_to_color.id', 'ASC')
+					   ->get();
 
-			if($query && is_array($query)) {
-				foreach($query as $key => $value) {
+			if ($query && is_array($query))
+			{
+				$response = [];
+				foreach ($query as $key => $value)
+				{
 					$response[] = $value['color_id'];
 				}
 
 				return $response;
-			} else {
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public static function getMaterials()
+	{
+		return DB::table('materials')
+				 ->select(['id', 'title'])
+				 ->orderBy('title', 'ASC')
+				 ->get();
+	}
+
+	/**
+	 * @param $product_id
+	 * @param $material_id
+	 *
+	 * @return bool
+	 */
+	public static function setMaterial($product_id, $material_id)
+	{
+		if ( ! empty($product_id) && $product_id > 0 && ! empty($material_id))
+		{
+			//Remove current relations
+			DB::table('product_to_material')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+
+			//Insert new relation
+			DB::table('product_to_material')
+			  ->insert([
+						   'product_id'  => $product_id,
+						   'material_id' => $material_id,
+					   ]
+			  );
+
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function getMaterial($product_id)
+	{
+		if ( ! empty($product_id) && $product_id > 0)
+		{
+			$query = DB::table('product_to_material')
+					   ->select('product_to_material.material_id')
+					   ->where('product_to_material.product_id', '=', $product_id)
+					   ->orderBy('product_to_material.id', 'ASC')
+					   ->get();
+
+			if ($query && is_array($query))
+			{
+				$response = [];
+				foreach ($query as $key => $value)
+				{
+					$response[] = $value['material_id'];
+				}
+
+				return $response;
+			}
+			else
+			{
 				return FALSE;
 			}
 		}

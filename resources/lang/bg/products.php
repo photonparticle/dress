@@ -51,6 +51,8 @@ return [
 	'select_manufacturer'           => 'Избери производител',
 	'colors'                        => 'Цветове',
 	'select_colors'                 => 'Избери цветове',
+	'material'                      => 'Материя',
+	'select_material'               => 'Избери материя',
 	''                              => '',
 	''                              => '',
 	''                              => '',

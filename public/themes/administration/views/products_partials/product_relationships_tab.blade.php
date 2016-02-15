@@ -49,6 +49,21 @@
         <div class="clearfix"></div>
 
         <div class="col-xs-12 margin-top-20">
+            <label for="material" class="control-label col-xs-12 default no-padding">
+                {{trans('products.material')}}
+            </label>
+            <select id="material" name="material" class="form-control select2me input-lg no-padding" data-placeholder="{{trans('products.select_material')}}">
+                <option value="">{{trans('products.select_material')}}</option>
+                @if(isset($materials) && is_array($materials))
+                    @foreach($materials as $key => $material)
+                        <option value="{{$material['id']}}" @if(!empty($related_materials) && in_array($color['id'], $related_materials)) selected="selected" @endif>{{$material['title']}}</option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="col-xs-12 margin-top-20">
             <label for="related_products" class="control-label col-xs-12 default no-padding">
                 {{trans('products.related_products')}}
             </label>

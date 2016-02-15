@@ -35,16 +35,16 @@ class ImageRepository
 		$this->temp_name = $form_data['temp_key'];
 		$this->module    = $form_data['module'];
 
-		$originalName           = $photo->getClientOriginalName();
-		$originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - 4);
-
-		$filename         = basename($originalNameWithoutExt);
-		$allowed_filename = $filename;
-
-		$filenameExt = $allowed_filename.'.jpg';
-
 		if ( ! empty($this->module) && $this->module == 'products')
 		{
+
+			$originalName           = $photo->getClientOriginalName();
+			$originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - 4);
+
+			$filename         = basename($originalNameWithoutExt);
+
+			$filenameExt = $filename.'.jpg';
+
 			$uploadSuccess1 = $this->original($photo, $filenameExt);
 
 			$uploadSuccess2 = $this->sm_icon($photo, $filenameExt);
@@ -63,6 +63,23 @@ class ImageRepository
 					];
 					Model_Products::storeImages($image, $form_data['target']);
 				}
+
+				return Response::json([
+										  'error'   => TRUE,
+										  'message' => 'Server error while uploading',
+										  'code'    => 500,
+									  ], 500);
+
+			}
+		} elseif(!empty($this->module) && $this->module == 'tables') {
+			$filename         = basename($this->temp_name);
+			$filenameExt = $filename.'.png';
+
+			$uploadSuccess1 = $this->table_img($photo, $filenameExt);
+
+			//If image is uploaded and thumbnails created
+			if ( ! $uploadSuccess1)
+			{
 
 				return Response::json([
 										  'error'   => TRUE,
@@ -188,49 +205,32 @@ class ImageRepository
 		return $image;
 	}
 
+
 	/**
-	 * Delete Image From Session folder, based on original filename
+	 * Table Image
 	 */
-	public function delete($originalFilename)
+	public function table_img($photo, $filename)
 	{
+		$manager = new ImageManager();
+		$dir     = Config::get('system_settings.tables_upload_path');
 
-		$full_size_dir = Config::get('images.full_size');
-		$icon_size_dir = Config::get('images.icon_size');
-		$dir           = Config::get('system_settings.product_upload_path');
-
-		$sessionImage = Image::where('original_name', 'like', $originalFilename)->first();
-
-		if (empty($sessionImage))
+		if ( ! is_dir($dir))
 		{
-			return Response::json([
-									  'error' => TRUE,
-									  'code'  => 400,
-								  ], 400);
-
+			mkdir($dir);
 		}
 
-		$full_path1 = $dir.$full_size_dir.$sessionImage->filename.'.jpg';
-		$full_path2 = $dir.$icon_size_dir.$sessionImage->filename.'.jpg';
+		$background = $manager->canvas(256, 256);
 
-		if (File::exists($full_path1))
+		$image = $manager->make($photo)->resize(intval(Config::get('images.table_image_size')), NULL, function ($constraint)
 		{
-			File::delete($full_path1);
-		}
+			$constraint->aspectRatio();
+			$constraint->upsize();
+		});
 
-		if (File::exists($full_path2))
-		{
-			File::delete($full_path2);
-		}
+		$background->insert($image, 'center');
+		$background->save($dir.$filename);
 
-		if ( ! empty($sessionImage))
-		{
-			$sessionImage->delete();
-		}
-
-		return Response::json([
-								  'error' => FALSE,
-								  'code'  => 200,
-							  ], 200);
+		return $image;
 	}
 
 	function sanitize($string, $force_lowercase = TRUE, $anal = FALSE)

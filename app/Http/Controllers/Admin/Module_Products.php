@@ -108,6 +108,7 @@ class Module_Products extends BaseController
 		$response['products']      = Model_Products::getProducts(FALSE, ['title']);
 		$response['manufacturers'] = Model_Products::getManufacturers();
 		$response['colors']        = Model_Products::getColors();
+		$response['materials']        = Model_Products::getMaterials();
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -211,6 +212,13 @@ class Module_Products extends BaseController
 						if ( ! empty($manufacturer))
 						{
 							Model_Products::setManufacturer($id, $manufacturer);
+						}
+
+						//Manage material
+						$material = Input::get('manufacturer');
+						if ( ! empty($material))
+						{
+							Model_Products::setMaterial($id, $material);
 						}
 
 						//Manage colors
@@ -396,6 +404,10 @@ class Module_Products extends BaseController
 		$response['manufacturers']           = Model_Products::getManufacturers();
 		$response['product']['manufacturer'] = Model_Products::getManufacturer($id);
 
+		//Material
+		$response['materials']           = Model_Products::getMaterials();
+		$response['product']['material'] = Model_Products::getMaterial($id);
+
 		//Related products
 		if ( ! empty($response['product']['related_products']))
 		{
@@ -577,6 +589,13 @@ class Module_Products extends BaseController
 							if ( ! empty($manufacturer))
 							{
 								Model_Products::setManufacturer($id, $manufacturer);
+							}
+
+							//Manage material
+							$material = Input::get('manufacturer');
+							if ( ! empty($material))
+							{
+								Model_Products::setMaterial($id, $material);
 							}
 
 							$response['status']  = 'success';
