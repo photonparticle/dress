@@ -5,7 +5,7 @@
 <div class="portlet box blue-madison">
     <div class="portlet-title">
         <div class="caption">
-            <i class="fa fa-user"></i>{{$pageTitle}}
+            <i class="fa fa-tags"></i>{{$pageTitle}}
         </div>
     </div>
     <div class="portlet-body">

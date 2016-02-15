@@ -1,7 +1,7 @@
 <div class="portlet box blue">
     <div class="portlet-title">
         <div class="caption">
-            <i class="fa fa-arrows-v"></i> {{trans('materials.material')}} @if(!empty($material['title']))<span>{{$material['title']}}</span> @else <span></span>@endif
+            <i class="fa fa-info-circle"></i> {{trans('materials.material')}} @if(!empty($material['title']))<span>{{$material['title']}}</span> @else <span></span>@endif
         </div>
         <div class="tools">
             <a href="javascript:;" class="collapse" data-original-title="" title="">

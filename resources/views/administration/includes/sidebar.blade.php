@@ -80,7 +80,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/products/orders/create">
+                        <a href="/admin/orders/create">
                             {{trans('global.create_order')}}
                         </a>
                     </li>
