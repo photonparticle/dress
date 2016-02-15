@@ -45,6 +45,7 @@ Route::group(
 		Route::controller('/module/materials', 'Module_Materials');
         Route::controller('/module/tags', 'Module_Tags');
         Route::controller('/module/tables', 'Module_Tables');
+        Route::controller('/module/sliders', 'Module_Sliders');
 	}
 );
 
