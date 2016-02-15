@@ -13,8 +13,9 @@
                                     <i class="fa fa-archive"></i>
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
+                                <div class="clearfix"></div>
                                 <ul class="nav nav-tabs">
-                                    <li class="active">
+                                    <li class="active pull-left">
                                         <a href="#main_info" data-toggle="tab">{{trans('products.main_info')}}</a>
                                     </li>
                                     <li>
@@ -86,6 +87,7 @@
 
             //Init WYSIWYG
             $('#description').summernote({height: 300});
+            $('#dimensions_table').summernote({height: 300});
 
             //Init spinner
             $('#position').spinner({value: 0, min: 0, max: 100, step: 1.0});
@@ -183,6 +185,7 @@
                                'tags': $('#tags').val(),
                                'manufacturer': $('#manufacturer').val(),
                                'colors': $('#colors').val(),
+                               'dimensions_table': $('#dimensions_table').code(),
                            },
                            headers: {
                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -205,6 +208,7 @@
                        });
             });
 
+            //Sizes group change
             $('body').on('change', '#sizes_group', function () {
                 var
                         group = $(this).val(),
@@ -221,6 +225,34 @@
                                    if (response) {
                                        if (holder.length > 0) {
                                            holder.html(response);
+                                       }
+                                   }
+                               },
+                               error: function () {
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                               }
+
+                           });
+                }
+            });
+
+            //Dimensions table change
+            $('body').on('change', '#load_table_template', function () {
+                var id = $(this).val(),
+                        holder = $('#dimensions_table');
+
+                if (id) {
+                    $.ajax({
+                               type: 'get',
+                               url: '/admin/products/show/render_table/' + id,
+                               headers: {
+                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                               },
+                               success: function (response) {
+                                   if (response) {
+                                       if (holder.length > 0) {
+                                           console.log('Set response');
+                                           holder.code(response);
                                        }
                                    }
                                },

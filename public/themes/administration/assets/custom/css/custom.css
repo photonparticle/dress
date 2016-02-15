@@ -39,5 +39,32 @@ label.default {
 
 textarea
 {
-    resize:vertical!important
+    resize:vertical !important
+}
+
+table.dimensions-table {
+	border-collapse: collapse;
+}
+
+table.dimensions-table th,
+table.dimensions-table td.title {
+	font-weight: bold;
+	color: #00a0e3;
+}
+
+table.dimensions-table th.image {
+	width: 148px;
+	border: none;
+}
+
+table.dimensions-table th.image img{
+	max-width: 128px;
+	margin: 0 10px;
+}
+
+table.dimensions-table th,
+table.dimensions-table td {
+	border: 1px solid #ccc;
+	text-align: center;
+	line-height: 24px;
 }

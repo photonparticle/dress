@@ -56,42 +56,6 @@ class BaseController extends Controller
 		}
 	}
 
-	/**
-	 * Dumps any variable
-	 *
-	 * @param $param - mixed
-	 */
-	public function d($param)
-	{
-		print '<pre>';
-		print_r($param);
-	}
-
-	/**
-	 * Dumps any variable and exit
-	 *
-	 * @param $param - mixed
-	 */
-	public function dd($param)
-	{
-		$this->d($param);
-		exit;
-	}
-
-	/**
-	 * Dumps the last executed query
-	 */
-	public function dsql()
-	{
-//		$this->d(Database::instance()->last_query);
-	}
-
-	public function redirectTo($url) {
-		if(!empty($url)) {
-			return Redirect::to($url)->send();
-		}
-	}
-
 	private function globalViewData() {
 		$user_data = Model_Users::getUserFullInfo($this->user->id);
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Admin\Model_Products;
 use App\Admin\Model_Categories;
 use App\Admin\Model_Sizes;
+use App\Admin\Model_Tables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -103,12 +104,23 @@ class Module_Products extends BaseController
 
 		$response['images_dir'] = uniqid('product_');
 
-		$response['categories']    = Model_Categories::getCategory(FALSE, ['title']);
-		$response['groups']        = Model_Sizes::getSizes(TRUE);
-		$response['products']      = Model_Products::getProducts(FALSE, ['title']);
-		$response['manufacturers'] = Model_Products::getManufacturers();
-		$response['colors']        = Model_Products::getColors();
-		$response['materials']        = Model_Products::getMaterials();
+		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
+		$response['groups']            = Model_Sizes::getSizes(TRUE);
+		$response['products']          = Model_Products::getProducts(FALSE, ['title']);
+		$response['manufacturers']     = Model_Products::getManufacturers();
+		$response['colors']            = Model_Products::getColors();
+		$response['materials']         = Model_Products::getMaterials();
+		$response['dimensions_tables'] = Model_Tables::getTables();
+		if ( ! empty($response['dimensions_tables']) && is_array($response['dimensions_tables']))
+		{
+			foreach ($response['dimensions_tables'] as $key => $table)
+			{
+				if (isset($table['image']))
+				{
+					unset($response['dimensions_tables'][$key]['image']);
+				}
+			}
+		}
 
 		return Theme::view('products.create_product', $response);
 	}
@@ -177,6 +189,7 @@ class Module_Products extends BaseController
 					'meta_keywords'    => Input::get('meta_keywords'),
 					'related_products' => Input::get('related_products'),
 					'images'           => $images_array,
+					'dimensions_table' => Input::get('dimensions_table'),
 				];
 
 				if ($id = Model_Products::createProduct($data))
@@ -265,27 +278,39 @@ class Module_Products extends BaseController
 
 				return Theme::View('products_partials.product_sizes_form', $response);
 			}
-			else
+			elseif ($request == 'check_url')
 			{
-				if ($request == 'check_url')
+				if (Model_Products::checkURL($param))
 				{
-					if (Model_Products::checkURL($param))
-					{
-						$response['status']  = 'error';
-						$response['title']   = trans('global.warning');
-						$response['message'] = trans('products.url_exists');
+					$response['status']  = 'error';
+					$response['title']   = trans('global.warning');
+					$response['message'] = trans('products.url_exists');
 
-						return response()->json($response);
-					}
-					else
-					{
-						return 'available';
-					}
+					return response()->json($response);
 				}
 				else
 				{
-					return FALSE;
+					return 'available';
 				}
+			}
+			elseif ($request == 'render_table')
+			{
+				$response['blade_standalone'] = TRUE;
+				$table                        = Model_Tables::getTables($param, FALSE);
+				if ( ! empty($table) && is_array($table) && ! empty($table[0]))
+				{
+					$response['table']         = $table[0];
+					$response['table']['cols'] = json_decode($table[0]['cols'], TRUE);
+					$response['table']['rows'] = json_decode($table[0]['rows'], TRUE);
+				}
+				$response['images_dir']        = Config::get('system_settings.tables_upload_path');
+				$response['public_images_dir'] = Config::get('system_settings.tables_public_path');
+
+				return Theme::View('products_partials.product_render_dimensions_table_partial', $response);
+			}
+			else
+			{
+				return FALSE;
 			}
 		}
 		else
@@ -339,6 +364,17 @@ class Module_Products extends BaseController
 		$response['groups']             = Model_Sizes::getSizes(TRUE);
 		$response['colors']             = Model_Products::getColors();
 		$response['related_colors']     = Model_Products::getColor($id);
+		$response['dimensions_tables'] = Model_Tables::getTables();
+		if ( ! empty($response['dimensions_tables']) && is_array($response['dimensions_tables']))
+		{
+			foreach ($response['dimensions_tables'] as $key => $table)
+			{
+				if (isset($table['image']))
+				{
+					unset($response['dimensions_tables'][$key]['image']);
+				}
+			}
+		}
 
 		$product = Model_Products::getProducts($id);
 
@@ -558,6 +594,7 @@ class Module_Products extends BaseController
 						'meta_description' => Input::get('meta_description'),
 						'meta_keywords'    => Input::get('meta_keywords'),
 						'related_products' => Input::get('related_products'),
+						'dimensions_table' => Input::get('dimensions_table'),
 					];
 
 					if (Model_Products::updateProduct($id, $data) === TRUE)

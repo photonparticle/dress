@@ -269,6 +269,13 @@ class Model_Products extends Model
 					'type'  => 'json',
 				];
 			}
+			if ( ! empty($data['dimensions_table']))
+			{
+				$objects['dimensions_table'] = [
+					'value' => $data['dimensions_table'],
+					'type'  => 'text',
+				];
+			}
 
 			//Determine update and insert objects
 			foreach ($objects as $name => $object)

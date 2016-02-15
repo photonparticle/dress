@@ -218,7 +218,7 @@
                                        'title': $('#table_title').val(),
                                        'cols': cols,
                                        'rows': rows,
-                                       'image_name': '{{$image_name or ''}}.png',
+                                       'image_name': '{{$image_name . '.png' or ''}}',
                                        'id': '{{$table['id'] or ''}}'
                                    },
                                    headers: {
