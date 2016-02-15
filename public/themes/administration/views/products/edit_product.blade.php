@@ -13,7 +13,7 @@
                                     <i class="fa fa-archive"></i>
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
-                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4 text-right">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4 text-right margin-top-5 no-padding">
                                     <button class="btn green-haze save_product">
                                         {{trans('global.save')}} </button>
                                     <a href="/admin/products" class="btn default">
@@ -70,15 +70,18 @@
                                     @include('products_partials.product_images_tab')
 
                                 </div>
-                                
-                                <div clas="clearfix" ></div>
-                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4 text-right">
+
+                                <div class="clearfix" ></div>
+
+                                <div class="col-xs-12 text-right">
                                     <button class="btn green-haze save_product">
                                         {{trans('global.save')}} </button>
                                     <a href="/admin/products" class="btn default">
                                         {{trans('global.cancel')}} </a>
 
                                 </div>
+
+                                <div class="clearfix" ></div>
                             </div>
                         </div>
                     </div>
