@@ -9,8 +9,10 @@
 return [
 	'product_upload_path' => public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products' . DIRECTORY_SEPARATOR,
 	'tables_upload_path' => public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'tables' . DIRECTORY_SEPARATOR,
+	'sliders_upload_path' => public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'sliders' . DIRECTORY_SEPARATOR,
 	'product_public_path' => '/images/products/',
 	'tables_public_path' => '/images/tables/',
+	'sliders_public_path' => '/images/sliders/',
 	'modules'             => [
 		'dashboard',
 		'users',
@@ -19,7 +21,7 @@ return [
 		'pages'
 	],
 	'plug-ins'            => [
-		'slider'        => [
+		'sliders'        => [
 			'title'     => 'Slider',
 			'icon'      => 'fa-image',
 			'color'     => 'bg-blue-steel',

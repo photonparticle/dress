@@ -15,64 +15,48 @@ class Model_Sliders extends Model
 	 *
 	 * @return array
 	 */
-	public static function getTables($id = FALSE, $for_list = TRUE, $object = FALSE)
+	public static function getSliders($id = FALSE, $for_list = TRUE, $objects = FALSE, $by_dir = FALSE)
 	{
-		$table = DB::table('tables');
+		$slider = DB::table('sliders');
 
 		if ($for_list === TRUE)
 		{
-			$table = $table->select(['id', 'title', 'image']);
+			$slider = $slider->select(['id', 'title', 'image']);
 		}
 
 		if ($id != FALSE && intval($id) > 0)
 		{
-			$table = $table->where('id', '=', $id);
+			$slider = $slider->where('id', '=', $id);
 		}
-
-		if ($object !== FALSE)
+		if ($by_dir != FALSE)
 		{
-			if ($object == 'rows')
-			{
-				$table = $table->select(['id', 'title', 'rows']);
-			}
-			if ($object == 'cols')
-			{
-				$table = $table->select(['id', 'title', 'cols']);
-			}
+			$slider = $slider->where('dir', '=', $by_dir);
 		}
 
-		$table = $table
+		if ($objects !== FALSE && is_array($objects))
+		{
+			$slider = $slider->select($objects);
+		}
+
+		$slider = $slider
 			->orderBy('title', 'ASC')
 			->get();
 
-		return $table;
+		return $slider;
 	}
 
-	public static function insertTable($table)
+	public static function insertSlider($slider)
 	{
-		if ( ! empty($table))
+		if ( ! empty($slider) && is_array($slider))
 		{
-			$insertData = [
-				'title' => $table['title'],
-				'image' => $table['image']
-			];
+			$slider['created_at'] = date('Y-m-d H:i:s');
 
-			if ( ! empty($table['cols']) && is_array($table['cols']))
+			$slider = DB::table('sliders')
+						->insertGetId($slider);
+
+			if ($slider)
 			{
-				$insertData['cols'] = json_encode($table['cols']);
-			}
-
-			if ( ! empty($table['rows']) && is_array($table['rows']))
-			{
-				$insertData['rows'] = json_encode($table['rows']);
-			}
-
-			$table = DB::table('tables')
-					   ->insertGetId($insertData);
-
-			if ($table)
-			{
-				return $table;
+				return $slider;
 			}
 			else
 			{
@@ -91,28 +75,15 @@ class Model_Sliders extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function updateTable($id, $table)
+	public static function updateSlider($id, $slider)
 	{
-		if ( ! empty($table) && ! empty($id))
+		if ( ! empty($slider) && is_array($slider) && ! empty($id))
 		{
-			$updateData = [
-				'title' => $table['title'],
-				'image' => $table['image']
-			];
+			$slider['updated_at'] = date('Y-m-d H:i:s');
 
-			if ( ! empty($table['cols']) && is_array($table['cols']))
-			{
-				$updateData['cols'] = json_encode($table['cols']);
-			}
-
-			if ( ! empty($table['rows']) && is_array($table['rows']))
-			{
-				$updateData['rows'] = json_encode($table['rows']);
-			}
-
-			$query = DB::table('tables')
+			$query = DB::table('sliders')
 					   ->where('id', '=', $id)
-					   ->update($updateData);
+					   ->update($slider);
 
 			if ($query)
 			{
@@ -134,13 +105,13 @@ class Model_Sliders extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function removeTable($id)
+	public static function removeSlider($id)
 	{
 		if ( ! empty($id))
 		{
 			try
 			{
-				$query = DB::table('tables');
+				$query = DB::table('sliders');
 
 				if (is_array($id))
 				{
@@ -172,24 +143,18 @@ class Model_Sliders extends Model
 		}
 	}
 
-	public static function setImage($id, $image)
+	public static function setSlides($id, $slides, $slides_positions)
 	{
-		if ( ! empty($id) && ! empty($image))
+		if ( ! empty($id) && ! empty($slides) && is_array($slides) && ! empty($slides_positions) && is_array($slides_positions))
 		{
-			$query = DB::table('tables')
-					   ->where('id', '=', $id)
-					   ->update([
-									'image' => $image,
-								]);
+			DB::table('sliders')
+			  ->where('id', '=', $id)
+			  ->update([
+						   'slides'           => json_encode($slides),
+						   'slides_positions' => json_encode($slides_positions),
+					   ]);
 
-			if ($query)
-			{
-				return TRUE;
-			}
-			else
-			{
-				return FALSE;
-			}
+			return TRUE;
 		}
 		else
 		{

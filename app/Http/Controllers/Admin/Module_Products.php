@@ -158,10 +158,10 @@ class Module_Products extends BaseController
 
 				if ( ! empty(Input::get('images_dir')) &&
 					is_dir($this->images_path.Input::get('images_dir')) &&
-					is_dir($this->images_path.Input::get('images_dir').'/'.Config::get('images.full_size'))
+					is_dir($this->images_path.Input::get('images_dir').DIRECTORY_SEPARATOR.Config::get('images.full_size'))
 				)
 				{
-					$images = array_diff(scandir($this->images_path.Input::get('images_dir').'/'.Config::get('images.full_size')), array('..', '.'));
+					$images = array_diff(scandir($this->images_path.Input::get('images_dir').DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
 
 					if ( ! empty($images) && is_array($images))
 					{

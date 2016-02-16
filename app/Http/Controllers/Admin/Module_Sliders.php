@@ -41,14 +41,14 @@ class Module_Sliders extends BaseController
 	{
 		$response['pageTitle'] = trans('tables.tables');
 
-		$response['tables'] = Model_Tables::getTables();
-		$response['images_dir'] = Config::get('system_settings.tables_upload_path');
+		$response['tables']            = Model_Tables::getTables();
+		$response['images_dir']        = Config::get('system_settings.tables_upload_path');
 		$response['public_images_dir'] = Config::get('system_settings.tables_public_path');
 
 		$response['blade_custom_css'] = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
-		$response['blade_custom_js'] = [
+		$response['blade_custom_js']  = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 			'global/plugins/bootbox/bootbox.min',
@@ -68,6 +68,7 @@ class Module_Sliders extends BaseController
 		$response['blade_custom_css'] = [
 			'global/plugins/dropzone/css/dropzone',
 			'global/plugins/select2/select2',
+			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
 		];
 
 		$response['blade_custom_js'] = [
@@ -76,11 +77,12 @@ class Module_Sliders extends BaseController
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
 			'admin/pages/scripts/components-dropdowns',
+			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
 		];
 
-		$response['image_name'] = uniqid('table_');
-		$response['images_dir'] = Config::get('system_settings.tables_upload_path');
-		$response['public_images_dir'] = Config::get('system_settings.tables_public_path');
+		$response['slider_dir']        = uniqid('slider_');
+		$response['images_dir']        = Config::get('system_settings.sliders_upload_path');
+		$response['public_images_dir'] = Config::get('system_settings.sliders_public_path');
 		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
 
 		return Theme::view('sliders.create_edit_slider', $response);
@@ -88,44 +90,71 @@ class Module_Sliders extends BaseController
 
 	/**
 	 * Store a newly created resource in storage.
+	 *
+	 * @param bool $slides
+	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postStore()
+	public function postStore($slides = FALSE)
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('tables.not_saved');
+		$response['message'] = trans('sliders.not_saved');
 
 		if ( ! empty($_POST))
 		{
-			$error = FALSE;
-
-			if (empty(trim(Input::get('title'))))
+//			Save slides
+			if ( ! empty($slides) && $slides == 'slides' && ! empty(Input::get('slides')) && ! empty(Input::get('slides_positions')) && ! empty(Input::get('slider_id')))
 			{
-				$response['message'] = trans('tables.title_required');
-				$error               = TRUE;
+				$response['message'] = trans('sliders.slides_not_saved');
+
+				if (Model_Sliders::setSlides(intval(Input::get('slider_id')), Input::get('slides'), Input::get('slides_positions')) === TRUE)
+				{
+					$response['status']  = 'success';
+					$response['message'] = trans('sliders.slides_saved');
+				}
+
 			}
-
-			if ($error === FALSE)
+			else
 			{
-				$data = [
-					'title'      => trim(Input::get('title')),
-					'cols'	=> Input::get('cols'),
-					'rows'	=> Input::get('rows'),
-					'image'	=> Input::get('image_name')
-				];
+//				Save slider
+				$error = FALSE;
 
-				if(empty(Input::get('id'))) {
-					if (($table_id = Model_Tables::insertTable($data)) != FALSE)
+				if (empty(trim(Input::get('title'))))
+				{
+					$response['message'] = trans('sliders.title_required');
+					$error               = TRUE;
+				}
+
+				if ($error === FALSE)
+				{
+					$data = [
+						'title'       => trim(Input::get('title')),
+						'position'    => trim(Input::get('position')),
+						'type'        => Input::get('type'),
+						'target'      => Input::get('target'),
+						'active_from' => Input::get('active_from'),
+						'active_to'   => Input::get('active_to'),
+						'dir'         => Input::get('dir'),
+					];
+
+					if (empty(Input::get('id')))
 					{
-						$response['status']  = 'success';
-						$response['message'] = trans('tables.saved');
-						$response['id'] = $table_id;
+						if (($slider_id = Model_Sliders::insertSlider($data)) != FALSE)
+						{
+							$response['status']   = 'success';
+							$response['message']  = trans('sliders.saved');
+							$response['id']       = $slider_id;
+							$response['redirect'] = TRUE;
+						}
 					}
-				} elseif(($id = intval(Input::get('id'))) > 0) {
-					if (Model_Tables::updateTable($id, $data) != FALSE)
+					elseif (($id = intval(Input::get('id'))) > 0)
 					{
-						$response['status']  = 'success';
-						$response['message'] = trans('tables.saved');
+						if (Model_Sliders::updateSlider($id, $data) != FALSE)
+						{
+							$response['status']  = 'success';
+							$response['message'] = trans('sliders.saved');
+							$response['id']      = $id;
+						}
 					}
 				}
 			}
@@ -137,31 +166,68 @@ class Module_Sliders extends BaseController
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param bool|int $id
+	 * @param bool|string $target
 	 * @param $object
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function getShow($object = FALSE, $id = FALSE)
+	public function getShow($object = FALSE, $target = FALSE)
 	{
 		$response['blade_standalone'] = TRUE;
 
-		if ($object == 'row' || $object == 'col')
+		if ($object == 'sync_images' && ! empty($target))
 		{
-			//Table load
-			if ($id !== FALSE)
+			//Get images
+			$images_array = [];
+
+			if (is_dir(Config::get('system_settings.sliders_upload_path').DIRECTORY_SEPARATOR.$target))
 			{
-				$response['table'] = Model_Tables::getTables($id, FALSE, $object);
+				$images = array_diff(scandir(Config::get('system_settings.sliders_upload_path').DIRECTORY_SEPARATOR.$target), array('..', '.'));
+
+				if ( ! empty($images) && is_array($images))
+				{
+					foreach ($images as $key => $data)
+					{
+						$images_array[$data] = 0;
+					}
+				}
 			}
 
-			if ($object == 'row')
+			$slider_data = Model_Sliders::getSliders(FALSE, FALSE, ['slides', 'slides_positions'], $target);
+			if ( ! empty($slider_data) && ! empty($slider_data[0]))
 			{
-				return Theme::view('tables.show_table_rows_partial', $response);
+				$slider_data = $slider_data[0];
 			}
-			if ($object == 'col')
+
+			if ( ! empty($slider_data['slides_positions']))
 			{
-				return Theme::view('tables.show_table_cols_partial', $response);
+				$saved_images = json_decode($slider_data['slides_positions'], TRUE);
+				$images_array = array_merge($images_array, $saved_images);
 			}
+
+			if ( ! empty($slider_data['slides_positions']))
+			{
+				$response['image_data'] = json_decode($slider_data['slides'], TRUE);
+			}
+
+			//Sort by position
+			if ( ! empty($images_array) && is_array($images_array))
+			{
+				uasort($images_array, function ($a, $b)
+				{
+					if ($a == $b)
+					{
+						return 0;
+					}
+
+					return ($a < $b) ? -1 : 1;
+				});
+			}
+
+			$response['images']      = $images_array;
+			$response['thumbs_path'] = Config::get('system_settings.sliders_public_path').$target;
+
+			return Theme::view('sliders.show_slider_form_partial', $response);
 		}
 	}
 
@@ -174,55 +240,73 @@ class Module_Sliders extends BaseController
 	 */
 	public function getEdit($id)
 	{
-		$response['pageTitle'] = trans('tables.edit_table');
+		$response['pageTitle'] = trans('sliders.edit');
 
 		$response['blade_custom_css'] = [
 			'global/plugins/dropzone/css/dropzone',
+			'global/plugins/select2/select2',
+			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
 		];
 
 		$response['blade_custom_js'] = [
 			'global/plugins/dropzone/dropzone',
 			'admin/pages/scripts/form-dropzone',
+			'global/plugins/bootstrap-select/bootstrap-select.min',
+			'global/plugins/select2/select2.min',
+			'admin/pages/scripts/components-dropdowns',
+			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
 		];
-		$response['images_dir'] = Config::get('system_settings.tables_upload_path');
-		$response['public_images_dir'] = Config::get('system_settings.tables_public_path');
 
-		if(!empty($id)) {
-			$result = Model_Tables::getTables($id, FALSE);
-			if(!empty($result) && !empty($result[0])) {
-				if(!empty($result[0]['cols']))
-				{
-					$result[0]['cols'] = json_decode($result[0]['cols'], TRUE);
-				}
-				if(!empty($result[0]['rows']))
-				{
-					$result[0]['rows'] = json_decode($result[0]['rows'], TRUE);
-				}
-				$response['table'] = $result[0];
-			}
+		$response['images_dir']        = Config::get('system_settings.sliders_upload_path');
+		$response['public_images_dir'] = Config::get('system_settings.sliders_public_path');
+		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
+		$response['slider']            = Model_Sliders::getSliders($id, FALSE, ['id', 'title', 'dir', 'active_from', 'active_to', 'position', 'type', 'target']);
+
+		if ( ! empty($response['slider']) && ! empty($response['slider'][0]))
+		{
+			$response['slider'] = $response['slider'][0];
 		}
 
-		return Theme::view('tables.create_edit_table', $response);
+		return Theme::view('sliders.create_edit_slider', $response);
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int $id
+	 * @param bool $method
+	 * @param bool|int $id
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postDestroy($id = FALSE)
+	public function postDestroy($method = FALSE, $id = FALSE)
 	{
-		$response['status']  = 'error';
-		$response['message'] = trans('tables.not_removed');
-
-		if ( ! empty($id) && intval($id) > 0)
+		if ($method == 'image' && ! empty(Input::get('image')) && ! empty(Input::get('dir')))
 		{
-			if (Model_Tables::removeTable($id) === TRUE)
+			$response['status']  = 'error';
+			$response['message'] = trans('sliders.image_not_removed');
+			$path                = Config::get('system_settings.sliders_upload_path');
+
+			if (file_exists($path.Input::get('dir').DIRECTORY_SEPARATOR.Input::get('image')))
 			{
-				$response['status']  = 'success';
-				$response['message'] = trans('tables.removed');
+				if (unlink($path.Input::get('dir').DIRECTORY_SEPARATOR.Input::get('image')))
+				{
+					$response['status']  = 'success';
+					$response['message'] = trans('sliders.image_removed');
+				}
+			}
+		}
+		elseif ($method === FALSE || $method == 'slider')
+		{
+			$response['status']  = 'error';
+			$response['message'] = trans('sliders.not_removed');
+
+			if ( ! empty($id) && intval($id) > 0)
+			{
+				if (Model_Sliders::removeSlider($id) === TRUE)
+				{
+					$response['status']  = 'success';
+					$response['message'] = trans('sliders.removed');
+				}
 			}
 		}
 

@@ -73,7 +73,7 @@
                                 
                                 <div class="clearfix" ></div>
 
-                                <div class="col-xs-12 text-right">
+                                <div class="col-xs-12 text-right margin-top-20">
                                     <button class="btn green-haze save_product">
                                         {{trans('global.save')}} </button>
                                     <a href="/admin/products" class="btn default">
@@ -269,7 +269,6 @@
                                success: function (response) {
                                    if (response) {
                                        if (holder.length > 0) {
-                                           console.log('Set response');
                                            holder.code(response);
                                        }
                                    }

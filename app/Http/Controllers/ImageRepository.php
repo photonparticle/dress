@@ -88,6 +88,27 @@ class ImageRepository
 									  ], 500);
 
 			}
+		} elseif(!empty($this->module) && $this->module == 'sliders') {
+			$originalName           = $photo->getClientOriginalName();
+			$originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - 4);
+
+			$filename         = basename($originalNameWithoutExt);
+
+			$filenameExt = $filename.'.jpg';
+
+			$uploadSuccess1 = $this->sliders($photo, $filenameExt);
+
+			//If image is uploaded and thumbnails created
+			if ( ! $uploadSuccess1)
+			{
+
+				return Response::json([
+										  'error'   => TRUE,
+										  'message' => 'Server error while uploading',
+										  'code'    => 500,
+									  ], 500);
+
+			}
 		}
 
 //		$sessionImage = new Image;
@@ -229,6 +250,23 @@ class ImageRepository
 
 		$background->insert($image, 'center');
 		$background->save($dir.$filename);
+
+		return $image;
+	}
+
+	/**
+	 * Sliders Image
+	 */
+	public function sliders($photo, $filename)
+	{
+		$manager = new ImageManager();
+		$dir     = Config::get('system_settings.sliders_upload_path');
+
+		if ( ! is_dir($dir.$this->temp_name. DIRECTORY_SEPARATOR))
+		{
+			mkdir($dir.$this->temp_name.DIRECTORY_SEPARATOR);
+		}
+		$image = $manager->make($photo)->encode('jpg')->save($dir.$this->temp_name.DIRECTORY_SEPARATOR.$filename);
 
 		return $image;
 	}
