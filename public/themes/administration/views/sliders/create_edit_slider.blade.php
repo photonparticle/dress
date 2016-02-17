@@ -16,10 +16,6 @@
                             <i class="fa fa-arrow-left"></i>
                             {{trans('sliders.sliders_list')}}
                         </a>
-                        <a href="#" id="add_slide" class="btn btn-success margin-top-10" title="{{trans('sliders.add')}}">
-                            <i class="fa fa-plus"></i>
-                            {{trans('sliders.add')}}
-                        </a>
                         <a href="#" id="save" class="btn btn-success margin-top-10" title="{{trans('sliders.save')}}">
                             <i class="fa fa-save"></i>
                             {{trans('sliders.save')}}
@@ -135,7 +131,7 @@
                                url: '/admin/module/sliders/destroy/image',
                                data: {
                                    'image': image,
-                                   'dir': '{{$slider_dir or ''}}'
+                                   'dir': '{{$slider_dir or $slider['dir']}}'
                                },
                                success: function (response) {
                                    if (typeof response == typeof {} && response['status'] && response['message']) {

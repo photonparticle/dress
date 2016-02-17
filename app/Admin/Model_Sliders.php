@@ -21,7 +21,7 @@ class Model_Sliders extends Model
 
 		if ($for_list === TRUE)
 		{
-			$slider = $slider->select(['id', 'title', 'image']);
+			$slider = $slider->select(['id', 'title', 'type', 'active_from', 'active_to', 'created_at']);
 		}
 
 		if ($id != FALSE && intval($id) > 0)
@@ -105,12 +105,30 @@ class Model_Sliders extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function removeSlider($id)
+	public static function removeSlider($id, $images_dir = FALSE)
 	{
 		if ( ! empty($id))
 		{
 			try
 			{
+				$dir = self::getSliders($id, FALSE, ['dir']);
+				if ( ! empty($dir) && ! empty($dir[0]['dir']))
+				{
+					$dir = $dir[0]['dir'];
+				}
+				else
+				{
+					$dir = '';
+				}
+
+				if ( ! empty($dir) && ! empty($images_dir))
+				{
+					if (is_dir($images_dir.$dir))
+					{
+						self::recursiveRemoveDirectory($images_dir.$dir);
+					}
+				}
+
 				$query = DB::table('sliders');
 
 				if (is_array($id))
@@ -141,6 +159,22 @@ class Model_Sliders extends Model
 		{
 			return FALSE;
 		}
+	}
+
+	public static function recursiveRemoveDirectory($directory)
+	{
+		foreach (glob("{$directory}/*") as $file)
+		{
+			if (is_dir($file))
+			{
+				self::recursiveRemoveDirectory($file);
+			}
+			else
+			{
+				unlink($file);
+			}
+		}
+		rmdir($directory);
 	}
 
 	public static function setSlides($id, $slides, $slides_positions)

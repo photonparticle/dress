@@ -18,8 +18,8 @@ class CreateSlidersTable extends Migration
 			$table->json('slides');
 			$table->json('slides_positions');
 			$table->string('dir');
-			$table->tinyInteger('active_from');
-			$table->tinyInteger('active_to');
+			$table->timestamp('active_from');
+			$table->timestamp('active_to');
 			$table->integer('position');
 			$table->string('type');
 			$table->string('target');

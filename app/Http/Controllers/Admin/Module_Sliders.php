@@ -41,20 +41,19 @@ class Module_Sliders extends BaseController
 	{
 		$response['pageTitle'] = trans('tables.tables');
 
-		$response['tables']            = Model_Tables::getTables();
-		$response['images_dir']        = Config::get('system_settings.tables_upload_path');
-		$response['public_images_dir'] = Config::get('system_settings.tables_public_path');
+		$response['sliders']            = Model_Sliders::getSliders();
 
 		$response['blade_custom_css'] = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
+
 		$response['blade_custom_js']  = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 			'global/plugins/bootbox/bootbox.min',
 		];
 
-		return Theme::view('tables.list_tables', $response);
+		return Theme::view('sliders.list_sliders', $response);
 	}
 
 	/**
@@ -302,7 +301,8 @@ class Module_Sliders extends BaseController
 
 			if ( ! empty($id) && intval($id) > 0)
 			{
-				if (Model_Sliders::removeSlider($id) === TRUE)
+				$dir = Config::get('system_settings.sliders_upload_path');
+				if (Model_Sliders::removeSlider($id, $dir) === TRUE)
 				{
 					$response['status']  = 'success';
 					$response['message'] = trans('sliders.removed');
