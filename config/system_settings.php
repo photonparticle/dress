@@ -27,8 +27,8 @@ return [
 			'color'     => 'bg-blue-steel',
 			'tile-size' => 'double-down',
 		],
-		'carousel'      => [
-			'title'     => 'Carousel',
+		'carousels'      => [
+			'title'     => 'Carousels',
 			'icon'      => 'fa-arrows-h',
 			'color'     => 'bg-green-seagreen',
 			'tile-size' => 'double-down',
