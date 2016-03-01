@@ -120,6 +120,53 @@
                 </span>
                         </div>
                     </div>
+                    
+                    {{--slider_type--}}
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <label for="slider_type" class="control-label col-xs-12 default margin-top-20">
+                            {{trans('carousels.slider_type')}}
+                        </label>
+                        <select id="slider_type" name="slider_type" class="form-control input-lg">
+                            <option value="">{{trans('carousels.choose_product')}}</option>
+                            <option value="newest" @if(!empty($carousel['slider_type']) && $carousel['slider_type'] == 'newest') selected="selected" @endif>{{trans('carousels.newest')}}</option>
+                            <option value="discounted" @if(!empty($carousel['slider_type']) && $carousel['slider_type'] == 'discounted') selected="selected" @endif>{{trans('carousels.discounted')}}</option>
+                            <option value="others" @if(!empty($carousel['slider_type']) && $carousel['type'] == 'others') selected="selected" @endif>{{trans('carousels.others')}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 products-holder hidden">
+                        
+                        <div class="margin-top-20">
+                            <label for="products" class="control-label col-xs-12 default no-padding">
+                                {{trans('carousels.products')}}
+                            </label>
+                            <select id="products"
+                                    name="products[]"
+                                    class="form-control select2me input-lg no-padding"
+                                    multiple="multiple"
+                                    data-placeholder="{{trans('carousels.products')}}">
+                                @if(isset($products) && is_array($products))
+                                    @foreach($products as $key => $product)
+                                        <option value="{{$product['id']}}" @if(!empty($products) && in_array($product['id'], $products)) selected="selected" @endif>{{$product['id']}} - {{$product['title']}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                    
+                    
+                    {{--max-products--}}
+                    <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-20 max-products-holder hidden">
+                    <label for="carousel_position" class="control-label col-xs-12 col-sm-12 col-md-12 col-lg-12 default no-padding">{{trans('carousels.max_products')}}</label>
+                    <input name="max_products" 
+                           id="max_products" 
+                           type="number" 
+                           class="form-control input-lg" 
+                           value="{{isset($carousel['max_products']) ? $carousel['max_products'] : '1'}}"
+                           min="1"/>
+
+                    </div>
+                    
 
                     <div class="clearfix"></div>
 
@@ -167,6 +214,29 @@
 
             showHideTarget();
 
+            $('body').on('change', '#slider_type', function () {
+                showHideSliderType();
+            });
+
+            //Show/hide slider type
+            function showHideSliderType() {
+                var type = $('#slider_type').val();
+                
+                if (type == 'newest' || type == 'discounted') {
+                    $('.max-products-holder').removeClass('hidden');
+                } else {
+                    $('.max-products-holder').addClass('hidden');
+                }
+                if (type == 'others') {
+                    
+                    $('.products-holder').removeClass('hidden');
+                } else {
+                    $('.products-holder').addClass('hidden');
+                }
+            }
+
+            showHideSliderType();
+            
             //Save slider
             function saveSlider() {
                 var
