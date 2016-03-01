@@ -42,13 +42,13 @@ class Module_Carousels extends BaseController
 	{
 		$response['pageTitle'] = trans('tables.tables');
 
-		$response['carousels']            = Model_Carousels::getCarousels();
+		$response['carousels'] = Model_Carousels::getCarousels();
 
 		$response['blade_custom_css'] = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
 
-		$response['blade_custom_js']  = [
+		$response['blade_custom_js'] = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 			'global/plugins/bootbox/bootbox.min',
@@ -66,27 +66,21 @@ class Module_Carousels extends BaseController
 		$response['pageTitle'] = trans('carousels.create');
 
 		$response['blade_custom_css'] = [
-			'global/plugins/dropzone/css/dropzone',
 			'global/plugins/select2/select2',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
 		];
 
 		$response['blade_custom_js'] = [
-			'global/plugins/dropzone/dropzone',
-			'admin/pages/scripts/form-dropzone',
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
 			'admin/pages/scripts/components-dropdowns',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
 		];
 
-		$response['carousel_dir']        = uniqid('carousel_');
-		$response['images_dir']        = Config::get('system_settings.carousels_upload_path');
-		$response['public_images_dir'] = Config::get('system_settings.carousels_public_path');
-		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
+		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 
-        $response['products']          = Model_Products::getProducts(FALSE, ['title']);
-        
+		$response['products'] = Model_Products::getProducts(FALSE, ['title']);
+
 		return Theme::view('carousels.create_edit_carousel', $response);
 	}
 
@@ -105,116 +99,77 @@ class Module_Carousels extends BaseController
 		if ( ! empty($_POST))
 		{
 //				Save carousel
-				$error = FALSE;
+			$error = FALSE;
 
-				if (empty(trim(Input::get('title'))))
+			if(!empty(Input::get('products')) && Input::get('products') == 'newest' || Input::get('products') == 'discounted') {
+				$slider_type = Input::get('products');
+			} else {
+				$slider_type = 'others';
+			}
+
+			if (empty(trim(Input::get('title'))))
+			{
+				$response['message'] = trans('carousels.title_required');
+				$error               = TRUE;
+			}
+			if (empty(Input::get('type')))
+			{
+				$response['message'] = trans('carousels.type_required');
+				$error               = TRUE;
+			}
+			if (
+				empty($slider_type) ||
+				(!empty($slider_type) && $slider_type == 'others' && is_array(Input::get('products')) !== TRUE)
+			)
+			{
+				$response['message'] = trans('carousels.slider_type_required');
+				$error               = TRUE;
+			}
+
+			if ($error === FALSE)
+			{
+				$data = [
+					'title'        => trim(Input::get('title')),
+					'position'     => trim(Input::get('position')),
+					'type'         => Input::get('type'),
+					'target'       => Input::get('target'),
+					'active_from'  => Input::get('active_from'),
+					'active_to'    => Input::get('active_to'),
+					'max_products' => Input::get('max_products'),
+				];
+
+				if ( ! empty($_POST['products']) && is_array($_POST['products']))
 				{
-					$response['message'] = trans('carousels.title_required');
-					$error               = TRUE;
+					$data['products'] = json_encode($_POST['products']);
+				}
+				else
+				{
+					$data['products'] = Input::get('products');
 				}
 
-				if ($error === FALSE)
+				if (empty(Input::get('id')))
 				{
-					$data = [
-						'title'       => trim(Input::get('title')),
-						'position'    => trim(Input::get('position')),
-						'type'        => Input::get('type'),
-						'target'      => Input::get('target'),
-						'active_from' => Input::get('active_from'),
-						'active_to'   => Input::get('active_to'),
-					];
-
-					if (empty(Input::get('id')))
+					if (($carousel_id = Model_Carousels::insertCarousel($data)) != FALSE)
 					{
-						if (($carousel_id = Model_Carousels::insertCarousel($data)) != FALSE)
-						{
-							$response['status']   = 'success';
-							$response['message']  = trans('carousels.saved');
-							$response['id']       = $carousel_id;
-							$response['redirect'] = TRUE;
-						}
-					}
-					elseif (($id = intval(Input::get('id'))) > 0)
-					{
-						if (Model_Carousels::updateCarousel($id, $data) != FALSE)
-						{
-							$response['status']  = 'success';
-							$response['message'] = trans('carousels.saved');
-							$response['id']      = $id;
-						}
+						$response['status']   = 'success';
+						$response['message']  = trans('carousels.saved');
+						$response['id']       = $carousel_id;
+						$response['redirect'] = TRUE;
 					}
 				}
+				elseif (($id = intval(Input::get('id'))) > 0)
+				{
+					if (Model_Carousels::updateCarousel($id, $data) != FALSE)
+					{
+						$response['status']  = 'success';
+						$response['message'] = trans('carousels.saved');
+						$response['id']      = $id;
+					}
+				}
+			}
 		}
 
 		return response()->json($response);
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param bool|string $target
-	 * @param $object
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function getShow($object = FALSE, $target = FALSE)
-	{
-		$response['blade_standalone'] = TRUE;
-
-		if ($object == 'sync_images' && ! empty($target))
-		{
-			//Get images
-			$images_array = [];
-
-			if (is_dir(Config::get('system_settings.carousels_upload_path').DIRECTORY_SEPARATOR.$target))
-			{
-				$images = array_diff(scandir(Config::get('system_settings.carousels_upload_path').DIRECTORY_SEPARATOR.$target), array('..', '.'));
-
-				if ( ! empty($images) && is_array($images))
-				{
-					foreach ($images as $key => $data)
-					{
-						$images_array[$data] = 0;
-					}
-				}
-			}
-
-			$carousel_data = Model_Carousels::getCarousels(FALSE, FALSE, ['slides', 'slides_positions'], $target);
-			if ( ! empty($carousel_data) && ! empty($carousel_data[0]))
-			{
-				$carousel_data = $carousel_data[0];
-			}
-
-			if ( ! empty($carousel_data['slides_positions']))
-			{
-				$saved_images = json_decode($carousel_data['slides_positions'], TRUE);
-				$images_array = array_merge($images_array, $saved_images);
-			}
-
-			if ( ! empty($carousel_data['slides_positions']))
-			{
-				$response['image_data'] = json_decode($carousel_data['slides'], TRUE);
-			}
-
-			//Sort by position
-			if ( ! empty($images_array) && is_array($images_array))
-			{
-				uasort($images_array, function ($a, $b)
-				{
-					if ($a == $b)
-					{
-						return 0;
-					}
-
-					return ($a < $b) ? -1 : 1;
-				});
-			}
-
-			$response['images']      = $images_array;
-			$response['thumbs_path'] = Config::get('system_settings.carousels_public_path').$target;
-
-			return Theme::view('carousels.show_carousel_form_partial', $response);
-		}
 	}
 
 	/**
@@ -229,28 +184,35 @@ class Module_Carousels extends BaseController
 		$response['pageTitle'] = trans('carousels.edit');
 
 		$response['blade_custom_css'] = [
-			'global/plugins/dropzone/css/dropzone',
 			'global/plugins/select2/select2',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
 		];
 
 		$response['blade_custom_js'] = [
-			'global/plugins/dropzone/dropzone',
-			'admin/pages/scripts/form-dropzone',
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
 			'admin/pages/scripts/components-dropdowns',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
 		];
 
-		$response['images_dir']        = Config::get('system_settings.carousels_upload_path');
-		$response['public_images_dir'] = Config::get('system_settings.carousels_public_path');
-		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
-		$response['carousel']            = Model_Carousels::getCarousels($id, FALSE, ['id', 'title', 'dir', 'active_from', 'active_to', 'position', 'type', 'target']);
+		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+		$response['products']   = Model_Products::getProducts(FALSE, ['title']);
+		$response['carousel']   = Model_Carousels::getCarousels($id, FALSE);
 
 		if ( ! empty($response['carousel']) && ! empty($response['carousel'][0]))
 		{
 			$response['carousel'] = $response['carousel'][0];
+		}
+
+		if(!empty($response['carousel']['products']) && $response['carousel']['products'] == 'newest' || $response['carousel']['products'] == 'discounted') {
+			$response['carousel']['slider_type'] = $response['carousel']['products'];
+		} else {
+			$response['carousel']['slider_type'] = 'others';
+		}
+
+		if ( ! empty($response['carousel']['products']) && $response['carousel']['slider_type'] == 'others')
+		{
+			$response['carousel']['products'] = json_decode($response['carousel']['products'], TRUE);
 		}
 
 		return Theme::view('carousels.create_edit_carousel', $response);

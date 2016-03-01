@@ -15,7 +15,7 @@ class Model_Carousels extends Model
 	 *
 	 * @return array
 	 */
-	public static function getCarousels($id = FALSE, $for_list = TRUE, $objects = FALSE, $by_dir = FALSE)
+	public static function getCarousels($id = FALSE, $for_list = TRUE, $objects = FALSE)
 	{
 		$carousel = DB::table('carousels');
 
@@ -27,10 +27,6 @@ class Model_Carousels extends Model
 		if ($id != FALSE && intval($id) > 0)
 		{
 			$carousel = $carousel->where('id', '=', $id);
-		}
-		if ($by_dir != FALSE)
-		{
-			$carousel = $carousel->where('dir', '=', $by_dir);
 		}
 
 		if ($objects !== FALSE && is_array($objects))
@@ -52,7 +48,7 @@ class Model_Carousels extends Model
 			$carousel['created_at'] = date('Y-m-d H:i:s');
 
 			$carousel = DB::table('carousels')
-						->insertGetId($carousel);
+						  ->insertGetId($carousel);
 
 			if ($carousel)
 			{
@@ -71,7 +67,7 @@ class Model_Carousels extends Model
 
 	/**
 	 * @param $id
-	 * @param $data
+	 * @param $carousel
 	 *
 	 * @return bool|\Exception|Exception
 	 */
@@ -105,30 +101,12 @@ class Model_Carousels extends Model
 	 *
 	 * @return bool|\Exception|Exception
 	 */
-	public static function removeCarousel($id, $images_dir = FALSE)
+	public static function removeCarousel($id)
 	{
 		if ( ! empty($id))
 		{
 			try
 			{
-				$dir = self::getCarousels($id, FALSE, ['dir']);
-				if ( ! empty($dir) && ! empty($dir[0]['dir']))
-				{
-					$dir = $dir[0]['dir'];
-				}
-				else
-				{
-					$dir = '';
-				}
-
-				if ( ! empty($dir) && ! empty($images_dir))
-				{
-					if (is_dir($images_dir.$dir))
-					{
-						self::recursiveRemoveDirectory($images_dir.$dir);
-					}
-				}
-
 				$query = DB::table('carousels');
 
 				if (is_array($id))
@@ -154,41 +132,6 @@ class Model_Carousels extends Model
 			{
 				return $e;
 			}
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
-
-	public static function recursiveRemoveDirectory($directory)
-	{
-		foreach (glob("{$directory}/*") as $file)
-		{
-			if (is_dir($file))
-			{
-				self::recursiveRemoveDirectory($file);
-			}
-			else
-			{
-				unlink($file);
-			}
-		}
-		rmdir($directory);
-	}
-
-	public static function setSlides($id, $slides, $slides_positions)
-	{
-		if ( ! empty($id) && ! empty($slides) && is_array($slides) && ! empty($slides_positions) && is_array($slides_positions))
-		{
-			DB::table('carousels')
-			  ->where('id', '=', $id)
-			  ->update([
-						   'slides'           => json_encode($slides),
-						   'slides_positions' => json_encode($slides_positions),
-					   ]);
-
-			return TRUE;
 		}
 		else
 		{

@@ -68,3 +68,8 @@ table.dimensions-table td {
 	text-align: center;
 	line-height: 24px;
 }
+
+.select2-container-multi .select2-choices {
+	min-height: 42px;
+	line-height: 32px;
+}
