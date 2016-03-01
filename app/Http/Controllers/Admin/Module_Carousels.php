@@ -101,20 +101,6 @@ class Module_Carousels extends BaseController
 
 		if ( ! empty($_POST))
 		{
-//			Save slides
-			if ( ! empty($slides) && $slides == 'slides' && ! empty(Input::get('slides')) && ! empty(Input::get('slides_positions')) && ! empty(Input::get('carousel_id')))
-			{
-				$response['message'] = trans('carousels.slides_not_saved');
-
-				if (Model_Carousels::setSlides(intval(Input::get('carousel_id')), Input::get('slides'), Input::get('slides_positions')) === TRUE)
-				{
-					$response['status']  = 'success';
-					$response['message'] = trans('carousels.slides_saved');
-				}
-
-			}
-			else
-			{
 //				Save carousel
 				$error = FALSE;
 
@@ -133,7 +119,6 @@ class Module_Carousels extends BaseController
 						'target'      => Input::get('target'),
 						'active_from' => Input::get('active_from'),
 						'active_to'   => Input::get('active_to'),
-						'dir'         => Input::get('dir'),
 					];
 
 					if (empty(Input::get('id')))
@@ -156,7 +141,6 @@ class Module_Carousels extends BaseController
 						}
 					}
 				}
-			}
 		}
 
 		return response()->json($response);
