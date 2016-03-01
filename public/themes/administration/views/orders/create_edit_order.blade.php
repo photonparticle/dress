@@ -39,7 +39,7 @@
 																<div class="col-md-7 value">
 																	 12313232 <span class="label label-info label-sm">
 																	Email confirmation was sent </span>
-																</div>
+                                                                </div>
 															</div>
 															<div class="row static-info">
 																<div class="col-md-5 name">
