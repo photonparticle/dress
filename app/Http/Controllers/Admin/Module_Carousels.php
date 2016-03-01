@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Admin\Model_Categories;
 use App\Admin\Model_Carousels;
+use App\Admin\Model_Products;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -83,6 +84,8 @@ class Module_Carousels extends BaseController
 		$response['images_dir']        = Config::get('system_settings.carousels_upload_path');
 		$response['public_images_dir'] = Config::get('system_settings.carousels_public_path');
 		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
+        
+        $response['products']          = Model_Products::getProducts(FALSE, ['title']);
 
 		return Theme::view('carousels.create_edit_carousel', $response);
 	}
