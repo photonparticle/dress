@@ -230,7 +230,7 @@ class Module_Products extends BaseController
 						}
 
 						//Manage material
-						$material = Input::get('manufacturer');
+						$material = Input::get('material');
 						if ( ! empty($material))
 						{
 							Model_Products::setMaterial($id, $material);
@@ -445,6 +445,9 @@ class Module_Products extends BaseController
 		//Material
 		$response['materials']           = Model_Products::getMaterials();
 		$response['product']['material'] = Model_Products::getMaterial($id);
+		if(!empty($response['product']['material'][0])) {
+			$response['product']['material'] = $response['product']['material'][0];
+		}
 
 		//Related products
 		if ( ! empty($response['product']['related_products']))
@@ -631,7 +634,7 @@ class Module_Products extends BaseController
 							}
 
 							//Manage material
-							$material = Input::get('manufacturer');
+							$material = Input::get('material');
 							if ( ! empty($material))
 							{
 								Model_Products::setMaterial($id, $material);

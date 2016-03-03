@@ -70,8 +70,8 @@
                                     @include('products_partials.product_images_tab')
 
                                 </div>
-                                
-                                <div class="clearfix" ></div>
+
+                                <div class="clearfix"></div>
 
                                 <div class="col-xs-12 text-right margin-top-20">
                                     <button class="btn green-haze save_product">
@@ -81,7 +81,7 @@
 
                                 </div>
 
-                                <div class="clearfix" ></div>
+                                <div class="clearfix"></div>
                             </div>
                         </div>
                     </div>
@@ -205,6 +205,7 @@
                                'tags': $('#tags').val(),
                                'manufacturer': $('#manufacturer').val(),
                                'colors': $('#manufacturer').val(),
+                               'material': $('#material').val(),
                                'dimensions_table': $('#dimensions_table').code(),
                            },
                            headers: {
@@ -214,7 +215,7 @@
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['message']);
 
-                                   if(response['status'] == 'success' && response['product_id']) {
+                                   if (response['status'] == 'success' && response['product_id']) {
                                        setTimeout(function () {
                                            window.location.href = "/admin/products/edit/" + response['product_id'];
                                        }, 2000);
@@ -261,7 +262,7 @@
             //Dimensions table change
             $('body').on('change', '#load_table_template', function () {
                 var id = $(this).val(),
-                    holder = $('#dimensions_table');
+                        holder = $('#dimensions_table');
 
                 if (id) {
                     $.ajax({
@@ -366,11 +367,45 @@
                 });
             }
 
-            //Images
+            $('body').on('click', '.save_material', function (e) {
+                e.preventDefault();
+
+                var
+                        title = $('#add_material').val(),
+                        position = 0,
+                        url = 'store';
+
+                $.ajax({
+                           type: 'post',
+                           url: '/admin/module/materials/' + url,
+                           data: {
+                               'title': title,
+                               'position': position
+                           },
+                           headers: {
+                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                           },
+                           success: function (response) {
+                               if (typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['message']);
+                                   if (response['id']) {
+                                       $('#material').append('<option value="' + response['id'] + '">' + title + '</option>');
+                                       $('#material').val(response['id']).change();
+                                   }
+                               } else {
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                               }
+                           },
+                           error: function () {
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                           }
+                       });
+            });
+
         });
 
-        $.ajaxPrefilter(function( options ) {
-            if ( !options.beforeSend) {
+        $.ajaxPrefilter(function (options) {
+            if (!options.beforeSend) {
                 options.beforeSend = function (xhr) {
                     xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
                 }

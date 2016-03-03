@@ -49,7 +49,6 @@
         </div>
 
         <div class="clearfix"></div>
-        
 
         <div class="form-group form-md-line-input has-success form-md-floating-label">
             <div class="input-icon right">

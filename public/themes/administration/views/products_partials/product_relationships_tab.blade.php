@@ -49,17 +49,42 @@
         <div class="clearfix"></div>
 
         <div class="col-xs-12 margin-top-20">
-            <label for="material" class="control-label col-xs-12 default no-padding">
-                {{trans('products.material')}}
-            </label>
-            <select id="material" name="material" class="form-control select2me input-lg no-padding" data-placeholder="{{trans('products.select_material')}}">
-                <option value="">{{trans('products.select_material')}}</option>
-                @if(isset($materials) && is_array($materials))
-                    @foreach($materials as $key => $material)
-                        <option value="{{$material['id']}}" @if(!empty($related_materials) && in_array($color['id'], $related_materials)) selected="selected" @endif>{{$material['title']}}</option>
-                    @endforeach
-                @endif
-            </select>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-padding">
+                <label for="material" class="control-label col-xs-12 default no-padding">
+                    {{trans('products.material')}}
+                </label>
+                <select id="material" name="material" class="form-control select2me input-lg no-padding" data-placeholder="{{trans('products.select_material')}}">
+                    <option value="">{{trans('products.select_material')}}</option>
+                    @if(isset($materials) && is_array($materials))
+                        @foreach($materials as $key => $material)
+                            <option value="{{$material['id']}}" @if(!empty($product['material']) && $material['id'] == $product['material']) selected="selected" @endif>{{$material['title']}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-15 no-padding">
+                <div class="col-xs-10 col-sm-11 col-md-11 col-lg-11">
+                    <div class="form-group form-md-line-input has-success form-md-floating-label no-margin">
+                        <div class="input-icon right">
+                            <input name="add_material" id="add_material" type="text" class="form-control input-lg"/>
+
+                            <label for="add_material">{{trans('products.add_material')}}</label>
+                            <span class="help-block"></span>
+                            <i class="fa fa-font"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 no-padding text-right margin-top-10">
+                    <a href="#"
+                       class="btn btn-icon-only green save_material margin-top-20"
+                       title="{{trans('global.save')}}"
+                    >
+                        <i class="fa fa-save"></i>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="clearfix"></div>
 

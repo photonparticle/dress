@@ -127,6 +127,7 @@
 
                         var
                                 parent = $(this).closest('.portlet'),
+                                btn = $(this),
                                 id = $(this).attr('data-id'),
                                 title = parent.find('#title').val(),
                                 position = parent.find('#position').val();
@@ -154,10 +155,11 @@
                                        if (typeof response == typeof {} && response['status'] && response['message']) {
                                            showNotification(response['status'], response['message']);
                                            
-                                           if ( response['status'] == 'success')
+                                           if ( response['status'] == 'success' && response['id'])
                                            {
                                                
                                                parent.find('.caption span').html(title);
+                                               btn.attr('data-id', response['id']);
                                            }
                                            
                                        } else {

@@ -204,6 +204,7 @@
                                'tags': $('#tags').val(),
                                'manufacturer': $('#manufacturer').val(),
                                'colors': $('#colors').val(),
+                               'material': $('#material').val(),
                                'dimensions_table': $('#dimensions_table').code(),
                            },
                            headers: {
@@ -464,6 +465,41 @@
                     return false;
                 }
             }
+
+            $('body').on('click', '.save_material', function (e) {
+                e.preventDefault();
+
+                var
+                        title = $('#add_material').val(),
+                        position = 0,
+                        url = 'store';
+
+                $.ajax({
+                           type: 'post',
+                           url: '/admin/module/materials/' + url,
+                           data: {
+                               'title': title,
+                               'position': position
+                           },
+                           headers: {
+                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                           },
+                           success: function (response) {
+                               if (typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['message']);
+                                   if (response['id']) {
+                                       $('#material').append('<option value="' + response['id'] + '">' + title + '</option>');
+                                       $('#material').val(response['id']).change();
+                                   }
+                               } else {
+                                   showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                               }
+                           },
+                           error: function () {
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                           }
+                       });
+            });
 
         });
 

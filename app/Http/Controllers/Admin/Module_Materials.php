@@ -81,10 +81,11 @@ class Module_Materials extends BaseController
 					'created_at' => time(),
 				];
 
-				if (Model_Materials::insertMaterial($data) != FALSE)
+				if (($id = Model_Materials::insertMaterial($data)) != FALSE)
 				{
 					$response['status']  = 'success';
 					$response['message'] = trans('materials.saved');
+					$response['id'] = $id;
 				}
 			}
 		}
