@@ -35,14 +35,14 @@ class Module_Carousels extends BaseController
 	}
 
 	/**
-	 * Display a listing of tables
+	 * Display a listing of sliders
 	 * @return \Illuminate\Http\Response
 	 */
 	public function getIndex()
 	{
-		$response['pageTitle'] = trans('tables.tables');
+		$response['pageTitle'] = trans('carousels.carousels');
 
-		$response['carousels'] = Model_Carousels::getCarousels();
+		$response['carousels'] = Model_Carousels::getCarousels(FALSE, TRUE, ['id', 'title', 'type', 'active_from', 'active_to', 'created_at']);
 
 		$response['blade_custom_css'] = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -226,36 +226,18 @@ class Module_Carousels extends BaseController
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postDestroy($method = FALSE, $id = FALSE)
+	public function postDestroy($id = FALSE)
 	{
-		if ($method == 'image' && ! empty(Input::get('image')) && ! empty(Input::get('dir')))
-		{
-			$response['status']  = 'error';
-			$response['message'] = trans('carousels.image_not_removed');
-			$path                = Config::get('system_settings.carousels_upload_path');
+		$response['status']  = 'error';
+		$response['message'] = trans('carousels.not_removed');
 
-			if (file_exists($path.Input::get('dir').DIRECTORY_SEPARATOR.Input::get('image')))
-			{
-				if (unlink($path.Input::get('dir').DIRECTORY_SEPARATOR.Input::get('image')))
-				{
-					$response['status']  = 'success';
-					$response['message'] = trans('carousels.image_removed');
-				}
-			}
-		}
-		elseif ($method === FALSE || $method == 'carousel')
+		if ( ! empty($id) && intval($id) > 0)
 		{
-			$response['status']  = 'error';
-			$response['message'] = trans('carousels.not_removed');
-
-			if ( ! empty($id) && intval($id) > 0)
+			$dir = Config::get('system_settings.carousels_upload_path');
+			if (Model_Carousels::removeCarousel($id, $dir) === TRUE)
 			{
-				$dir = Config::get('system_settings.carousels_upload_path');
-				if (Model_Carousels::removeCarousel($id, $dir) === TRUE)
-				{
-					$response['status']  = 'success';
-					$response['message'] = trans('carousels.removed');
-				}
+				$response['status']  = 'success';
+				$response['message'] = trans('carousels.removed');
 			}
 		}
 

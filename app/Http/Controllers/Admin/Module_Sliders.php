@@ -34,12 +34,12 @@ class Module_Sliders extends BaseController
 	}
 
 	/**
-	 * Display a listing of tables
+	 * Display a listing of slliders
 	 * @return \Illuminate\Http\Response
 	 */
 	public function getIndex()
 	{
-		$response['pageTitle'] = trans('tables.tables');
+		$response['pageTitle'] = trans('sliders.sliders');
 
 		$response['sliders']            = Model_Sliders::getSliders();
 
