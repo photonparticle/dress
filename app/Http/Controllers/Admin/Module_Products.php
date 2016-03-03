@@ -162,12 +162,14 @@ class Module_Products extends BaseController
 				)
 				{
 					$images = array_diff(scandir($this->images_path.Input::get('images_dir').DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
+					natcasesort($images);
+					$images = array_values($images);
 
 					if ( ! empty($images) && is_array($images))
 					{
 						foreach ($images as $key => $data)
 						{
-							$images_array[$data] = 0;
+							$images_array[$data] = $key;
 						}
 					}
 				}

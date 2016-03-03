@@ -20,13 +20,15 @@
 
     <div class="clearfix"></div>
 
+    @if(!empty($product))
     <a href="javascript:;"
        class="btn green save_btn pull-right margin-top-20 padding-10"
        title="{{trans('global.save')}}"
     >
         <i class="fa fa-refresh"></i>
-        {{trans('products.sync_images')}}
+            {{trans('products.sync_images')}}
     </a>
+    @endif
 
     <div class="clearfix"></div>
 
@@ -39,7 +41,7 @@
                             <div class="portlet-title">
                                 <div class="caption col-xs-12 col-sm-12 col-md-8 col-lg-8 text-center">
                                     <i class="fa fa-picture-o"></i>
-                                    <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-8 no-margin">
+                                    <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-8 no-margin" style="padding-left:0; padding-right: 0;">
                                         <div class="input-icon right margin-10">
                                             <input id="position-{{$image}}" type="number" class="form-control input-sm input-position edited" value="{{isset($position) ? $position : '0'}}"/>
 

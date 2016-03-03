@@ -135,6 +135,8 @@
             $('.save_product').click(function (e) {
                 e.preventDefault();
 
+                var slug = $slug.val();
+
                 //Check URL
                 if (slug.length > 0) {
                     if ((current_slug.length > 0 && current_slug != slug) || (current_slug.length == 0)) {
@@ -363,6 +365,8 @@
                     }
                 });
             }
+
+            //Images
         });
 
         $.ajaxPrefilter(function( options ) {
