@@ -8,20 +8,17 @@
             <i class="fa fa-table"></i>{{$pageTitle}}
         </div>
         <div class="actions">
-            <a href="/admin/module/tables/create" class="btn btn-success" title="{{trans('tables.create_table')}}">
+            <a href="/admin/pages/create" class="btn btn-success" title="{{trans('pages.create_page')}}">
                 <i class="fa fa-plus"></i>
-                {{trans('tables.create_table')}}
+                {{trans('pages.create_page')}}
             </a>
         </div>
     </div>
     <div class="portlet-body">
-        @if(!empty($tables) && is_array($tables))
-            <table class="table table-striped table-bordered table-hover" id="tables">
+        @if(!empty($pages) && is_array($pages))
+            <table class="table table-striped table-bordered table-hover" id="pages">
                 <thead>
                 <tr>
-                    <th>
-                        {{trans('tables.image')}}
-                    </th>
                     <th>
                         {{trans('tables.title')}}
                     </th>
@@ -31,33 +28,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($tables as $table)
-                    @if(!empty($table))
+                @foreach($pages as $page)
+                    @if(!empty($page))
                         <tr>
-                            <td style="width: 128px">
-                                @if(!empty($table['image']) &&
-                                !empty($images_dir) &&
-                                !empty($public_images_dir) &&
-                                file_exists($images_dir . $table['image'])
-                                )
-                                    <img src="{{$public_images_dir. $table['image']}}" alt="{{$table['title']}}" class="img-responsive"/>
-                                @endif
-                            </td>
                             <td>
-                                {{$table['title']}}
+                                {{$page['title']}}
                             </td>
                             <td class="text-center">
-                                <a href="/admin/module/tables/edit/{{$table['id']}}"
+                                <a href="/admin/pages/edit/{{$page['id']}}"
                                    class="btn btn-icon-only green"
                                    title="{{trans('global.edit')}}"
                                 >
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 <a href="#"
-                                   class="btn btn-icon-only red remove_table"
+                                   class="btn btn-icon-only red remove_page"
                                    title="{{trans('global.remove')}}"
-                                   data-id="{{$table['id']}}"
-                                   data-title="{{$table['title']}}"
+                                   data-id="{{$page['id']}}"
+                                   data-title="{{$page['title']}}"
                                 >
                                     <i class="fa fa-trash"></i>
                                 </a>
@@ -77,15 +65,15 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
 
-            $('.remove_table').click(function (e) {
+            $('.remove_page').click(function (e) {
                 e.preventDefault();
-                var table_title = $(this).attr('data-title');
-                var table_id = $(this).attr('data-id');
+                var page_title = $(this).attr('data-title');
+                var page_id = $(this).attr('data-id');
                 var parent = $(this).closest('tr');
 
-                if (typeof table_title !== typeof undefined && table_title.length > 0) {
+                if (typeof page_title !== typeof undefined && page_title.length > 0) {
                     bootbox.dialog({
-                                       message: "<h4>{{trans('tables.table_remove')}}</h4><strong> " + table_title + "</strong>",
+                                       message: "<h4>{{trans('pages.page_remove')}}</h4><strong> " + page_title + "</strong>",
                                        title: "{{trans('global.confirm_action')}}",
                                        buttons: {
                                            cancel: {
@@ -98,7 +86,7 @@
                                                callback: function () {
                                                    $.ajax({
                                                               type: 'post',
-                                                              url: '/admin/module/tables/destroy/' + table_id,
+                                                              url: '/admin/pages/destroy/' + page_id,
                                                               headers: {
                                                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                                               },
@@ -124,10 +112,10 @@
                 }
             });
 
-            var tables = $('#tables');
+            var pages = $('#pages');
 
-            if (tables.length > 0) {
-                tables.DataTable({
+            if (pages.length > 0) {
+                pages.DataTable({
                                      responsive: true,
                                      order: [[1, 'asc']],
                                      stateSave: false,

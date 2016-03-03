@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Admin\Model_Pages;
+use App\Admin\Model_Products;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -43,11 +44,13 @@ class Module_Pages extends BaseController
 		$response['blade_custom_css'] = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
-		$response['blade_custom_js'] = [
+		$response['blade_custom_js']  = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 			'global/plugins/bootbox/bootbox.min',
 		];
+
+		$response['pages'] = Model_Pages::getPage(FALSE, ['id', 'title']);
 
 		return Theme::view('pages.list_pages', $response);
 	}
@@ -69,6 +72,9 @@ class Module_Pages extends BaseController
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
 			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
 			'global/plugins/bootstrap-summernote/summernote.min',
+			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
+			'global/plugins/jquery-slugify/speakingurl',
+			'global/plugins/jquery-slugify/slugify.min',
 		];
 
 		return Theme::view('pages.create_edit_page', $response);
@@ -81,7 +87,7 @@ class Module_Pages extends BaseController
 	public function postStore()
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('tables.not_saved');
+		$response['message'] = trans('pages.not_saved');
 
 		if ( ! empty($_POST))
 		{
@@ -89,37 +95,96 @@ class Module_Pages extends BaseController
 
 			if (empty(trim(Input::get('title'))))
 			{
-				$response['message'] = trans('tables.title_required');
+				$response['message'] = trans('pages.title_required');
 				$error               = TRUE;
 			}
 
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'      => trim(Input::get('title')),
-					'cols'	=> Input::get('cols'),
-					'rows'	=> Input::get('rows'),
-					'image'	=> Input::get('image_name')
+					'title'            => trim(Input::get('title')),
+					'content'          => Input::get('content'),
+					'meta_description' => Input::get('meta_description'),
+					'meta_keywords'    => Input::get('meta_keywords'),
+					'active'           => Input::get('active'),
 				];
 
-				if(empty(Input::get('id'))) {
-					if (($table_id = Model_Tables::insertTable($data)) != FALSE)
+				if (empty(Input::get('id')))
+				{
+					if (($page_id = Model_Pages::createPage($data)) != FALSE)
 					{
-						$response['status']  = 'success';
-						$response['message'] = trans('tables.saved');
-						$response['id'] = $table_id;
+						try {
+							//Manage Friendly URL
+							Model_Pages::setURL($page_id, Input::get('friendly_url'));
+
+							$response['status']   = 'success';
+							$response['message']  = trans('pages.saved');
+							$response['id']       = $page_id;
+							$response['redirect'] = TRUE;
+						} catch(Exception $e) {
+							$response['message'] = $e;
+						}
 					}
-				} elseif(($id = intval(Input::get('id'))) > 0) {
-					if (Model_Tables::updateTable($id, $data) != FALSE)
+				}
+				elseif (($id = intval(Input::get('id'))) > 0)
+				{
+					if (Model_Pages::updatePage($id, $data) != FALSE)
 					{
-						$response['status']  = 'success';
-						$response['message'] = trans('tables.saved');
+						try {
+							//Manage Friendly URL
+							Model_Pages::setURL($id, Input::get('friendly_url'));
+
+							$response['status']  = 'success';
+							$response['message'] = trans('pages.saved');
+						} catch(Exception $e) {
+							$response['message'] = $e;
+						}
 					}
 				}
 			}
 		}
 
 		return response()->json($response);
+	}
+
+	/**
+	 * Used to display partials or do ajax requests
+	 *
+	 * @param $request
+	 * @param $param
+	 *
+	 * @return \Illuminate\Http\Response
+	 * @internal param int $id
+	 */
+	public function getShow($request, $param)
+	{
+		if ( ! empty($request) && ! empty($param))
+		{
+
+			if ($request == 'check_url')
+			{
+				if (Model_Pages::checkURL($param) === TRUE)
+				{
+					$response['status']  = 'error';
+					$response['title']   = trans('global.warning');
+					$response['message'] = trans('products.url_exists');
+
+					return response()->json($response);
+				}
+				else
+				{
+					return 'available';
+				}
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	/**
@@ -131,13 +196,44 @@ class Module_Pages extends BaseController
 	 */
 	public function getEdit($id)
 	{
-		$response['pageTitle'] = trans('pages.edit_page');
+		$response['pageTitle'] = trans('pages.create_page');
 
 		$response['blade_custom_css'] = [
+			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
+			'global/plugins/bootstrap-summernote/summernote',
 		];
 
 		$response['blade_custom_js'] = [
+			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
+			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
+			'global/plugins/bootstrap-summernote/summernote.min',
+			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
+			'global/plugins/jquery-slugify/speakingurl',
+			'global/plugins/jquery-slugify/slugify.min',
 		];
+
+		$response['page'] = Model_Pages::getPage($id);
+
+		if ( ! empty($response['page'][0]))
+		{
+			$response['page'] = $response['page'][0];
+		}
+		//SEO Tab
+		if (($slug = Model_Pages::getURL($id)) != FALSE) {
+			$response['seo']['friendly_url'] = $slug;
+		}
+
+		if ( ! empty($response['page']['meta_description']))
+		{
+			$response['seo']['meta_description'] = $response['page']['meta_description'];
+			unset($response['page']['meta_description']);
+		}
+
+		if ( ! empty($response['page']['meta_keywords']))
+		{
+			$response['seo']['meta_keywords'] = $response['page']['meta_keywords'];
+			unset($response['page']['meta_keywords']);
+		}
 
 		return Theme::view('pages.create_edit_page', $response);
 	}
@@ -152,14 +248,14 @@ class Module_Pages extends BaseController
 	public function postDestroy($id = FALSE)
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('tables.not_removed');
+		$response['message'] = trans('pages.not_removed');
 
 		if ( ! empty($id) && intval($id) > 0)
 		{
-			if (Model_Tables::removeTable($id) === TRUE)
+			if (Model_Pages::removePage($id) === TRUE)
 			{
 				$response['status']  = 'success';
-				$response['message'] = trans('tables.removed');
+				$response['message'] = trans('pages.removed');
 			}
 		}
 

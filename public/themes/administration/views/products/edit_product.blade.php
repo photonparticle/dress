@@ -139,7 +139,7 @@
 
                 //Check URL
                 if (slug.length > 0) {
-                    if (current_slug.length > 0 && current_slug != slug) {
+                    if ((current_slug.length > 0 && current_slug != slug) || (current_slug.length == 0)) {
                         if (url_invalid === true) {
                             showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_exists')}}');
 

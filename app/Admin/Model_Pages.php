@@ -5,79 +5,116 @@ namespace App\Admin;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
-use Mockery\CountValidator\Exception;
 
 class Model_Pages extends Model
 {
 
 	/**
-	 * @param bool $id
+	 * @param bool $page_id - int|array - FALSE for to get all pages
+	 * @param array $objects
 	 *
 	 * @return array
 	 */
-	public static function getTables($id = FALSE, $for_list = TRUE, $object = FALSE)
+	public static function getPage($page_id = FALSE, $objects = [])
 	{
-		$table = DB::table('tables');
+		$pages    = DB::table('pages')
+					  ->orderBy('created_at', 'DESC');
 
-		if ($for_list === TRUE)
-		{
-			$table = $table->select(['id', 'title', 'image']);
+		if(!empty($objects) && is_array($objects)) {
+			$pages = $pages->select($objects);
 		}
 
-		if ($id != FALSE && intval($id) > 0)
+		if (is_array($page_id))
 		{
-			$table = $table->where('id', '=', $id);
+			$pages = $pages->whereIn('id', $page_id);
+		}
+		elseif (is_string($page_id) || is_int($page_id))
+		{
+			$pages = $pages->where('id', '=', $page_id);
 		}
 
-		if ($object !== FALSE)
-		{
-			if ($object == 'rows')
-			{
-				$table = $table->select(['id', 'title', 'rows']);
-			}
-			if ($object == 'cols')
-			{
-				$table = $table->select(['id', 'title', 'cols']);
-			}
-		}
+		$pages = $pages->get();
 
-		$table = $table
-			->orderBy('title', 'ASC')
-			->get();
 
-		return $table;
+		return $pages;
 	}
 
-	public static function insertTable($table)
+	public static function createPage($data)
 	{
-		if ( ! empty($table))
+		if ( ! empty($data))
 		{
-			$insertData = [
-				'title' => $table['title'],
-				'image' => $table['image']
-			];
-
-			if ( ! empty($table['cols']) && is_array($table['cols']))
+			if (empty($data['active']))
 			{
-				$insertData['cols'] = json_encode($table['cols']);
-			}
-
-			if ( ! empty($table['rows']) && is_array($table['rows']))
-			{
-				$insertData['rows'] = json_encode($table['rows']);
-			}
-
-			$table = DB::table('tables')
-					   ->insertGetId($insertData);
-
-			if ($table)
-			{
-				return $table;
+				$data['active'] = 0;
 			}
 			else
 			{
-				return FALSE;
+				$data['active'] = 1;
 			}
+
+			$page_id = DB::table('pages')
+						 ->insertGetId([
+										   'title'            => $data['title'],
+										   'content'          => $data['content'],
+										   'active'           => $data['active'],
+										   'meta_description' => $data['meta_description'],
+										   'meta_keywords'    => $data['meta_keywords'],
+										   'created_at'       => date('Y-m-d H:i:s'),
+										   'updated_at'       => date('Y-m-d H:i:s'),
+									   ]);
+			return $page_id;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public static function updatePage($page_id, $data)
+	{
+		if ( ! empty($data))
+		{
+			if (empty($data['active']))
+			{
+				$data['active'] = 0;
+			}
+			else
+			{
+				$data['active'] = 1;
+			}
+
+			DB::table('pages')
+			  ->where('id', '=', $page_id)
+			  ->update([
+						   'title'            => $data['title'],
+						   'content'          => $data['content'],
+						   'active'           => $data['active'],
+						   'meta_description' => $data['meta_description'],
+						   'meta_keywords'    => $data['meta_keywords'],
+						   'updated_at'       => date('Y-m-d H:i:s'),
+					   ]);
+
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public static function removePage($page_id)
+	{
+		if ( ! empty($page_id))
+		{
+			DB::table('pages')
+			  ->where('id', '=', $page_id)
+			  ->delete();
+			DB::table('seo_url')
+			  ->where('type', '=', 'page')
+			  ->where('object', '=', $page_id)
+			  ->delete();
+
+			return TRUE;
 		}
 		else
 		{
@@ -86,41 +123,15 @@ class Model_Pages extends Model
 	}
 
 	/**
-	 * @param $id
-	 * @param $data
+	 * @param $url
 	 *
-	 * @return bool|\Exception|Exception
+	 * @return bool
 	 */
-	public static function updateTable($id, $table)
+	public static function checkURL($url)
 	{
-		if ( ! empty($table) && ! empty($id))
+		if (DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'page')->where('slug', '=', $url)->count() > 0)
 		{
-			$updateData = [
-				'title' => $table['title'],
-				'image' => $table['image']
-			];
-
-			if ( ! empty($table['cols']) && is_array($table['cols']))
-			{
-				$updateData['cols'] = json_encode($table['cols']);
-			}
-
-			if ( ! empty($table['rows']) && is_array($table['rows']))
-			{
-				$updateData['rows'] = json_encode($table['rows']);
-			}
-
-			$query = DB::table('tables')
-					   ->where('id', '=', $id)
-					   ->update($updateData);
-			if ($query)
-			{
-				return TRUE;
-			}
-			else
-			{
-				return FALSE;
-			}
+			return TRUE;
 		}
 		else
 		{
@@ -129,41 +140,17 @@ class Model_Pages extends Model
 	}
 
 	/**
-	 * @param $id
+	 * @param $page_id
 	 *
-	 * @return bool|\Exception|Exception
+	 * @return bool
 	 */
-	public static function removeTable($id)
+	public static function getURL($page_id)
 	{
-		if ( ! empty($id))
+		$response = DB::table('seo_url')->where('type', '=', 'page')->where('object', '=', $page_id)->get();
+
+		if ( ! empty($response[0]['slug']))
 		{
-			try
-			{
-				$query = DB::table('tables');
-
-				if (is_array($id))
-				{
-					$query = $query->whereIn('id', $id);
-				}
-				else
-				{
-					$query = $query->where('id', $id);
-				}
-
-				$query = $query->delete();
-
-				if ($query)
-				{
-					return TRUE;
-				}
-				else
-				{
-					return FALSE;
-				}
-			} catch (Exception $e)
-			{
-				return $e;
-			}
+			return $response[0]['slug'];
 		}
 		else
 		{
@@ -171,17 +158,36 @@ class Model_Pages extends Model
 		}
 	}
 
-	public static function setImage($id, $image)
+	/**
+	 * @param $page_id
+	 * @param $url
+	 */
+	public static function setURL($page_id, $url)
 	{
-		if ( ! empty($id) && ! empty($image))
+		if ( ! empty($page_id) && ! empty($url))
 		{
-			$query = DB::table('tables')
-					   ->where('id', '=', $id)
-					   ->update([
-									'image' => $image,
-								]);
+			$have_url = DB::table('seo_url')->select('type', 'object')->where('type', '=', 'page')->where('object', '=', $page_id)->count();
 
-			if ($query)
+			if ($have_url)
+			{
+				$response = DB::table('seo_url')
+							  ->where('type', '=', 'page')
+							  ->where('object', '=', $page_id)
+							  ->update([
+										   'slug' => $url,
+									   ]);
+			}
+			else
+			{
+				$response = DB::table('seo_url')
+							  ->insert([
+										   'slug'   => $url,
+										   'type'   => 'page',
+										   'object' => $page_id,
+									   ]);
+			}
+
+			if ($response)
 			{
 				return TRUE;
 			}
@@ -189,10 +195,6 @@ class Model_Pages extends Model
 			{
 				return FALSE;
 			}
-		}
-		else
-		{
-			return FALSE;
 		}
 	}
 }

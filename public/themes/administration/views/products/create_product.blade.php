@@ -136,11 +136,13 @@
                 e.preventDefault();
 
                 //Check URL
-                if ($slug.val().length > 0) {
-                    if (url_invalid === true) {
-                        showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_exists')}}');
+                if (slug.length > 0) {
+                    if ((current_slug.length > 0 && current_slug != slug) || (current_slug.length == 0)) {
+                        if (url_invalid === true) {
+                            showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_exists')}}');
 
-                        return;
+                            return;
+                        }
                     }
                 } else {
                     showNotification('error', '{{trans('global.warning')}}', '{{trans('products.url_required')}}');

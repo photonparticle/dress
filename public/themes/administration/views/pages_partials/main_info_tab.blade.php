@@ -20,21 +20,21 @@
             </label>
             <div class="col-xs-12 no-padding">
                 <div id="content">
-                    {!!isset($pages['content']) ? $pages['content'] : ''!!}
+                    {!!isset($page['content']) ? $page['content'] : ''!!}
                 </div>
             </div>
             <div class="clearfix"></div>
         </div>
-        
-        <div class="clearfix"></div>
 
-        
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20">
+            <label for="active" class="control-label col-xs-12 default no-padding">
+                {{trans('pages.active')}}
+            </label>
+            <div class="col-xs-12 no-padding">
+                <input id="active" name="active" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('pages.activated')}}&nbsp;" data-off-text="&nbsp;{{trans('pages.not_activated')}}&nbsp;" @if(isset($page['active']) && $page['active'] == '1') checked @endif>
+            </div>
+        </div>
 
-        <div class="clearfix"></div>
-        
-
-         
-        
         <div class="clearfix"></div>
     </form>
 

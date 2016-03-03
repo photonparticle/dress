@@ -27,4 +27,6 @@ return [
 	'parent_required' => 'Моля, изберете родителска категория',
 	'parent_category' => 'Категория родител',
 	'category_remove' => 'Премахване на категория',
+	'url_exists'      => 'Този URL вече съществува',
+	'url_required'    => 'Моля попълнете SEO URL адрес',
 ];
