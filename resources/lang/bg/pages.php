@@ -5,6 +5,7 @@ return [
 	'content'          => 'Съдържание',
 	'main_info'        => 'Основна информация',
 	'friendly_url'     => 'SEO URL',
+	'page_title'       => 'Title таг',
 	'meta_description' => 'META Описание',
 	'meta_keywords'    => 'META Ключови думи',
 	'title_required'   => 'Заглавието е задължително',

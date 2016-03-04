@@ -17,10 +17,11 @@ class Model_Pages extends Model
 	 */
 	public static function getPage($page_id = FALSE, $objects = [])
 	{
-		$pages    = DB::table('pages')
-					  ->orderBy('created_at', 'DESC');
+		$pages = DB::table('pages')
+				   ->orderBy('created_at', 'DESC');
 
-		if(!empty($objects) && is_array($objects)) {
+		if ( ! empty($objects) && is_array($objects))
+		{
 			$pages = $pages->select($objects);
 		}
 
@@ -34,7 +35,6 @@ class Model_Pages extends Model
 		}
 
 		$pages = $pages->get();
-
 
 		return $pages;
 	}
@@ -57,11 +57,13 @@ class Model_Pages extends Model
 										   'title'            => $data['title'],
 										   'content'          => $data['content'],
 										   'active'           => $data['active'],
+										   'page_title'       => $data['page_title'],
 										   'meta_description' => $data['meta_description'],
 										   'meta_keywords'    => $data['meta_keywords'],
 										   'created_at'       => date('Y-m-d H:i:s'),
 										   'updated_at'       => date('Y-m-d H:i:s'),
 									   ]);
+
 			return $page_id;
 		}
 		else
@@ -89,6 +91,7 @@ class Model_Pages extends Model
 						   'title'            => $data['title'],
 						   'content'          => $data['content'],
 						   'active'           => $data['active'],
+						   'page_title'       => $data['page_title'],
 						   'meta_description' => $data['meta_description'],
 						   'meta_keywords'    => $data['meta_keywords'],
 						   'updated_at'       => date('Y-m-d H:i:s'),

@@ -14,6 +14,16 @@
             </div>
         </div>
 
+        <div class="form-group form-md-line-input has-success form-md-floating-label">
+            <div class="input-icon right">
+                <input name="page_title" id="page_title" type="text" class="form-control input-lg"  value="{{isset($seo['page_title']) ? $seo['page_title'] : ''}}"/>
+
+                <label for="page_title">{{trans('pages.page_title')}}</label>
+                <span class="help-block"></span>
+                <i class="fa fa-font"></i>
+            </div>
+        </div>
+
         <div class="form-group">
             <label for="meta_description" class="control-label col-xs-12 default no-padding">
                 {{trans('pages.meta_description')}}

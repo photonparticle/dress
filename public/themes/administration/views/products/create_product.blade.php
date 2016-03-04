@@ -196,6 +196,7 @@
                                'discount_end': $('#discount_end').val(),
                                'created_at': $('#created_at').val(),
                                'friendly_url': $slug.val(),
+                               'page_title': $('#page_title').val(),
                                'meta_description': $('#meta_description').val(),
                                'meta_keywords': $('#meta_keywords').val(),
                                'categories': $('#categories').val(),

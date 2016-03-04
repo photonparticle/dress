@@ -244,6 +244,14 @@ class Model_Categories extends Model
 				];
 			}
 
+			if ( ! empty($data['page_title']))
+			{
+				$objects['page_title'] = [
+					'value' => $data['page_title'],
+					'type'  => 'text',
+				];
+			}
+
 			if ( ! empty($data['meta_description']))
 			{
 				$objects['meta_description'] = [

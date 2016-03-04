@@ -61,6 +61,7 @@ class Model_Products extends Model
 				{
 					foreach ($objects as $obj_key => $object)
 					{
+
 						$response[$key][$obj_key] = $object;
 					}
 				}
@@ -243,6 +244,14 @@ class Model_Products extends Model
 				$objects['related_products'] = [
 					'value' => json_encode($data['related_products']),
 					'type'  => 'json',
+				];
+			}
+
+			if ( ! empty($data['page_title']))
+			{
+				$objects['page_title'] = [
+					'value' => $data['page_title'],
+					'type'  => 'string',
 				];
 			}
 

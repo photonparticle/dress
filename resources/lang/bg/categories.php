@@ -27,6 +27,12 @@ return [
 	'parent_required' => 'Моля, изберете родителска категория',
 	'parent_category' => 'Категория родител',
 	'category_remove' => 'Премахване на категория',
+	'friendly_url'                  => 'SEO URL',
+	'page_title'                    => 'Title таг',
+	'tags_help'                     => 'Избройте със запетайка',
+	'tags'                          => 'Тагове',
+	'meta_description'              => 'META Описание',
+	'meta_keywords'                 => 'META Ключови думи',
 	'url_exists'      => 'Този URL вече съществува',
 	'url_required'    => 'Моля попълнете SEO URL адрес',
 ];

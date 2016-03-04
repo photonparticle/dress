@@ -104,6 +104,7 @@ class Module_Pages extends BaseController
 				$data = [
 					'title'            => trim(Input::get('title')),
 					'content'          => Input::get('content'),
+					'page_title'       => Input::get('page_title'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
 					'active'           => Input::get('active'),
@@ -113,7 +114,8 @@ class Module_Pages extends BaseController
 				{
 					if (($page_id = Model_Pages::createPage($data)) != FALSE)
 					{
-						try {
+						try
+						{
 							//Manage Friendly URL
 							Model_Pages::setURL($page_id, Input::get('friendly_url'));
 
@@ -121,7 +123,8 @@ class Module_Pages extends BaseController
 							$response['message']  = trans('pages.saved');
 							$response['id']       = $page_id;
 							$response['redirect'] = TRUE;
-						} catch(Exception $e) {
+						} catch (Exception $e)
+						{
 							$response['message'] = $e;
 						}
 					}
@@ -130,13 +133,15 @@ class Module_Pages extends BaseController
 				{
 					if (Model_Pages::updatePage($id, $data) != FALSE)
 					{
-						try {
+						try
+						{
 							//Manage Friendly URL
 							Model_Pages::setURL($id, Input::get('friendly_url'));
 
 							$response['status']  = 'success';
 							$response['message'] = trans('pages.saved');
-						} catch(Exception $e) {
+						} catch (Exception $e)
+						{
 							$response['message'] = $e;
 						}
 					}
@@ -219,8 +224,15 @@ class Module_Pages extends BaseController
 			$response['page'] = $response['page'][0];
 		}
 		//SEO Tab
-		if (($slug = Model_Pages::getURL($id)) != FALSE) {
+		if (($slug = Model_Pages::getURL($id)) != FALSE)
+		{
 			$response['seo']['friendly_url'] = $slug;
+		}
+
+		if ( ! empty($response['page']['page_title']))
+		{
+			$response['seo']['page_title'] = $response['page']['page_title'];
+			unset($response['page']['page_title']);
 		}
 
 		if ( ! empty($response['page']['meta_description']))

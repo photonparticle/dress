@@ -81,6 +81,7 @@
                 var
                         title = $('#title').val(),
                         content = $('#content').code(),
+                        page_title = $('#page_title').val(),
                         meta_description = $('#meta_description').val(),
                         meta_keywords = $('#meta_keywords').val();
 
@@ -115,6 +116,7 @@
                                'content': content,
                                'active': active,
                                'friendly_url': $slug.val(),
+                               'page_title': page_title,
                                'meta_description': meta_description,
                                'meta_keywords': meta_keywords,
                                'id': '{{$page['id'] or ''}}'

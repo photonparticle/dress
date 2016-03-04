@@ -135,6 +135,7 @@ class Module_Categories extends BaseController
 					'position'         => Input::get('position'),
 					'visible'          => Input::get('visible'),
 					'active'           => Input::get('active'),
+					'page_title'       => Input::get('page_title'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
 				];
@@ -251,6 +252,11 @@ class Module_Categories extends BaseController
 			$response['seo']['friendly_url'] = $slug;
 		}
 
+		if ( ! empty($response['category']['page_title']))
+		{
+			$response['seo']['page_title'] = $response['category']['page_title'];
+			unset($response['category']['page_title']);
+		}
 		if ( ! empty($response['category']['meta_description']))
 		{
 			$response['seo']['meta_description'] = $response['category']['meta_description'];
@@ -304,13 +310,14 @@ class Module_Categories extends BaseController
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'       => trim(Input::get('title')),
-					'description' => Input::get('description'),
-					'level'       => $category_level,
-					'parent'      => $parent,
-					'position'    => Input::get('position'),
-					'visible'     => Input::get('visible'),
-					'active'      => Input::get('active'),
+					'title'            => trim(Input::get('title')),
+					'description'      => Input::get('description'),
+					'level'            => $category_level,
+					'parent'           => $parent,
+					'position'         => Input::get('position'),
+					'visible'          => Input::get('visible'),
+					'active'           => Input::get('active'),
+					'page_title'       => Input::get('page_title'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
 				];

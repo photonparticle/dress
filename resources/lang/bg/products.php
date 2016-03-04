@@ -36,6 +36,7 @@ return [
 	'quantity'                      => 'Количество',
 	'select_sizes_group'            => 'Избери група',
 	'friendly_url'                  => 'SEO URL',
+	'page_title'                    => 'Title таг',
 	'tags_help'                     => 'Избройте със запетайка',
 	'tags'                          => 'Тагове',
 	'meta_description'              => 'META Описание',

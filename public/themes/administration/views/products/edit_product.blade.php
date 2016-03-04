@@ -71,7 +71,7 @@
 
                                 </div>
 
-                                <div class="clearfix" ></div>
+                                <div class="clearfix"></div>
 
                                 <div class="col-xs-12 text-right margin-top-20">
                                     <button class="btn green-haze save_product">
@@ -81,7 +81,7 @@
 
                                 </div>
 
-                                <div class="clearfix" ></div>
+                                <div class="clearfix"></div>
                             </div>
                         </div>
                     </div>
@@ -196,6 +196,7 @@
                                'discount_end': $('#discount_end').val(),
                                'created_at': $('#created_at').val(),
                                'friendly_url': slug,
+                               'page_title': $('#page_title').val(),
                                'meta_description': $('#meta_description').val(),
                                'meta_keywords': $('#meta_keywords').val(),
                                'related_products': $('#related_products').val(),
@@ -386,7 +387,7 @@
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['message']);
 
-                                   if(response['status'] == 'success') {
+                                   if (response['status'] == 'success') {
                                        window.location.replace('/admin/products/edit/{{$product['id']}}#images');
                                        location.reload();
                                    }
@@ -403,7 +404,7 @@
 
             //Image delete
             $('body').on('click', '.product-images a.remove_btn', function () {
-                    var images = getImages(),
+                var images = getImages(),
                         remove_image = $(this).attr('data-image'),
                         parent = $(this).closest('.product-image-holder');
 
@@ -422,7 +423,7 @@
                            success: function (response) {
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['message']);
-                                   if(response['status'] == 'success') {
+                                   if (response['status'] == 'success') {
                                        parent.remove();
                                        imagesGrid();
                                    }
@@ -459,7 +460,7 @@
                     });
                 }
 
-                if(images) {
+                if (images) {
                     return JSON.stringify(images);
                 } else {
                     return false;

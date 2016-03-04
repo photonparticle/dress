@@ -46,10 +46,10 @@ class Module_Products extends BaseController
 	{
 		$response['pageTitle'] = trans('global.products');
 
-		$response['products'] = Model_Products::getProducts(FALSE, ['title', 'images']);
-		$response['thumbs_path']      = Config::get('system_settings.product_public_path');
-		$response['icon_size']        = Config::get('images.sm_icon_size');
-		$upload_path      = Config::get('system_settings.product_upload_path');
+		$response['products']    = Model_Products::getProducts(FALSE, ['title', 'images']);
+		$response['thumbs_path'] = Config::get('system_settings.product_public_path');
+		$response['icon_size']   = Config::get('images.sm_icon_size');
+		$upload_path             = Config::get('system_settings.product_upload_path');
 
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -82,7 +82,7 @@ class Module_Products extends BaseController
 
 					reset($product['images']);
 					$product['images'] = key($product['images']);
-					if (file_exists($upload_path . $product['id'] . DIRECTORY_SEPARATOR . $response['icon_size'] . DIRECTORY_SEPARATOR . $product['images']))
+					if (file_exists($upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images']))
 					{
 						$response['products'][$product['id']]['image'] = $product['images'];
 					}
@@ -220,6 +220,7 @@ class Module_Products extends BaseController
 					'discount_end'     => Input::get('discount_end'),
 					'created_at'       => Input::get('created_at'),
 					'sizes'            => Input::get('sizes'),
+					'page_title'       => Input::get('page_title'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
 					'related_products' => Input::get('related_products'),
@@ -428,6 +429,11 @@ class Module_Products extends BaseController
 			$response['seo']['friendly_url'] = $slug;
 		}
 
+		if ( ! empty($response['product']['page_title']))
+		{
+			$response['seo']['page_title'] = $response['product']['page_title'];
+			unset($response['product']['page_title']);
+		}
 		if ( ! empty($response['product']['meta_description']))
 		{
 			$response['seo']['meta_description'] = $response['product']['meta_description'];
@@ -630,6 +636,7 @@ class Module_Products extends BaseController
 						'discount_end'     => Input::get('discount_end'),
 						'created_at'       => Input::get('created_at'),
 						'sizes'            => Input::get('sizes'),
+						'page_title'       => Input::get('page_title'),
 						'meta_description' => Input::get('meta_description'),
 						'meta_keywords'    => Input::get('meta_keywords'),
 						'related_products' => Input::get('related_products'),
