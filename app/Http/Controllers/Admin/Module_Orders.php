@@ -67,10 +67,12 @@ class Module_Orders extends BaseController
 		$customCSS                    = [
 			###
             'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+            'global/plugins/bootstrap-summernote/summernote',
 		];
 		$customJS                     = [
 			###
             'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
+            'global/plugins/bootstrap-summernote/summernote.min',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;

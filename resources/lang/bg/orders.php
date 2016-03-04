@@ -41,6 +41,9 @@ return [
     'office'                    => 'Офис',
     'to_address'                => 'До адрес',
     'to_office'                 => 'До офис',
+    'msgtoorder'                => 'Коментар за поръчката',
+    'comments'                  => 'Коментари',
+    
     
     
 ];
