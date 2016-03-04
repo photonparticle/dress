@@ -25,7 +25,7 @@
                                 
 											<div class="row">
 												<div class="col-md-6 col-sm-12">
-													<div class="portlet yellow-crusta box">
+													<div class="portlet red-sunglo box">
 														<div class="portlet-title">
 															<div class="caption">
 																<i class="fa fa-shopping-cart"></i>{{trans('orders.order_details')}}
@@ -216,8 +216,8 @@
 												</div>
 											</div>
 											<div class="row">
-												<div class="col-md-6 col-sm-12 col-lg-12">
-													<div class="portlet red-sunglo box">
+												<div class="col-md-6 col-sm-12">
+													<div class="portlet box green">
 														<div class="portlet-title">
 															<div class="caption">
 																<i class="fa fa-shopping-cart"></i>{{trans('orders.shipping_addr')}}
@@ -240,7 +240,7 @@
                                                             
                                                             <div class="edit-form-details ">
                                                                     
-                                                                <div class="form-group form-md-line-input has-error form-md-floating-label">
+                                                                <div class="form-group form-md-line-input has-warnig form-md-floating-label">
                                                                     <div class="input-icon right ">
                                                                         <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
 
@@ -249,7 +249,7 @@
                                                                         <i class="fa fa-building"></i>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group form-md-line-input has-error form-md-floating-label">
+                                                                <div class="form-group form-md-line-input has-warnig form-md-floating-label">
                                                                     <div class="input-icon right">
                                                                         <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
 
@@ -258,7 +258,7 @@
                                                                         <i class="fa fa-building-o"></i>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group form-md-line-input has-error form-md-floating-label">
+                                                                <div class="form-group form-md-line-input has-warnig form-md-floating-label">
                                                                     <div class="input-icon right">
                                                                         <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
 
@@ -271,7 +271,47 @@
 														</div>
 													</div>
 												</div>
+                                                
+												<div class="col-md-6 col-sm-12">
+													<div class="portlet yellow-crusta box">
+														<div class="portlet-title">
+															<div class="caption">
+																<i class="fa fa-shopping-cart"></i>{{trans('orders.comments')}}
+															</div>
+														</div>
+														<div class="portlet-body">
+                                                            <div class="locked-form-details">
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-12 value">
+                                                                        <!--
+                                                                        #################<br>
+                                                                        
+                                                                        COMMENT TO ORDER<br>
+                                                                        
+                                                                        #################<br>
+                                                                        -->
+                                                                        <div class="form-group form-md-line-input has-warning form-md-floating-label padding-60">
+                                                                            <textarea class="form-control" rows="3"></textarea>
+                                                                            <label for="form_control_1">{{trans('orders.msgtoorder')}}</label>
+                                                                            
+                                                                        </div>
+
+                                                                        
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="edit-form-details ">
+                                                                  
+                                                                <div class="clearfix"></div>
+                                                                
+                                                            </div>
+														</div>
+													</div>
+												</div>
 											</div>
+                                
 											<div class="row">
 												<div class="col-md-12 col-sm-12">
 													<div class="portlet grey-cascade box">
@@ -340,6 +380,9 @@
                                                                                 format: "yyyy.mm.dd hh:ii",
                                                                                 pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left")
                                                                             });
+            //Init WYSIWYG
+            $('#description').summernote({height: 300});
+            $('#dimensions_table').summernote({height: 300});
         
         
         });
