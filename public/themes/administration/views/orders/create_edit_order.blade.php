@@ -32,40 +32,100 @@
 															</div>
 														</div>
 														<div class="portlet-body">
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.order_n')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 12313232 <span class="label label-info label-sm">
-																	Email confirmation was sent </span>
+                                                            <div class="locked-form-details" >
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-5 name">
+                                                                         {{trans('orders.order_n')}}:
+                                                                    </div>
+                                                                    <div class="col-md-7 value">
+                                                                         12313232 <span class="label label-info label-sm">
+                                                                        Email confirmation was sent </span>
+                                                                    </div>
                                                                 </div>
-															</div>
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.order_d_t')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 Dec 27, 2013 7:16:25 PM
-																</div>
-															</div>
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.order_status')}}:
-																</div>
-																<div class="col-md-7 value">
-																	<span class="label label-success">
-																	Closed </span>
-																</div>
-															</div>
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.grand_total')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 $175.25
-																</div>
-															</div>
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-5 name">
+                                                                         {{trans('orders.order_d_t')}}:
+                                                                    </div>
+                                                                    <div class="col-md-7 value">
+                                                                         Dec 27, 2013 7:16:25 PM
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-5 name">
+                                                                         {{trans('orders.order_status')}}:
+                                                                    </div>
+                                                                    <div class="col-md-7 value">
+                                                                        <span class="label label-success">
+                                                                        Closed </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-5 name">
+                                                                         {{trans('orders.grand_total')}}:
+                                                                    </div>
+                                                                    <div class="col-md-7 value">
+                                                                         $175.25
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="edit-form-details ">
+                                                                
+                                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 margin-top-20 no-padding">
+                                                                    <label for="created_at" class="control-label col-xs-12 default no-padding">
+                                                                        {{trans('orders.created_at')}}
+                                                                    </label>
+
+                                                                    <div class="input-group date created_at">
+                                                                        <input type="text" id="created_at" size="16" readonly class="form-control" value="{{isset($product['created_at']) ? $product['created_at'] : ''}}">
+                                                                        <span class="input-group-btn">
+                                                                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="clearfix"></div>
+                                                                
+                                                                    <!-- START -->
+                                                                
+                                                                    {{--STATUS--}}
+                                                                
+                                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding">
+                                                                    <label for="type" class="control-label col-xs-12 default no-padding">
+                                                                        {{trans('orders.order_status')}}
+                                                                    </label>
+                                                                    <select id="type" name="type" class="form-control input-lg">
+                                                                        <option value="">{{trans('orders.ch_status')}}</option>
+                                                                        <option value="requested" @if(!empty($orders['status']) && $order['status'] == 'requested') selected="selected" @endif>{{trans('orders.requested')}}</option>
+                                                                        <option value="sended" @if(!empty($order['status']) && $order['status'] == 'sended') selected="selected" @endif>{{trans('orders.sended')}}</option>
+                                                                        <option value="completed" @if(!empty($order['status']) && $order['status'] == 'completed') selected="selected" @endif>{{trans('orders.completed')}}</option>
+                                                                        <option value="canceled" @if(!empty($order['status']) && $order['status'] == 'canceled') selected="selected" @endif>{{trans('orders.canceled')}}</option>
+                                                                    </select>
+                                                                </div>
+                                                                                                                                
+                                                                <div class="clearfix"></div>
+                                                                
+                                                                    <!-- END -->
+                                                                
+                                                                    <!-- START -->
+                                                                
+                                                                    {{--DELIVERY_TYPE--}}
+                                                                
+                                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding">
+                                                                    <label for="type" class="control-label col-xs-12 default no-padding">
+                                                                        {{trans('orders.delivery_type')}}
+                                                                    </label>
+                                                                    <select id="type" name="type" class="form-control input-lg">
+                                                                        <option value="">{{trans('orders.ch_delivery')}}</option>
+                                                                        <option value="to_office" @if(!empty($orders['status']) && $order['status'] == 'requested') selected="selected" @endif>{{trans('orders.to_office')}}</option>
+                                                                        <option value="to_address" @if(!empty($order['status']) && $order['status'] == 'sended') selected="selected" @endif>{{trans('orders.to_address')}}</option>
+                                                                    </select>
+                                                                </div>
+                                                                                                                                
+                                                                <div class="clearfix"></div>
+                                                                
+                                                                    <!-- END -->
+                                                            </div>
 														</div>
 													</div>
 												</div>
@@ -77,30 +137,80 @@
 															</div>
 														</div>
 														<div class="portlet-body">
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.name')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 Jhon Doe
-																</div>
-															</div>
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.email')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 jhon@doe.com
-																</div>
-															</div>
-															<div class="row static-info">
-																<div class="col-md-5 name">
-																	 {{trans('orders.phone')}}:
-																</div>
-																<div class="col-md-7 value">
-																	 12234389
-																</div>
-															</div>
+                                                            <div class="locked-form-details">
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-5 name">
+                                                                         {{trans('orders.name')}}:
+                                                                    </div>
+                                                                    <div class="col-md-7 value">
+                                                                         Jhon Doe
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-5 name">
+                                                                         {{trans('orders.email')}}:
+                                                                    </div>
+                                                                    <div class="col-md-7 value">
+                                                                         jhon@doe.com
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-5 name">
+                                                                         {{trans('orders.phone')}}:
+                                                                    </div>
+                                                                    <div class="col-md-7 value">
+                                                                         12234389
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="edit-form-details ">
+                                                                
+                                                                
+
+                                                                <div class="form-group form-md-line-input has-info form-md-floating-label no-margin margin-top-10">
+                                                                    
+                                                                    <div class="input-icon right">
+                                                                        <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+
+                                                                        <label for="title">{{trans('orders.name')}}</label>
+                                                                        <span class="help-block"></span>
+                                                                        <i class="fa fa-user"></i>
+                                                                    </div>
+                                                                </div>
+                                                                
+
+                                                                <div class="form-group form-md-line-input has-info form-md-floating-label no-margin margin-top-10">
+                                                                    <div class="input-icon right">
+                                                                        <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+
+                                                                        <label for="title">{{trans('orders.lastname')}}</label>
+                                                                        <span class="help-block"></span>
+                                                                        <i class="fa fa-user-plus"></i>
+                                                                    </div>
+                                                                </div>
+                                                                
+
+                                                                <div class="form-group form-md-line-input has-info form-md-floating-label no-margin margin-top-10">
+                                                                    <div class="input-icon right">
+                                                                        <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+
+                                                                        <label for="title">{{trans('orders.email')}}</label>
+                                                                        <span class="help-block"></span>
+                                                                        <i class="fa fa-at"></i>
+                                                                    </div>
+                                                                </div>
+                                                                
+
+                                                                <div class="form-group form-md-line-input has-info form-md-floating-label no-margin margin-top-10">
+                                                                    <div class="input-icon right">
+                                                                        <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+
+                                                                        <label for="title">{{trans('orders.phone')}}</label>
+                                                                        <span class="help-block"></span>
+                                                                        <i class="fa fa-phone"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 														</div>
 													</div>
 												</div>
@@ -114,17 +224,50 @@
 															</div>
 														</div>
 														<div class="portlet-body">
-															<div class="row static-info">
-																<div class="col-md-12 value">
-																	 Jhon Done<br>
-																	 #24 Park Avenue Str<br>
-																	 New York<br>
-																	 Connecticut, 23456 New York<br>
-																	 United States<br>
-																	 T: 123123232<br>
-																	 F: 231231232<br>
-																</div>
-															</div>
+                                                            <div class="locked-form-details">
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-12 value">
+                                                                         Jhon Done<br>
+                                                                         #24 Park Avenue Str<br>
+                                                                         New York<br>
+                                                                         Connecticut, 23456 New York<br>
+                                                                         United States<br>
+                                                                         T: 123123232<br>
+                                                                         F: 231231232<br>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="edit-form-details ">
+                                                                    
+                                                                <div class="form-group form-md-line-input has-error form-md-floating-label">
+                                                                    <div class="input-icon right ">
+                                                                        <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+
+                                                                        <label for="title">{{trans('orders.address')}}</label>
+                                                                        <span class="help-block"></span>
+                                                                        <i class="fa fa-building"></i>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-md-line-input has-error form-md-floating-label">
+                                                                    <div class="input-icon right">
+                                                                        <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+
+                                                                        <label for="title">{{trans('orders.city')}}</label>
+                                                                        <span class="help-block"></span>
+                                                                        <i class="fa fa-building-o"></i>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-md-line-input has-error form-md-floating-label">
+                                                                    <div class="input-icon right">
+                                                                        <input name="title" id="title" type="text" class="form-control input-lg"  value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+
+                                                                        <label for="title">{{trans('orders.post_code')}}</label>
+                                                                        <span class="help-block"></span>
+                                                                        <i class="fa fa-envelope-o"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 														</div>
 													</div>
 												</div>
@@ -188,134 +331,17 @@
 @section('customJS')
     <script type="text/javascript">
         jQuery(document).ready(function () {
-
-            //Global variables
-            var group = '{{isset($group) ? $group : ''}}',
-                    new_group_name = '';
-
-            $('body').on('change', '#group', function () {
-                new_group_name = $(this).val();
-            });
-
-            $('body').on('click', '.add_manufacturer', function (e) {
-                e.preventDefault();
-
-                $.ajax({
-                           type: 'get',
-                           url: '/admin/module/manufacturers/show/',
-                           async: 'true',
-                           headers: {
-                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                           },
-                           success: function (response) {
-                               if (response) {
-                                   $('#manufacturers_portlet').append(response);
-                               }
-                           },
-                           error: function () {
-                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
-                           }
-
-                       });
-            });
-
-            $('.remove_btn').click(function () {
-                var manufacturer_id = $(this).attr('data-id');
-                var manufacturer_title = $(this).attr('data-title');
-                var parent = $(this).closest('.portlet');
-
-                if (
-                        typeof manufacturer_id !== typeof undefined && typeof manufacturer_title !== typeof undefined &&
-                        manufacturer_title.length > 0 && manufacturer_title.length > 0
-                ) {
-                    bootbox.dialog({
-                                       message: "<h4>{{trans('manufacturers.remove')}}</h4> <strong>ID:</strong> " + manufacturer_id + " <br /><strong>{{trans('manufacturers.title')}}:</strong> " + manufacturer_title,
-                                       title: "{{trans('global.confirm_action')}}",
-                                       buttons: {
-                                           cancel: {
-                                               label: "{{trans('global.no')}}",
-                                               className: "btn-danger"
-                                           },
-                                           confirm: {
-                                               label: "{{trans('global.yes')}}",
-                                               className: "btn-success",
-                                               callback: function () {
-                                                   $.ajax({
-                                                              type: 'post',
-                                                              url: '/admin/module/manufacturers/destroy/' + manufacturer_id,
-                                                              headers: {
-                                                                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                              },
-                                                              success: function (response) {
-                                                                  if (typeof response == typeof {} && response['status'] && response['message']) {
-                                                                      showNotification(response['status'], response['title'], response['message']);
-                                                                      if (response['status'] == 'success') {
-                                                                          parent.remove();
-                                                                      }
-                                                                  } else {
-                                                                      showNotification('error', translate('request_not_completed'), translate('contact_support'));
-                                                                  }
-                                                              },
-                                                              error: function () {
-                                                                  showNotification('error', translate('request_not_completed'), translate('contact_support'));
-                                                              }
-
-                                                          });
-                                               }
-                                           }
-                                       }
-                                   });
-                }
-            });
-
-            $('body').on( 'click', '.save_btn',
-                    function (e) {
-                        e.preventDefault();
-
-                        var
-                                parent = $(this).closest('.portlet'),
-                                id = $(this).attr('data-id'),
-                                title = parent.find('#title').val(),
-                                position = parent.find('#position').val();
-
-                        if(id == 'new') {
-                            var url = 'store';
-                        } else {
-                            var url = 'update/' + id;
-                        }
-
-                        console.log(title);
-
-                        $.ajax({
-                                   type: 'post',
-                                   url: '/admin/module/manufacturers/' + url,
-                                   data: {
-                                       'id': id,
-                                       'title': title,
-                                       'position': position
-                                   },
-                                   headers: {
-                                       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                   },
-                                   success: function (response) {
-                                       if (typeof response == typeof {} && response['status'] && response['message']) {
-                                           showNotification(response['status'], response['message']);
-                                       } else {
-                                           showNotification('error', translate('request_not_completed'), translate('contact_support'));
-                                           
-                                           if ( response['status'] == 'success')
-                                           {
-                                               
-                                               parent.find('.caption span').html(title);
-                                           }
-                                       }
-                                   },
-                                   error: function () {
-                                       showNotification('error', translate('request_not_completed'), translate('contact_support'));
-                                   }
-                               });
-                    }
-            );
+        
+        
+            // Init DateTime_Picker
+            $(".discount_start, .discount_end, .created_at").datetimepicker({
+                                                                                autoclose: true,
+                                                                                isRTL: Metronic.isRTL(),
+                                                                                format: "yyyy.mm.dd hh:ii",
+                                                                                pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left")
+                                                                            });
+        
+        
         });
     </script>
 @endsection
