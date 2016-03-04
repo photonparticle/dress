@@ -46,7 +46,10 @@ class Module_Products extends BaseController
 	{
 		$response['pageTitle'] = trans('global.products');
 
-		$response['products'] = Model_Products::getProducts(FALSE, ['title']);
+		$response['products'] = Model_Products::getProducts(FALSE, ['title', 'images']);
+		$response['thumbs_path']      = Config::get('system_settings.product_public_path');
+		$response['icon_size']        = Config::get('images.sm_icon_size');
+		$upload_path      = Config::get('system_settings.product_upload_path');
 
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -57,6 +60,36 @@ class Module_Products extends BaseController
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 			'global/plugins/bootbox/bootbox.min',
 		];
+
+		//Images Tab
+		foreach ($response['products'] as $key => $product)
+		{
+			if ( ! empty($product['images']))
+			{
+				$product['images'] = json_decode($product['images'], TRUE);
+
+				if (is_array($product['images']))
+				{
+					uasort($product['images'], function ($a, $b)
+					{
+						if ($a == $b)
+						{
+							return 0;
+						}
+
+						return ($a < $b) ? -1 : 1;
+					});
+
+					reset($product['images']);
+					$product['images'] = key($product['images']);
+					if (file_exists($upload_path . $product['id'] . DIRECTORY_SEPARATOR . $response['icon_size'] . DIRECTORY_SEPARATOR . $product['images']))
+					{
+						$response['products'][$product['id']]['image'] = $product['images'];
+					}
+				}
+				unset($response['product'][$product['id']]['images']);
+			}
+		}
 
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
@@ -366,7 +399,7 @@ class Module_Products extends BaseController
 		$response['groups']             = Model_Sizes::getSizes(TRUE);
 		$response['colors']             = Model_Products::getColors();
 		$response['related_colors']     = Model_Products::getColor($id);
-		$response['dimensions_tables'] = Model_Tables::getTables();
+		$response['dimensions_tables']  = Model_Tables::getTables();
 		if ( ! empty($response['dimensions_tables']) && is_array($response['dimensions_tables']))
 		{
 			foreach ($response['dimensions_tables'] as $key => $table)
@@ -445,7 +478,8 @@ class Module_Products extends BaseController
 		//Material
 		$response['materials']           = Model_Products::getMaterials();
 		$response['product']['material'] = Model_Products::getMaterial($id);
-		if(!empty($response['product']['material'][0])) {
+		if ( ! empty($response['product']['material'][0]))
+		{
 			$response['product']['material'] = $response['product']['material'][0];
 		}
 

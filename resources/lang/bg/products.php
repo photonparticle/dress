@@ -57,4 +57,5 @@ return [
 	'load_table_template'           => 'Зареди предефиниран темплейт за таблица',
 	'choose_table_template'         => 'Избери темплейт',
 	'add_material'                  => 'Нова материя',
+	'image'                         => 'Изображение',
 ];

@@ -17,6 +17,9 @@
                         ID
                     </th>
                     <th>
+                        {{trans('products.image')}}
+                    </th>
+                    <th>
                         {{trans('products.title')}}
                     </th>
                     <th>
@@ -37,6 +40,11 @@
                 @foreach($products as $product)
                     <tr>
                         <td>{{isset($product['id']) ? $product['id'] : 'n/a'}}</td>
+                        <td>
+                            @if(!empty($product['image']))
+                                <img src="{{$thumbs_path . $product['id'] . '/' . $icon_size . '/' .  $product['image']}}" alt="{{$product['image']}}" class="img-responsive" style="max-width:150px; margin: auto" />
+                            @endif
+                        </td>
                         <td>{{isset($product['title']) ? $product['title'] : 'n/a'}}</td>
                         <td>{{isset($product['quantity']) ? $product['quantity'] : '0'}}</td>
                         <td>{{isset($product['price']) ? $product['price'] : '0'}}</td>
@@ -130,8 +138,8 @@
 
             $('#products_list').DataTable({
                                            responsive: true,
-                                           order: [[0, 'asc']],
-                                           stateSave: true,
+                                           order: [[0, 'desc']],
+                                           stateSave: false,
                                            adaptiveHeight: true,
                                            language: translateData['dataTable']
                                        });
