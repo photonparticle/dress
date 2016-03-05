@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-// use App\Admin\Model_Categories;
+use App\Admin\Model_Products;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -19,6 +19,35 @@ use View;
 class Module_Orders extends BaseController
 {
 	private $active_module = '';
+	private $states = [
+		'blagoevgrad',
+		'burgas',
+		'varna',
+		'veliko_tyrnovo',
+		'vidin',
+		'vraca',
+		'gabrovo',
+		'dobrich',
+		'kyrdjali',
+		'kiustendil',
+		'lovech',
+		'montana',
+		'pazardjik',
+		'pernik',
+		'pleven',
+		'plovdiv',
+		'razgrad',
+		'ruse',
+		'silistra',
+		'sliven',
+		'smolyan',
+		'sofia',
+		'stara_zagora',
+		'tyrgovishte',
+		'haskovo',
+		'shumen',
+		'yambol',
+	];
 
 	public function __construct(Request $request)
 	{
@@ -65,20 +94,30 @@ class Module_Orders extends BaseController
 	{
 
 		$customCSS                    = [
-			###
-            'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
-            'global/plugins/bootstrap-summernote/summernote',
+			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+			'global/plugins/bootstrap-summernote/summernote',
+			'global/plugins/select2/select2',
+			'global/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch',
+			'global/plugins/bootstrap-modal/css/bootstrap-modal',
 		];
 		$customJS                     = [
-			###
-            'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
-            'global/plugins/bootstrap-summernote/summernote.min',
+			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
+			'global/plugins/bootstrap-summernote/summernote.min',
+			'global/plugins/bootstrap-select/bootstrap-select.min',
+			'global/plugins/select2/select2.min',
+			'global/plugins/bootstrap-modal/js/bootstrap-modalmanager',
+			'global/plugins/bootstrap-modal/js/bootstrap-modal',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		
-		$response['pageTitle']  = trans('global.create_category');
+		$response['method'] = 'unlocked';
+		foreach ($this->states as $state)
+		{
+			$response['states'][$state] = trans('orders.'.$state);
+		}
+
+		$response['pageTitle'] = trans('global.create_order');
 
 		return Theme::view('orders.create_edit_order', $response);
 	}
@@ -155,31 +194,38 @@ class Module_Orders extends BaseController
 	/**
 	 * Used to display partials or do ajax requests
 	 *
+	 * @param id
 	 * @param $request
-	 * @param $param
 	 *
 	 * @return \Illuminate\Http\Response
 	 * @internal param int $id
 	 */
-	public function getShow($request, $param)
+	public function getShow($id = FALSE, $request = FALSE)
 	{
-		if ( ! empty($request) && ! empty($param))
+		if ($request == 'add_product')
 		{
+			$response['blade_standalone'] = TRUE;
+			$response['products']         = Model_Products::getProducts(FALSE, ['title']);
 
-			if ($request == 'check_url')
+			return Theme::View('orders.add_product_partial', $response);
+		}
+		elseif ($request == 'add_product_info' && is_numeric($id))
+		{
+			if (($product = Model_Products::getProducts($id, ['sizes'])))
 			{
-				if (Model_Categories::checkURL($param))
+				$response['blade_standalone'] = TRUE;
+				if ( ! empty($product[$id]) && is_array($product[$id]))
 				{
-					$response['status']  = 'error';
-					$response['title']   = trans('global.warning');
-					$response['message'] = trans('products.url_exists');
+					$product = $product[$id];
+				}
 
-					return response()->json($response);
-				}
-				else
+				//Sizes
+				if ( ! empty($product['sizes']) && is_array(($sizes = json_decode($product['sizes'], TRUE))))
 				{
-					return 'available';
+					$response['sizes'] = $sizes;
 				}
+
+				return Theme::View('orders.add_product_info_partial', $response);
 			}
 			else
 			{
@@ -292,13 +338,13 @@ class Module_Orders extends BaseController
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'       => trim(Input::get('title')),
-					'description' => Input::get('description'),
-					'level'       => $category_level,
-					'parent'      => $parent,
-					'position'    => Input::get('position'),
-					'visible'     => Input::get('visible'),
-					'active'      => Input::get('active'),
+					'title'            => trim(Input::get('title')),
+					'description'      => Input::get('description'),
+					'level'            => $category_level,
+					'parent'           => $parent,
+					'position'         => Input::get('position'),
+					'visible'          => Input::get('visible'),
+					'active'           => Input::get('active'),
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
 				];

@@ -1,3 +1,4 @@
+
 /* Translations data */
 
 var translateData = {

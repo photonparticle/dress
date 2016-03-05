@@ -70,14 +70,13 @@ class Module_Categories extends BaseController
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2',
 			'global/plugins/jquery-multi-select/css/multi-select',
-			'/global/plugins/bootstrap-switch/css/bootstrap-switch.min',
+			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
 			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
 			'global/plugins/bootstrap-summernote/summernote.min',
 			'admin/pages/scripts/components-dropdowns',
-			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
@@ -220,14 +219,13 @@ class Module_Categories extends BaseController
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2',
 			'global/plugins/jquery-multi-select/css/multi-select',
-			'/global/plugins/bootstrap-switch/css/bootstrap-switch.min',
+			'global/plugins/bootstrap-switch/css/bootstrap-switch.min',
 		];
 		$customJS                     = [
 			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
 			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
 			'global/plugins/bootstrap-summernote/summernote.min',
 			'admin/pages/scripts/components-dropdowns',
-			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
