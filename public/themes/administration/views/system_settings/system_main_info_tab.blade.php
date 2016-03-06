@@ -12,7 +12,7 @@
                 
                 <label for="title">{{trans('sys_trans.shop_name')}}</label>
                 <span class="help-block"></span>
-                <i class="fa fa-user"></i>
+                <i class="fa fa-home"></i>
             </div>
         </div>
 
