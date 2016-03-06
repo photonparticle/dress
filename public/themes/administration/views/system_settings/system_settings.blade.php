@@ -74,7 +74,7 @@
             $('#quantity').spinner({value: 1, min: 1, max: 50, step: 1.0});
             $('#to_off').spinner({value: 1, min: 1, max: 50, step: 1.0});
             $('#to_addr').spinner({value: 1, min: 1, max: 50, step: 1.0});
-            $('#giveaway').spinner({value: 1, min: 1, max: 9999, step: 0.1});
+            $('#giveaway').spinner({value: 1, min: 1, max: 9999, step: 1.0});
             
         });
     </script>
