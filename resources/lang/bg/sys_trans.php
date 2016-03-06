@@ -1,0 +1,21 @@
+<?php
+return [
+	'main_info'                     => 'Основна информация',
+	'title'                         => 'Заглавие',
+	'description'                   => 'Описание',
+	'page_title'                    => 'META таг',
+	'tags_help'                     => 'Избройте със запетайка',
+	'tags'                          => 'Тагове',
+	'meta_description'              => 'META Описание',
+	'meta_keywords'                 => 'META Ключови думи',
+    'shop_name'                     => 'Име на магазина',
+    'sys'                           => 'Система',
+    'settings'                      => 'Настройки',
+    'delivery'                      => 'Доставка',
+    'to_off'                        => 'До офис',
+    'to_addr'                       => 'До адрес',
+    'giveaway'                      => 'Безплатна',
+    'email'                         => 'Email',
+    'phone'                         => 'Телефон',
+    'quantity'                      => 'Количество',
+];

@@ -45,6 +45,7 @@ class Module_SysSettings extends BaseController
 
 		$response['blade_custom_js'] = [
 			'global/plugins/bootbox/bootbox.min',
+			'global/plugins/fuelux/js/spinner.min',
 		];
 
 		return Theme::view('system_settings.system_settings', $response);
