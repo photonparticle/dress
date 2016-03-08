@@ -76,6 +76,13 @@ return [
 	'not_saved'                => 'Поръчката не беше запазена',
 	'product_saved'            => 'Продуктът беше добавен',
 	'product_not_saved'        => 'Продъктът не беше добавен',
+	'remove'                   => 'Премахни',
+	'product_remove'           => 'Премахване на продукт',
+	'product_title'            => 'Заглавие на продукта',
+	'product_not_removed'      => 'Продуктът не беше премахнат',
+	'product_removed'          => 'Продуктът беше премахнат',
+	'preview_order'            => 'Преглед на поръчка',
+	'edit_order' => 'Промени поръчка',
 
 	'blagoevgrad'    => 'Благоевград',
 	'burgas'         => 'Бургас',

@@ -18,10 +18,18 @@
                                         <i class="fa fa-arrow-left"></i>
                                         {{trans('orders.orders_list')}}
                                     </a>
-                                    <a href="javascript:;" class="btn btn-success" id="save_order" title="{{trans('global.save')}}">
-                                        <i class="fa fa-save"></i>
-                                        {{trans('global.save')}}
-                                    </a>
+
+                                    @if(!empty($method) && $method == 'unlocked')
+                                        <a href="javascript:;" class="btn btn-success" id="save_order" title="{{trans('global.save')}}">
+                                            <i class="fa fa-save"></i>
+                                            {{trans('global.save')}}
+                                        </a>
+                                    @else
+                                        <a href="/admin/orders/edit/{{$order['id'] or ''}}" class="btn btn-success" title="{{trans('global.edit')}}">
+                                            <i class="fa fa-edit"></i>
+                                            {{trans('global.edit')}}
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="portlet-body">
@@ -50,16 +58,18 @@
                                 @if(!empty($order['id']))
                                     <div class="row">
 
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <div class="note note-success note-bordered">
-                                                <h4>
-                                                    {{trans('orders.products_auto_save_tip')}}
-                                                </h4>
-                                                <h4>
-                                                    {{trans('orders.products_auto_save_tip_2')}}
-                                                </h4>
+                                        @if(!empty($method) && $method == 'unlocked')
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div class="note note-success note-bordered">
+                                                    <h4>
+                                                        {{trans('orders.products_auto_save_tip')}}
+                                                    </h4>
+                                                    <h4>
+                                                        {{trans('orders.products_auto_save_tip_2')}}
+                                                    </h4>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                         <div id="products_table"></div>
                                     </div>
 
@@ -111,6 +121,8 @@
 @section('customJS')
     <script type="text/javascript">
         jQuery(document).ready(function () {
+
+                    @if($method == 'unlocked')
             var $modal = $('#ajax-modal');
 
             // general settings
@@ -163,7 +175,7 @@
                                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                                    showNotification(response['status'], response['message']);
 
-                                                   if (response['status'] == 'success' && response['redirect']) {
+                                                   if (response['status'] == 'success' && response['id']) {
                                                        setTimeout(function () {
                                                            window.location.href = "/admin/orders/edit/" + response['id'];
                                                        }, 2000);
@@ -177,8 +189,64 @@
                                            }
                                        });
             });
+            @endif
 
             @if(!empty($order['id']))
+
+            $('body').on('click', '.remove_product', function () {
+                var product_id = $(this).attr('data-id');
+                var record_id = $(this).attr('data-record');
+                var product_title = $(this).attr('data-title');
+                var parent = $(this).closest('tr');
+
+                if (
+                        typeof product_id !== typeof undefined && typeof product_title !== typeof undefined &&
+                        product_id.length > 0 && product_title.length > 0
+                ) {
+                    bootbox.dialog({
+                                       message: "<h4>{{trans('orders.product_remove')}}</h4> <strong>ID:</strong> " + product_id + " <br /><strong>{{trans('orders.product_title')}}:</strong> " + product_title,
+                                       title: "{{trans('global.confirm_action')}}",
+                                       buttons: {
+                                           cancel: {
+                                               label: "{{trans('global.no')}}",
+                                               className: "btn-danger"
+                                           },
+                                           confirm: {
+                                               label: "{{trans('global.yes')}}",
+                                               className: "btn-success",
+                                               callback: function () {
+                                                   $.ajax({
+                                                              type: 'post',
+                                                              url: '/admin/orders/destroy',
+                                                              data: {
+                                                                  'method': 'product',
+                                                                  'record_id': record_id
+
+                                                              },
+                                                              success: function (response) {
+                                                                  if (typeof response == typeof {} && response['status'] && response['message']) {
+                                                                      showNotification(response['status'], response['title'], response['message']);
+                                                                      if (response['status'] == 'success') {
+                                                                          parent.remove();
+                                                                      }
+                                                                  } else {
+                                                                      showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                                                  }
+                                                              },
+                                                              error: function () {
+                                                                  showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                                                              }
+
+                                                          });
+                                               }
+                                           }
+                                       }
+                                   });
+
+                    $('.bootbox.modal').addClass('bootbox-remove-bs');
+                }
+            });
+
             $('body').on('click', '#add_product', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -268,11 +336,13 @@
                            }
                        });
             });
+            @endif
 
+            @if(!empty($order))
             function productsTable() {
                 $.ajax({
                            type: 'get',
-                           url: '/admin/orders/show/{{$order['id']}}/products_table',
+                           url: '/admin/orders/show/{{$order['id']}}/products_table/{{$method or ''}}',
                            success: function (response) {
                                if (response) {
                                    $('#products_table').html(response);
@@ -292,6 +362,10 @@
                                        var total = parseFloat($('.shipping_holder .value').html()) + sub_total;
 
                                        $('.total_holder .value').html(total + ' {{trans('orders.currency')}}');
+
+                                       if ($('.summary-total .value').length > 0) {
+                                           $('.summary-total .value').html(total + ' {{trans('orders.currency')}}');
+                                       }
                                    } else {
                                        //Hide totals
                                        $('.totals_holder').addClass('hidden');

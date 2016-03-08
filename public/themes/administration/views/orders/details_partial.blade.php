@@ -15,8 +15,7 @@
                         {{trans('orders.order_n')}}:
                     </div>
                     <div class="col-md-7 value">
-                        12313232 <span class="label label-info label-sm">
-                                                                        Email confirmation was sent </span>
+                        {{$order['id'] or ''}}
                     </div>
                 </div>
                 <div class="row static-info">
@@ -24,7 +23,7 @@
                         {{trans('orders.order_d_t')}}:
                     </div>
                     <div class="col-md-7 value">
-                        Dec 27, 2013 7:16:25 PM
+                        {{$order['created_at'] or ''}}
                     </div>
                 </div>
                 <div class="row static-info">
@@ -33,15 +32,15 @@
                     </div>
                     <div class="col-md-7 value">
                                                                         <span class="label label-success">
-                                                                        Closed </span>
+                                                                        {{$order['status'] or ''}}</span>
                     </div>
                 </div>
-                <div class="row static-info">
+                <div class="row static-info summary-total">
                     <div class="col-md-5 name">
                         {{trans('orders.grand_total')}}:
                     </div>
                     <div class="col-md-7 value">
-                        $175.25
+
                     </div>
                 </div>
             </div>

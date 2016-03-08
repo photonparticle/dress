@@ -46,12 +46,13 @@ class Model_Orders extends Model
 		if ( ! empty($order) && is_array($order))
 		{
 			//Default creation date
-			if(empty($order['created_at'])) {
+			if (empty($order['created_at']))
+			{
 				$order['created_at'] = date('Y-m-d H:i:s');
 			}
 
 			$order = DB::table('orders')
-						  ->insertGetId($order);
+					   ->insertGetId($order);
 
 			if ($order)
 			{
@@ -142,18 +143,18 @@ class Model_Orders extends Model
 		}
 	}
 
-
 	public static function insertProduct($product)
 	{
 		if ( ! empty($product) && is_array($product))
 		{
 			//Default creation date
-			if(empty($product['created_at'])) {
+			if (empty($product['created_at']))
+			{
 				$product['created_at'] = date('Y-m-d H:i:s');
 			}
 
 			$product = DB::table('order_products')
-					   ->insert($product);
+						 ->insert($product);
 
 			if ($product)
 			{
@@ -189,5 +190,58 @@ class Model_Orders extends Model
 			->get();
 
 		return $products;
+	}
+
+	public static function removeOrderProducts($record_id)
+	{
+		if ( ! empty($record_id))
+		{
+			try
+			{
+				$query = DB::table('order_products')
+						   ->where('id', '=', $record_id)
+						   ->delete();
+
+				if ($query)
+				{
+					return TRUE;
+				}
+				else
+				{
+					return FALSE;
+				}
+			} catch (Exception $e)
+			{
+				return $e;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public static function discountProduct($product_id, $sizes, $total)
+	{
+		if ( ! empty($product_id) && ! empty($sizes) && isset($total))
+		{
+			$quantity = DB::table('products')
+					   ->where('id', '=', $product_id)
+					   ->update(['quantity' => $total]);
+
+			$sizes = DB::table('products_data')
+					   ->where('product_id', '=', $product_id)
+					   ->where('object', '=', 'sizes')
+					   ->update(['json' => $sizes]);
+
+			if ($sizes)
+			{
+				return TRUE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 }

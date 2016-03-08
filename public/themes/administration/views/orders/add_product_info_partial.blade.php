@@ -1,6 +1,6 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-    @if(!empty($sizes) && is_array($sizes))
+    @if(!empty($sizes) && is_array($sizes) && $total_quantity > 0)
         <a href="javascript:;" id="save_product" class="btn btn-success pull-left" data-id="{{$product_id or ''}}">
             <i class="fa fa-upload"></i>
             {{trans('orders.add_product_action')}}
@@ -11,7 +11,7 @@
     <div class="clearfix"></div>
 </div>
 <div class="modal-body">
-    @if(!empty($sizes) && is_array($sizes))
+    @if(!empty($sizes) && is_array($sizes) && $total_quantity > 0)
         <div class="col-xs-12">
 
             <label for="size" class="control-label col-xs-12 default no-padding">

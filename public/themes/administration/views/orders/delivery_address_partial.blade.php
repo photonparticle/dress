@@ -12,13 +12,14 @@
                 <div class="locked-form-details">
                     <div class="row static-info">
                         <div class="col-md-12 value">
-                            Jhon Done<br>
-                            #24 Park Avenue Str<br>
-                            New York<br>
-                            Connecticut, 23456 New York<br>
-                            United States<br>
-                            T: 123123232<br>
-                            F: 231231232<br>
+                            <strong>{{trans('orders.address')}}</strong><br />
+                            {{$order['address'] or ''}}<br>
+                            <hr />
+                            <strong>{{trans('orders.city')}}</strong><br />
+                            {{$order['city'] or ''}}<br>
+                            <hr />
+                            <strong>{{trans('orders.state')}}</strong><br />
+                            {{$states[$order['state']] or ''}}
                         </div>
                     </div>
                 </div>

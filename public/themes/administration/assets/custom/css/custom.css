@@ -73,3 +73,10 @@ table.dimensions-table td {
 	min-height: 42px;
 	line-height: 32px;
 }
+
+.bootbox-remove-bs {
+	background: none !important;
+	box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	width: auto !important;
+}

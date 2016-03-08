@@ -15,7 +15,7 @@
                             {{trans('orders.name')}}:
                         </div>
                         <div class="col-md-7 value">
-                            Jhon Doe
+                            {{$order['name'] or ''}} {{$order['last_name'] or ''}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -23,7 +23,7 @@
                             {{trans('orders.email')}}:
                         </div>
                         <div class="col-md-7 value">
-                            jhon@doe.com
+                            {{$order['email'] or ''}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -31,7 +31,7 @@
                             {{trans('orders.phone')}}:
                         </div>
                         <div class="col-md-7 value">
-                            12234389
+                            {{$order['phone'] or ''}}
                         </div>
                     </div>
                 </div>
