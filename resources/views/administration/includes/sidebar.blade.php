@@ -117,6 +117,21 @@
                 </a>
             </li>
 
+            <li class="@if(isset($active_module) && $active_module == 'settings') active @endif">
+                <a href="javascript:;">
+                    <i class="fa fa-sitemap"></i>
+                    <span class="title">{{trans('global.sys')}}</span>
+                    <span class="arrow "></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="/admin/system/settings">
+                            {{trans('global.settings')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="last @if(isset($active_module) && $active_module == 'users') active @endif">
                 <a href="javascript:;">
                     <i class="icon-user"></i>
