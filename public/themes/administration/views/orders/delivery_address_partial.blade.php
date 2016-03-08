@@ -40,9 +40,9 @@
 
                     <div class="form-group form-md-line-input has-success form-md-floating-label">
                         <div class="input-icon right">
-                            <input name="title" id="title" type="text" class="form-control input-lg" value="{{isset($order['title']) ? $order['title'] : ''}}"/>
+                            <input name="city" id="city" type="text" class="form-control input-lg" value="{{isset($order['city']) ? $order['city'] : ''}}"/>
 
-                            <label for="title">{{trans('orders.city')}}</label>
+                            <label for="city">{{trans('orders.city')}}</label>
                             <span class="help-block"></span>
                             <i class="fa fa-building-o"></i>
                         </div>
@@ -64,11 +64,11 @@
 
                     <div class="clearfix"></div>
 
-                    <div class="form-group form-md-line-input has-success form-md-floating-label">
+                    <div class="form-group form-md-line-input has-success form-md-floating-label margin-top-20">
                         <div class="input-icon right">
-                            <input name="title" id="title" type="text" class="form-control input-lg" value="{{isset($order['title']) ? $order['title'] : ''}}"/>
+                            <input name="post_code" id="post_code" type="text" class="form-control input-lg" value="{{isset($order['post_code']) ? $order['post_code'] : ''}}"/>
 
-                            <label for="title">{{trans('orders.post_code')}}</label>
+                            <label for="post_code">{{trans('orders.post_code')}}</label>
                             <span class="help-block"></span>
                             <i class="fa fa-envelope-o"></i>
                         </div>

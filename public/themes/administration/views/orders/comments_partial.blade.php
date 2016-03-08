@@ -23,7 +23,7 @@
             @if(!empty($method) && $method == 'unlocked')
                 <div class="edit-form-details">
                     <div class="form-group form-md-line-input has-warning form-md-floating-label padding-60 margin-top-10">
-                        <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
+                        <textarea id="comment" name="comment" class="form-control" rows="3">{{$order['comment'] or ''}}</textarea>
                         <label for="comment">{{trans('orders.msgtoorder')}}</label>
                     </div>
                 </div>

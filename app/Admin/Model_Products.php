@@ -53,7 +53,7 @@ class Model_Products extends Model
 			}
 		}
 
-		if (is_array(($product_objects = self::getProductObjects($product_id, $objects))))
+		if ($objects != 'none' && is_array(($product_objects = self::getProductObjects($product_id, $objects))))
 		{
 			foreach ($product_objects as $key => $objects)
 			{

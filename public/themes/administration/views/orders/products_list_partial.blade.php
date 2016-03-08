@@ -9,10 +9,6 @@
                     <i class="fa fa-plus"></i>
                     {{trans('orders.add_product')}}
                 </a>
-                <a href="javascript:;" id="save_products" class="btn btn-success" title="{{trans('orders.save_products')}}">
-                    <i class="fa fa-save"></i>
-                    {{trans('orders.save_products')}}
-                </a>
             </div>
         </div>
         <div class="portlet-body">
@@ -27,6 +23,12 @@
                             {{trans('orders.image')}}
                         </th>
                         <th>
+                            {{trans('orders.size')}}
+                        </th>
+                        <th>
+                            {{trans('orders.quantity')}}
+                        </th>
+                        <th>
                             {{trans('orders.original_price')}}
                         </th>
                         <th>
@@ -34,12 +36,6 @@
                         </th>
                         <th>
                             {{trans('orders.discount')}}
-                        </th>
-                        <th>
-                            {{trans('orders.size')}}
-                        </th>
-                        <th>
-                            {{trans('orders.quantity')}}
                         </th>
                         <th>
                             {{trans('orders.total')}}
@@ -50,29 +46,38 @@
                     @if(!empty($products) && is_array($products))
                         @foreach($products as $product)
                             <tr>
-                                <td>
-
+                                <td class="text-center">
+                                    <h4 class="no-margin font-red-thunderbird"></h4>
+                                    {{$product['product_id'] or ''}}
                                 </td>
-                                <td>
-
+                                <td class="text-center">
+                                    @if($product['image'])
+                                        <img src="{{$thumbs_path . $product['product_id'] . '/' . $icon_size . '/' . $product['image']}}" class="img-responsive thumbnail" style="max-width:150px; margin: auto"/>
+                                    @endif
                                 </td>
-                                <td>
-
+                                <td class="text-center">
+                                    <h4 class="no-margin font-blue-steel">{{$product['size']}}</h4>
                                 </td>
-                                <td>
-
+                                <td class="text-center">
+                                    <h4 class="no-margin font-red-thunderbird">{{$product['quantity']}}</h4>
                                 </td>
-                                <td>
-
+                                <td class="text-center">
+                                    <h4 class="no-margin font-blue-steel">{{$product['original_price']}} {{trans('orders.currency')}}</h4>
                                 </td>
-                                <td>
-
+                                <td class="text-center">
+                                    <h4 class="no-margin">
+                                        @if(empty($product['discount']))<span class="font-red-thunderbird">@endif
+                                            {{$product['price']}} {{trans('orders.currency')}}
+                                            @if(empty($product['discount']))</span>@endif
+                                    </h4>
                                 </td>
-                                <td>
-
+                                <td class="text-center">
+                                    @if(!empty($product['discount']))
+                                        <h4 class="no-margin font-red-thunderbird">{{$product['discount']}} {{trans('orders.currency')}}</h4>
+                                    @endif
                                 </td>
-                                <td>
-
+                                <td class="text-center">
+                                    <h4 class="no-margin font-blue-steel"><span class="total_val">{{$product['total']}}</span> {{trans('orders.currency')}}</h4>
                                 </td>
                             </tr>
                         @endforeach

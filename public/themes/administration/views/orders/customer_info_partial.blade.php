@@ -45,9 +45,9 @@
                     <div class="form-group form-md-line-input has-info form-md-floating-label">
 
                         <div class="input-icon right">
-                            <input name="title" id="title" type="text" class="form-control input-lg" value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+                            <input name="name" id="name" type="text" class="form-control input-lg" value="{{isset($order['name']) ? $order['name'] : ''}}"/>
 
-                            <label for="title">{{trans('orders.name')}}</label>
+                            <label for="name">{{trans('orders.name')}}</label>
                             <span class="help-block"></span>
                             <i class="fa fa-user"></i>
                         </div>
@@ -56,9 +56,9 @@
 
                     <div class="form-group form-md-line-input has-info form-md-floating-label">
                         <div class="input-icon right">
-                            <input name="title" id="title" type="text" class="form-control input-lg" value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+                            <input name="last_name" id="last_name" type="text" class="form-control input-lg" value="{{isset($order['last_name']) ? $order['last_name'] : ''}}"/>
 
-                            <label for="title">{{trans('orders.lastname')}}</label>
+                            <label for="last_name">{{trans('orders.last_name')}}</label>
                             <span class="help-block"></span>
                             <i class="fa fa-user-plus"></i>
                         </div>
@@ -67,9 +67,9 @@
 
                     <div class="form-group form-md-line-input has-info form-md-floating-label">
                         <div class="input-icon right">
-                            <input name="title" id="title" type="text" class="form-control input-lg" value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+                            <input name="email" id="email" type="text" class="form-control input-lg" value="{{isset($order['email']) ? $order['email'] : ''}}"/>
 
-                            <label for="title">{{trans('orders.email')}}</label>
+                            <label for="email">{{trans('orders.email')}}</label>
                             <span class="help-block"></span>
                             <i class="fa fa-at"></i>
                         </div>
@@ -78,9 +78,9 @@
 
                     <div class="form-group form-md-line-input has-info form-md-floating-label">
                         <div class="input-icon right">
-                            <input name="title" id="title" type="text" class="form-control input-lg" value="{{isset($product['title']) ? $product['title'] : ''}}"/>
+                            <input name="phone" id="phone" type="text" class="form-control input-lg" value="{{isset($order['phone']) ? $order['phone'] : ''}}"/>
 
-                            <label for="title">{{trans('orders.phone')}}</label>
+                            <label for="phone">{{trans('orders.phone')}}</label>
                             <span class="help-block"></span>
                             <i class="fa fa-phone"></i>
                         </div>

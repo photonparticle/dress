@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Admin\Model_Orders;
 use App\Admin\Model_Products;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -117,6 +118,8 @@ class Module_Orders extends BaseController
 			$response['states'][$state] = trans('orders.'.$state);
 		}
 
+		$response['current_time'] = date('Y.m.d H:i');
+
 		$response['pageTitle'] = trans('global.create_order');
 
 		return Theme::view('orders.create_edit_order', $response);
@@ -126,64 +129,173 @@ class Module_Orders extends BaseController
 	 * Store a newly created resource in storage.
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postStore()
+	public function postStore($id = FALSE, $method = FALSE)
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('categories.not_created');
+		$response['message'] = trans('orders.not_saved');
 
 		if ( ! empty($_POST))
 		{
-			$error = FALSE;
-
-			if (empty(trim(Input::get('title'))))
+			if ($method == FALSE)
 			{
-				$response['message'] = trans('categories.title_required');
-				$error               = TRUE;
-			}
+				$error = FALSE;
 
-			$category_level = Input::get('level');
-			$parent         = Input::get('parent');
-			if ( ! empty($category_level) && in_array($category_level, ['1', '2']))
-			{
-				if (empty($parent))
+				if (empty(trim(Input::get('city'))))
 				{
-					$response['message'] = trans('categories.parent_required');
+					$response['message'] = trans('orders.city_required');
 					$error               = TRUE;
 				}
-			}
-
-			if ($error === FALSE)
-			{
-				$data = [
-					'title'            => trim(Input::get('title')),
-					'description'      => Input::get('description'),
-					'level'            => $category_level,
-					'parent'           => $parent,
-					'position'         => Input::get('position'),
-					'visible'          => Input::get('visible'),
-					'active'           => Input::get('active'),
-					'meta_description' => Input::get('meta_description'),
-					'meta_keywords'    => Input::get('meta_keywords'),
-				];
-
-				if (($id = Model_Categories::createCategory($data)) > 0)
+				if (empty(trim(Input::get('address'))))
 				{
-					try
-					{
-						//Manage Friendly URL
-						Model_Categories::setURL($id, Input::get('friendly_url'));
+					$response['message'] = trans('orders.address_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('phone'))))
+				{
+					$response['message'] = trans('orders.phone_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('last_name'))))
+				{
+					$response['message'] = trans('orders.last_name_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('name'))))
+				{
+					$response['message'] = trans('orders.name_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('delivery_type'))))
+				{
+					$response['message'] = trans('orders.delivery_type_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('status'))))
+				{
+					$response['message'] = trans('orders.status_required');
+					$error               = TRUE;
+				}
 
-						$response['status']      = 'success';
-						$response['message']     = trans('categories.created');
-						$response['category_id'] = $id;
-					} catch (Exception $e)
+				if ($error === FALSE)
+				{
+					$data = [
+						'user_id'       => Input::get('user_id'),
+						'name'          => trim(Input::get('name')),
+						'last_name'     => trim(Input::get('last_name')),
+						'email'         => trim(Input::get('email')),
+						'phone'         => trim(Input::get('phone')),
+						'address'       => trim(Input::get('address')),
+						'city'          => trim(Input::get('city')),
+						'state'         => trim(Input::get('state')),
+						'post_code'     => trim(Input::get('post_code')),
+						'comment'       => trim(Input::get('comment')),
+						'status'        => Input::get('status'),
+						'delivery_type' => Input::get('delivery_type'),
+						'created_at'    => Input::get('created_at'),
+					];
+
+					if ($id == FALSE)
 					{
-						$response['message'] = $e;
+						if (($id = Model_Orders::insertOrder($data)) > 0)
+						{
+							$response['status']  = 'success';
+							$response['message'] = trans('orders.saved');
+							$response['id']      = $id;
+						}
+					}
+					elseif (is_numeric($id))
+					{
+						if (Model_Orders::updateOrder($id, $data))
+						{
+							$response['status']  = 'success';
+							$response['message'] = trans('orders.saved');
+						}
 					}
 				}
-				else
+			}
+			elseif ($method == 'product')
+			{
+				$response['message'] = trans('orders.product_not_saved');
+				$error               = FALSE;
+
+				if (empty(($order_id = intval(trim(Input::get('order_id'))))))
 				{
-					$response['message'] = trans('categories.not_created');
+					$error = TRUE;
+				}
+				if (empty(($size = trim(Input::get('size')))))
+				{
+					$error = TRUE;
+				}
+				if (empty(($quantity = intval(trim(Input::get('quantity'))))))
+				{
+					$error = TRUE;
+				}
+				if (empty(($product_id = intval(trim(Input::get('product_id'))))))
+				{
+					$error = TRUE;
+				}
+
+				if ($error === FALSE)
+				{
+					$product = Model_Products::getProducts($product_id, 'none');
+
+					if ( ! empty($product[$product_id]) && is_array($product[$product_id]))
+					{
+						$product = $product[$product_id];
+					}
+
+					$data = [
+						'order_id'       => $order_id,
+						'product_id'     => $product_id,
+						'size'           => $size,
+						'quantity'       => $quantity,
+						'original_price' => $product['original_price'],
+					];
+
+					//If size doesn't have price, get products one
+					if (empty(($price = trim(Input::get('price')))))
+					{
+						$data['price'] = floatval($product['price']);
+					}
+					else
+					{
+						$data['price'] = floatval($price);
+					}
+
+					$data['total'] = $data['price'];
+
+					//Discount
+					$discount_start = strtotime($product['discount_start']);
+					$discount_end   = strtotime($product['discount_end']);
+					$now            = time();
+
+					//If currently the product have discount
+					if ($now > $discount_start && $now < $discount_end)
+					{
+						//If size doesn't have discount, get products one
+						if (empty(($discount = trim(Input::get('discount')))))
+						{
+							$data['discount'] = floatval($product['discount_price']);
+						}
+						else
+						{
+							$data['discount'] = floatval($discount);
+						}
+
+						$data['total'] = $data['discount'];
+					}
+
+					//If quantity more then one
+					if (intval($quantity) > 1)
+					{
+						$data['total'] = intval($quantity) * $data['total'];
+					}
+
+					if (Model_Orders::insertProduct($data) === TRUE)
+					{
+						$response['status']  = 'success';
+						$response['message'] = trans('orders.product_saved');
+					}
 				}
 			}
 		}
@@ -225,12 +337,87 @@ class Module_Orders extends BaseController
 					$response['sizes'] = $sizes;
 				}
 
+				$response['product_id'] = $id;
+
 				return Theme::View('orders.add_product_info_partial', $response);
 			}
 			else
 			{
 				return FALSE;
 			}
+		}
+		elseif ($request == 'products_table' && is_numeric($id))
+		{
+			$response                     = [];
+			$response['blade_standalone'] = TRUE;
+
+			if (($order_products = Model_Orders::getOrderProducts($id)))
+			{
+				$products_list                = [];
+				$products_images              = [];
+				$response['thumbs_path']      = Config::get('system_settings.product_public_path');
+				$response['icon_size']        = Config::get('images.sm_icon_size');
+				$upload_path                  = Config::get('system_settings.product_upload_path');
+
+				if ( ! empty($order_products) && is_array($order_products))
+				{
+					foreach ($order_products as $product)
+					{
+						if ( ! in_array($product['product_id'], $products_list))
+						{
+							$products_list[] = $product['product_id'];
+						}
+					}
+				}
+
+				//Fetch images
+				if ( ! empty($products_list) && is_array($products_list))
+				{
+					if ($products = Model_Products::getProducts($products_list, ['images']))
+					{
+						foreach ($products as $key => $product)
+						{
+							if ( ! empty($product['images']))
+							{
+								$product['images'] = json_decode($product['images'], TRUE);
+
+								if (is_array($product['images']))
+								{
+									uasort($product['images'], function ($a, $b)
+									{
+										if ($a == $b)
+										{
+											return 0;
+										}
+
+										return ($a < $b) ? -1 : 1;
+									});
+
+									reset($product['images']);
+									$product['images'] = key($product['images']);
+									if (file_exists($upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images']))
+									{
+										$products_images[$product['id']] = $product['images'];
+									}
+								}
+							}
+						}
+
+						foreach ($order_products as $key => $product)
+						{
+							if (array_key_exists($product['product_id'], $products_images))
+							{
+								$order_products[$key]['image'] = $products_images[$product['product_id']];
+							}
+						}
+
+						$response['products'] = $order_products;
+					}
+				}
+			}
+
+			return Theme::View('orders.products_list_partial', $response);
+
 		}
 		else
 		{
@@ -245,58 +432,42 @@ class Module_Orders extends BaseController
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function getEdit($id = FALSE)
+	public
+	function getEdit($id)
 	{
 		$customCSS                    = [
-			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
+			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
 			'global/plugins/bootstrap-summernote/summernote',
-			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2',
-			'global/plugins/jquery-multi-select/css/multi-select',
-			'/global/plugins/bootstrap-switch/css/bootstrap-switch.min',
+			'global/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch',
+			'global/plugins/bootstrap-modal/css/bootstrap-modal',
 		];
 		$customJS                     = [
-			'global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0',
-			'global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5',
+			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
 			'global/plugins/bootstrap-summernote/summernote.min',
-			'admin/pages/scripts/components-dropdowns',
-			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
-			'global/plugins/jquery-multi-select/js/jquery.multi-select',
-			'global/plugins/fuelux/js/spinner.min',
-			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
-			'global/plugins/jquery-slugify/speakingurl',
-			'global/plugins/jquery-slugify/slugify.min',
+			'global/plugins/bootstrap-modal/js/bootstrap-modalmanager',
+			'global/plugins/bootstrap-modal/js/bootstrap-modal',
 		];
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['pageTitle']  = trans('categories.edit_category');
-
-		$category_data        = Model_Categories::getCategory($id);
-		$response['category'] = $category_data[$id];
-		unset($response['categories'][$id]);
-
-		//SEO Tab
-		if (($slug = Model_Categories::getURL($id)) != FALSE)
+		$response['method'] = 'unlocked';
+		foreach ($this->states as $state)
 		{
-			$response['seo']['friendly_url'] = $slug;
+			$response['states'][$state] = trans('orders.'.$state);
 		}
 
-		if ( ! empty($response['category']['meta_description']))
+		$order = Model_Orders::getOrders($id, FALSE);
+		if ( ! empty($order[0]) && is_array($order[0]))
 		{
-			$response['seo']['meta_description'] = $response['category']['meta_description'];
-			unset($response['category']['meta_description']);
-		}
-		if ( ! empty($response['category']['meta_keywords']))
-		{
-			$response['seo']['meta_keywords'] = $response['category']['meta_keywords'];
-			unset($response['product']['meta_keywords']);
+			$response['order'] = $order[0];
 		}
 
-		return Theme::view('categories.edit_category', $response);
+		$response['pageTitle'] = trans('global.create_order');
+
+		return Theme::view('orders.create_edit_order', $response);
 	}
 
 	/**
@@ -308,7 +479,8 @@ class Module_Orders extends BaseController
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postUpdate(Request $request, $id)
+	public
+	function postUpdate(Request $request, $id)
 	{
 		$response['status']  = 'error';
 		$response['message'] = trans('categories.not_updated');
@@ -380,7 +552,8 @@ class Module_Orders extends BaseController
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postDestroy($id)
+	public
+	function postDestroy($id)
 	{
 		$response['status']  = 'error';
 		$response['message'] = trans('categories.not_removed');

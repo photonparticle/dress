@@ -3,6 +3,8 @@
     <h4>{{trans('orders.add_product')}}</h4>
 </div>
 <div class="modal-body">
+    <strong>{{trans('orders.add_product_tip')}}</strong>
+    <hr />
     <div class="col-xs-12 margin-top-20 no-padding no-margin size_holder">
         <label for="products" class="control-label col-xs-12 default no-padding">
             {{trans('orders.products')}}

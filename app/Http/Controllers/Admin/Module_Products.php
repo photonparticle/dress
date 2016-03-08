@@ -61,7 +61,7 @@ class Module_Products extends BaseController
 			'global/plugins/bootbox/bootbox.min',
 		];
 
-		//Images Tab
+		//Images
 		foreach ($response['products'] as $key => $product)
 		{
 			if ( ! empty($product['images']))

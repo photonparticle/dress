@@ -51,13 +51,14 @@
             @if(!empty($method) && $method == 'unlocked')
             <div class="edit-form-details ">
 
+                {{--Created at--}}
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding margin-top-10">
                     <label for="created_at" class="control-label col-xs-12 default no-padding">
                         {{trans('orders.created_at')}}
                     </label>
 
                     <div class="input-group date created_at">
-                        <input type="text" id="created_at" size="16" readonly class="form-control" value="{{isset($product['created_at']) ? $product['created_at'] : ''}}">
+                        <input type="text" id="created_at" size="16" readonly class="form-control" value="{{isset($order['created_at']) ? $order['created_at'] : $current_time}}">
                                                                         <span class="input-group-btn">
                                                                             <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
                                                                         </span>
@@ -71,13 +72,13 @@
                 {{--STATUS--}}
 
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding margin-top-20">
-                    <label for="type" class="control-label col-xs-12 default no-padding">
+                    <label for="status" class="control-label col-xs-12 default no-padding">
                         {{trans('orders.order_status')}}
                     </label>
-                    <select id="type" name="type" class="form-control input-lg">
+                    <select id="status" name="status" class="form-control input-lg">
                         <option value="">{{trans('orders.ch_status')}}</option>
-                        <option value="requested" @if(!empty($orders['status']) && $order['status'] == 'requested') selected="selected" @endif>{{trans('orders.requested')}}</option>
-                        <option value="sended" @if(!empty($order['status']) && $order['status'] == 'sended') selected="selected" @endif>{{trans('orders.sended')}}</option>
+                        <option value="pending" @if(!empty($order['status']) && $order['status'] == 'pending') selected="selected" @endif>{{trans('orders.pending')}}</option>
+                        <option value="confirmed" @if(!empty($order['status']) && $order['status'] == 'confirmed') selected="selected" @endif>{{trans('orders.confirmed')}}</option>
                         <option value="completed" @if(!empty($order['status']) && $order['status'] == 'completed') selected="selected" @endif>{{trans('orders.completed')}}</option>
                         <option value="canceled" @if(!empty($order['status']) && $order['status'] == 'canceled') selected="selected" @endif>{{trans('orders.canceled')}}</option>
                     </select>
@@ -92,13 +93,13 @@
                 {{--DELIVERY_TYPE--}}
 
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding margin-top-20">
-                    <label for="type" class="control-label col-xs-12 default no-padding">
+                    <label for="delivery_type" class="control-label col-xs-12 default no-padding">
                         {{trans('orders.delivery_type')}}
                     </label>
-                    <select id="type" name="type" class="form-control input-lg">
+                    <select id="delivery_type" name="delivery_type" class="form-control input-lg">
                         <option value="">{{trans('orders.ch_delivery')}}</option>
-                        <option value="to_office" @if(!empty($orders['status']) && $order['status'] == 'requested') selected="selected" @endif>{{trans('orders.to_office')}}</option>
-                        <option value="to_address" @if(!empty($order['status']) && $order['status'] == 'sended') selected="selected" @endif>{{trans('orders.to_address')}}</option>
+                        <option value="to_office" @if(!empty($order['delivery_type']) && $order['delivery_type'] == 'to_office') selected="selected" @endif>{{trans('orders.to_office')}}</option>
+                        <option value="to_address" @if(!empty($order['delivery_type']) && $order['delivery_type'] == 'to_address') selected="selected" @endif>{{trans('orders.to_address')}}</option>
                     </select>
                 </div>
 

@@ -16,6 +16,8 @@ class CreateOrderProductsTable extends Migration
         {
             $table->increments('id');
             $table->integer('order_id');
+            $table->integer('product_id');
+            $table->string('size');
             $table->float('original_price');
             $table->float('price');
             $table->float('discount');
