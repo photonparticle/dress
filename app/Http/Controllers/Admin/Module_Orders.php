@@ -67,9 +67,9 @@ class Module_Orders extends BaseController
 	 */
 	public function getIndex()
 	{
-		$response['pageTitle'] = trans('global.categories');
+		$response['pageTitle'] = trans('orders.orders_list');
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+		$response['orders'] = Model_Orders::getOrders(FALSE, true);
 
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
@@ -84,7 +84,9 @@ class Module_Orders extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		return Theme::view('categories.list_categories', $response);
+//		dd($response);
+
+		return Theme::view('orders.list_orders', $response);
 	}
 
 	/**
@@ -627,7 +629,7 @@ class Module_Orders extends BaseController
 				if (Model_Orders::removeOrder($_POST['order_id']) === TRUE)
 				{
 					$response['status']  = 'success';
-					$response['message'] = trans('orders.product_removed');
+					$response['message'] = trans('orders.removed');
 				}
 			}
 		}

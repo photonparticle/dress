@@ -61,36 +61,36 @@
                                     {{$product['product_id'] or ''}}
                                 </td>
                                 <td class="text-center">
-                                    @if($product['image'])
+                                    @if(!empty($product['image']))
                                         <img src="{{$thumbs_path . $product['product_id'] . '/' . $icon_size . '/' . $product['image']}}" class="img-responsive thumbnail" style="max-width:150px; margin: auto"/>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <h5 class="no-margin"><strong>{{$product['title']}}</strong></h5>
+                                    <h5 class="no-margin"><strong>{{$product['title'] or ''}}</strong></h5>
                                 </td>
                                 <td class="text-center">
-                                    <h4 class="no-margin font-blue-steel">{{$product['size']}}</h4>
+                                    <h4 class="no-margin font-blue-steel">{{$product['size'] or ''}}</h4>
                                 </td>
                                 <td class="text-center">
-                                    <h4 class="no-margin font-red-thunderbird">{{$product['quantity']}}</h4>
+                                    <h4 class="no-margin font-red-thunderbird">{{$product['quantity'] or ''}}</h4>
                                 </td>
                                 <td class="text-center">
-                                    <h4 class="no-margin font-blue-steel">{{$product['original_price']}} {{trans('orders.currency')}}</h4>
+                                    <h4 class="no-margin font-blue-steel">{{$product['original_price'] or ''}} {{trans('orders.currency')}}</h4>
                                 </td>
                                 <td class="text-center">
                                     <h4 class="no-margin">
                                         @if(empty($product['discount']))<span class="font-red-thunderbird">@endif
-                                            {{$product['price']}} {{trans('orders.currency')}}
+                                            {{$product['price'] or ''}} {{trans('orders.currency')}}
                                             @if(empty($product['discount']))</span>@endif
                                     </h4>
                                 </td>
                                 <td class="text-center">
                                     @if(!empty($product['discount']))
-                                        <h4 class="no-margin font-red-thunderbird">{{$product['discount']}} {{trans('orders.currency')}}</h4>
+                                        <h4 class="no-margin font-red-thunderbird">{{$product['discount'] or ''}} {{trans('orders.currency')}}</h4>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <h4 class="no-margin font-blue-steel"><span class="total_val">{{$product['total']}}</span> {{trans('orders.currency')}}</h4>
+                                    <h4 class="no-margin font-blue-steel"><span class="total_val">{{$product['total'] or ''}}</span> {{trans('orders.currency')}}</h4>
                                 </td>
                                 @if(!empty($method) && $method == 'unlocked')
                                     <td class="text-center">

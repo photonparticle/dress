@@ -21,7 +21,7 @@ class Model_Orders extends Model
 
 		if ($for_list === TRUE)
 		{
-			$order = $order->select(['id', 'name', 'last_name', 'email', 'phone', 'status']);
+			$order = $order->select(['id', 'name', 'last_name', 'email', 'address', 'phone', 'status', 'created_at', 'updated_at']);
 		}
 
 		if ($id != FALSE && intval($id) > 0)
@@ -120,6 +120,19 @@ class Model_Orders extends Model
 				else
 				{
 					$query = $query->where('id', $id);
+				}
+
+				$query = $query->delete();
+
+				$query = DB::table('order_products');
+
+				if (is_array($id))
+				{
+					$query = $query->whereIn('order_id', $id);
+				}
+				else
+				{
+					$query = $query->where('order_id', $id);
 				}
 
 				$query = $query->delete();
