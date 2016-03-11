@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Admin\Model_System_Settings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ use Mockery\CountValidator\Exception;
 use Symfony\Component\DomCrawler\Form;
 use View;
 
-class Module_SysSettings extends BaseController
+class Module_System_Settings extends BaseController
 {
 	private $active_module = '';
 
@@ -37,16 +38,13 @@ class Module_SysSettings extends BaseController
 	 */
 	public function getIndex()
 	{
-		$response['pageTitle'] = trans('colors.colors');
-
-		$response['blade_custom_css'] = [
-			'global/plugins/bootbox/bootbox.min',
-		];
+		$response['pageTitle'] = trans('system_settings.system_settings');
 
 		$response['blade_custom_js'] = [
-			'global/plugins/bootbox/bootbox.min',
 			'global/plugins/fuelux/js/spinner.min',
 		];
+
+		$response['system_settings'] = Model_System_Settings::getSetting(FALSE, FALSE, TRUE);
 
 		return Theme::view('system_settings.system_settings', $response);
 	}
@@ -58,36 +56,27 @@ class Module_SysSettings extends BaseController
 	public function postStore()
 	{
 		$response['status']  = 'error';
-		$response['message'] = trans('colors.not_saved');
+		$response['message'] = trans('system_settings.not_saved');
 
 		if ( ! empty($_POST))
 		{
-			$error = FALSE;
+			$data = [
+				'title'      => trim(Input::get('title')),
+				'email'      => trim(Input::get('email')),
+				'phone'      => trim(Input::get('phone')),
+				'quantity'      => trim(Input::get('quantity')),
+				'page_title'      => trim(Input::get('page_title')),
+				'meta_description'      => trim(Input::get('meta_description')),
+				'meta_keywords'      => trim(Input::get('meta_keywords')),
+				'delivery_to_office'      => trim(Input::get('delivery_to_office')),
+				'delivery_to_address'      => trim(Input::get('delivery_to_address')),
+				'delivery_free_delivery'      => trim(Input::get('delivery_free_delivery')),
+			];
 
-			if (empty(trim(Input::get('title'))))
+			if (Model_System_Settings::saveSettings($data) != FALSE)
 			{
-				$response['message'] = trans('colors.title_required');
-				$error               = TRUE;
-			}
-			elseif ( ! empty(trim(Input::get('title'))) && Model_Colors::checkTitleExists(trim(Input::get('title'))) > 0)
-			{
-				$response['message'] = trans('colors.exists');
-				$error               = TRUE;
-			}
-
-			if ($error === FALSE)
-			{
-				$data = [
-					'title'      => trim(Input::get('title')),
-					'position'   => Input::get('position'),
-					'created_at' => time(),
-				];
-
-				if (Model_Colors::insertColor($data) != FALSE)
-				{
-					$response['status']  = 'success';
-					$response['message'] = trans('colors.saved');
-				}
+				$response['status']  = 'success';
+				$response['message'] = trans('system_settings.saved');
 			}
 		}
 

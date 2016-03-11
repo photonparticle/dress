@@ -209,9 +209,6 @@
                                'material': $('#material').val(),
                                'dimensions_table': $('#dimensions_table').code(),
                            },
-                           headers: {
-                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                           },
                            success: function (response) {
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['message']);
@@ -269,9 +266,6 @@
                     $.ajax({
                                type: 'get',
                                url: '/admin/products/show/render_table/' + id,
-                               headers: {
-                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                               },
                                success: function (response) {
                                    if (response) {
                                        if (holder.length > 0) {
@@ -300,9 +294,6 @@
                 $.ajax({
                            type: 'get',
                            url: '/admin/products/show/check_url/' + url,
-                           headers: {
-                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                           },
                            success: function (response) {
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['title'], response['message']);
@@ -382,9 +373,6 @@
                            data: {
                                'title': title,
                                'position': position
-                           },
-                           headers: {
-                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                            },
                            success: function (response) {
                                if (typeof response == typeof {} && response['status'] && response['message']) {
