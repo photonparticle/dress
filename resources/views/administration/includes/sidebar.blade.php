@@ -117,6 +117,16 @@
                 </a>
             </li>
 
+            <li class="@if(isset($active_module) && $active_module == 'reports') active @endif">
+                <a href="/admin/reports">
+                    <i class="fa fa-list-alt"></i>
+                    <span class="title">{{trans('global.reports')}}</span>
+                    @if(isset($active_module) && $active_module == 'modules')
+                        <span class="selected"></span>
+                    @endif
+                </a>
+            </li>
+
             <li class="@if(isset($active_module) && $active_module == 'settings') active @endif">
                 <a href="javascript:;">
                     <i class="fa fa-sitemap"></i>

@@ -17,7 +17,7 @@
             <option value="">{{trans('orders.select_product')}}</option>
             @if(isset($products) && is_array($products))
                 @foreach($products as $key => $product)
-                    <option value="{{$product['id']}}" @if(!empty($related_products) && in_array($product['id'], $related_products)) selected="selected" @endif>{{$product['id']}} - {{$product['title']}}</option>
+                    <option value="{{$product['id'] or ''}}" @if(!empty($related_products) && !empty($product['id']) && in_array($product['id'], $related_products)) selected="selected" @endif>{{$product['id'] or ''}} - {{$product['title']}}</option>
                 @endforeach
             @endif
         </select>

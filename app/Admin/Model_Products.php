@@ -25,11 +25,15 @@ class Model_Products extends Model
 	 *
 	 * @return array
 	 */
-	public static function getProducts($product_id = FALSE, $objects = [])
+	public static function getProducts($product_id = FALSE, $objects = [], $for_list = FALSE)
 	{
 		$products = DB::table('products')
-					  ->orderBy('created_at', 'DESC');
+					  ->orderBy('id', 'DESC');
 		$response = [];
+
+		if($for_list === TRUE) {
+			$products = $products->select(['id']);
+		}
 
 		if (is_array($product_id))
 		{

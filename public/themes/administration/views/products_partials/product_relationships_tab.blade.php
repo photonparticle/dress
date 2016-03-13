@@ -9,7 +9,7 @@
             <select id="categories" name="categories[]" class="form-control select2me input-lg no-padding" multiple="multiple" data-placeholder="{{trans('products.select_catagories')}}">
                 @if(isset($categories) && is_array($categories))
                     @foreach($categories as $key => $category)
-                        <option value="{{$category['id']}}" @if(!empty($related_categories) && in_array($category['id'], $related_categories)) selected="selected" @endif>{{$category['title']}}</option>
+                        <option value="{{$category['id']}}" @if(!empty($related_categories) && in_array($category['id'], $related_categories)) selected="selected" @endif>{{$category['title'] or ''}}</option>
                     @endforeach
                 @endif
             </select>
@@ -27,7 +27,7 @@
                 <option value="">{{trans('products.select_manufacturer')}}</option>
                 @if(isset($manufacturers) && is_array($manufacturers))
                     @foreach($manufacturers as $key => $manufacturer)
-                        <option value="{{$manufacturer['id']}}" @if(!empty($product['manufacturer']) && !empty($product['manufacturer']) && $manufacturer['id'] == $product['manufacturer'])) selected="selected" @endif>{{$manufacturer['title']}}</option>
+                        <option value="{{$manufacturer['id']}}" @if(!empty($product['manufacturer']) && !empty($product['manufacturer']) && $manufacturer['id'] == $product['manufacturer'])) selected="selected" @endif>{{$manufacturer['title'] or ''}}</option>
                     @endforeach
                 @endif
             </select>
@@ -41,7 +41,7 @@
             <select id="colors" name="colors[]" class="form-control select2me input-lg no-padding" multiple="multiple" data-placeholder="{{trans('products.select_colors')}}">
                 @if(isset($colors) && is_array($colors))
                     @foreach($colors as $key => $color)
-                        <option value="{{$color['id']}}" @if(!empty($related_colors) && in_array($color['id'], $related_colors)) selected="selected" @endif>{{$color['title']}}</option>
+                        <option value="{{$color['id']}}" @if(!empty($related_colors) && in_array($color['id'], $related_colors)) selected="selected" @endif>{{$color['title'] or ''}}</option>
                     @endforeach
                 @endif
             </select>
@@ -57,7 +57,7 @@
                     <option value="">{{trans('products.select_material')}}</option>
                     @if(isset($materials) && is_array($materials))
                         @foreach($materials as $key => $material)
-                            <option value="{{$material['id']}}" @if(!empty($product['material']) && $material['id'] == $product['material']) selected="selected" @endif>{{$material['title']}}</option>
+                            <option value="{{$material['id']}}" @if(!empty($product['material']) && $material['id'] == $product['material']) selected="selected" @endif>{{$material['title'] or ''}}</option>
                         @endforeach
                     @endif
                 </select>
@@ -99,7 +99,7 @@
                     data-placeholder="{{trans('products.related_products')}}">
                 @if(isset($products) && is_array($products))
                     @foreach($products as $key => $product)
-                        <option value="{{$product['id']}}" @if(!empty($related_products) && in_array($product['id'], $related_products)) selected="selected" @endif>{{$product['id']}} - {{$product['title']}}</option>
+                        <option value="{{$product['id'] or ''}}" @if(!empty($related_products) && !empty($product['id']) && in_array($product['id'], $related_products)) selected="selected" @endif>{{$product['id'] or ''}} - {{$product['title']}}</option>
                     @endforeach
                 @endif
             </select>

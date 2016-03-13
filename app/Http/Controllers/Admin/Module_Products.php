@@ -139,7 +139,7 @@ class Module_Products extends BaseController
 
 		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
 		$response['groups']            = Model_Sizes::getSizes(TRUE);
-		$response['products']          = Model_Products::getProducts(FALSE, ['title']);
+		$response['products']          = Model_Products::getProducts(FALSE, ['title'], TRUE);
 		$response['manufacturers']     = Model_Products::getManufacturers();
 		$response['colors']            = Model_Products::getColors();
 		$response['materials']         = Model_Products::getMaterials();

@@ -18,7 +18,8 @@ return [
 		'users',
 		'categories',
 		'products',
-		'pages'
+		'pages',
+		'reports'
 	],
 	'plug-ins'            => [
 		'sliders'        => [
