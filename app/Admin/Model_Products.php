@@ -25,10 +25,15 @@ class Model_Products extends Model
 	 *
 	 * @return array
 	 */
-	public static function getProducts($product_id = FALSE, $objects = [], $for_list = FALSE)
+	public static function getProducts($product_id = FALSE, $objects = [], $for_list = FALSE, $skip = 0, $limit = 0)
 	{
 		$products = DB::table('products')
 					  ->orderBy('id', 'DESC');
+
+		if($skip > 0 && $limit > 0) {
+			$products = $products->skip($skip)->take($limit);
+		}
+
 		$response = [];
 
 		if($for_list === TRUE) {

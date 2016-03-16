@@ -71,6 +71,26 @@ class Module_Orders extends BaseController
 
 		$response['orders'] = Model_Orders::getOrders(FALSE, true);
 
+		if(!empty($response['orders']) && is_array($response['orders'])) {
+			foreach($response['orders'] as $key => $order) {
+				switch ($order['status'])
+				{
+					case 'pending':
+						$response['orders'][$key]['status_color'] = 'bg-green-jungle';
+						break;
+					case 'confirmed':
+						$response['orders'][$key]['status_color'] = 'bg-yellow-casablanca';
+						break;
+					case 'completed':
+						$response['orders'][$key]['status_color'] = 'bg-blue-madison';
+						break;
+					case 'canceled':
+						$response['orders'][$key]['status_color'] = 'bg-red-thunderbird';
+						break;
+				}
+			}
+		}
+
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
@@ -464,6 +484,22 @@ class Module_Orders extends BaseController
 			if ( ! empty($order[0]) && is_array($order[0]))
 			{
 				$response['order'] = $order[0];
+
+				switch ($response['order']['status'])
+				{
+					case 'pending':
+						$response['order']['status_color'] = 'bg-green-jungle';
+						break;
+					case 'confirmed':
+						$response['order']['status_color'] = 'bg-yellow-casablanca';
+						break;
+					case 'completed':
+						$response['order']['status_color'] = 'bg-blue-madison';
+						break;
+					case 'canceled':
+						$response['order']['status_color'] = 'bg-red-thunderbird';
+						break;
+				}
 			}
 			foreach ($this->states as $state)
 			{

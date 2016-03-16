@@ -15,10 +15,14 @@ class Model_Users extends Model
 	 *
 	 * @return
 	 */
-	public static function getUsersData($object = FALSE)
+	public static function getUsersData($object = FALSE, $skip = 0, $limit = 0)
 	{
 		$users = DB::table('users_info')
 				   ->orderBy('created_at', 'ASC');
+
+		if($skip > 0 && $limit > 0) {
+			$users = $users->skip($skip)->take($limit);
+		}
 
 		if ( ! empty($object))
 		{
@@ -72,10 +76,18 @@ class Model_Users extends Model
 	 *
 	 * @param $id - int|array
 	 */
-	public static function getUsers($id = FALSE)
+	public static function getUsers($id = FALSE, $where = FALSE, $skip = 0, $limit = 0)
 	{
 		$users = DB::table('users')
-				   ->orderBy('created_at', 'ASC');
+				   ->orderBy('id', 'ASC');
+
+		if($skip > 0 && $limit > 0) {
+			$users = $users->skip($skip)->take($limit);
+		}
+
+		if(!empty($where) && is_array($where)) {
+			$users = $users->where($where[0], $where[1], $where[2]);
+		}
 
 		if ( ! empty($id))
 		{

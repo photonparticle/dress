@@ -53,13 +53,20 @@
                                 {{$order['phone']}}
                             </td>
                             <td>
-                                {{$order['status']}}
+                                <span class="label label-sm text-center {{$order['status_color'] or ''}}">
+                                {{trans('orders.' . $order['status'])}} </span>
                             </td>
                             <td>
                                 {{$order['created_at']}}
                             </td>
 
                             <td class="text-center">
+                                <a href="/admin/orders/show/{{$order['id']}}"
+                                   class="btn btn-icon-only blue"
+                                   title="{{trans('orders.preview_order')}}"
+                                >
+                                    <i class="fa fa-eye"></i>
+                                </a>
                                 <a href="/admin/orders/edit/{{$order['id']}}"
                                    class="btn btn-icon-only green"
                                    title="{{trans('global.edit')}}"
@@ -148,7 +155,7 @@
             if (orders.length > 0) {
                 orders.DataTable({
                                      responsive: true,
-                                     order: [[1, 'asc']],
+                                     order: [[0, 'desc']],
                                      stateSave: false,
                                      adaptiveHeight: true,
                                      language: translateData['dataTable']

@@ -12,12 +12,28 @@ class Model_Orders extends Model
 
 	/**
 	 * @param bool $id
+	 * @param bool $for_list
+	 * @param bool $objects
+	 * @param int $skip
+	 * @param int $limit
+	 * @param bool $start_date
+	 * @param bool $end_date
 	 *
 	 * @return array
 	 */
-	public static function getOrders($id = FALSE, $for_list = TRUE, $objects = FALSE)
+	public static function getOrders($id = FALSE, $for_list = TRUE, $objects = FALSE, $skip = 0, $limit = 0, $start_date = FALSE, $end_date = FALSE)
 	{
 		$order = DB::table('orders');
+
+		if ($skip > 0 && $limit > 0)
+		{
+			$order = $order->skip($skip)->take($limit);
+		}
+
+		if ( ! empty($where) && is_array($where))
+		{
+			$order = $order->where($where[0], $where[1], $where[2]);
+		}
 
 		if ($for_list === TRUE)
 		{
@@ -34,13 +50,24 @@ class Model_Orders extends Model
 			$order = $order->select($objects);
 		}
 
-		$order = $order
-			->orderBy('created_at', 'DESC')
-			->get();
+		if($start_date != FALSE && strtotime($start_date) !== FALSE) {
+			$order = $order->where('created_at', '>=', $start_date);
+		}
+
+		if($end_date != FALSE && strtotime($end_date) !== FALSE) {
+			$order = $order->where('created_at', '<=', $end_date);
+		}
+
+		$order = $order->orderBy('created_at', 'DESC')->get();
 
 		return $order;
 	}
 
+	/**
+	 * @param $order
+	 *
+	 * @return array|bool
+	 */
 	public static function insertOrder($order)
 	{
 		if ( ! empty($order) && is_array($order))
@@ -239,8 +266,8 @@ class Model_Orders extends Model
 		if ( ! empty($product_id) && ! empty($sizes) && isset($total))
 		{
 			$quantity = DB::table('products')
-					   ->where('id', '=', $product_id)
-					   ->update(['quantity' => $total]);
+						  ->where('id', '=', $product_id)
+						  ->update(['quantity' => $total]);
 
 			$sizes = DB::table('products_data')
 					   ->where('product_id', '=', $product_id)
@@ -256,5 +283,39 @@ class Model_Orders extends Model
 		{
 			return FALSE;
 		}
+	}
+
+	public static function getTotalSales($order_id = FALSE)
+	{
+		$total = DB::table('order_products')
+				   ->select('total');
+
+		if ( ! empty($order_id))
+		{
+			$total = $total->where('order_id', '=', $order_id);
+		}
+
+		$total = $total->sum('total');
+
+		return $total;
+	}
+
+	public static function getCountSales()
+	{
+		$count = DB::table('orders')
+				   ->select('id')
+				   ->count('id');
+
+		return $count;
+	}
+
+	public static function getAvgSales()
+	{
+		$count = DB::table('order_products')
+				   ->select('total')
+				   ->groupby('order_id')
+				   ->avg('total');
+
+		return $count;
 	}
 }

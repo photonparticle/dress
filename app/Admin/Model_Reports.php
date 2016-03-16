@@ -80,4 +80,20 @@ class Model_Reports extends Model
 			return FALSE;
 		}
 	}
+
+	public static function getUsers($start_date, $end_date)
+	{
+		if ( ! empty($start_date) && ! empty($end_date))
+		{
+			$users = DB::table('users')
+						->select(['id'])
+						->where('created_at', '>=', $start_date)
+						->where('created_at', '<=', $end_date)
+						->count();
+
+			return $users;
+		} else {
+			return FALSE;
+		}
+	}
 }

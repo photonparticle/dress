@@ -56,7 +56,17 @@
                                         </div>
 
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="padding-right: 0">
-                                            <div class="col-xs-12 no-padding margin-top-10">
+                                            <div class="col-xs-6 margin-top-10">
+                                                <label for="type" class="control-label col-xs-12 default no-padding">
+                                                    {{trans('reports.report')}}
+                                                </label>
+
+                                                <select id="type" name="type" class="form-control input-md">
+                                                    <option value="orders">{{trans('reports.orders')}}</option>
+                                                    <option value="users">{{trans('reports.users')}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xs-6 margin-top-10">
                                                 <label for="group_by" class="control-label col-xs-12 default no-padding">
                                                     {{trans('reports.group_by')}}
                                                 </label>
@@ -76,19 +86,7 @@
 
                                 <div class="col-xs-12 margin-top-20">
                                     <table id="table-holder" class="table table-striped table-bordered table-hover no-footer">
-                                        <thead>
-                                        <tr>
-                                            <th>{{trans('reports.date_start')}}</th>
-                                            <th>{{trans('reports.date_end')}}</th>
-                                            <th>{{trans('reports.orders')}}</th>
-                                            <th>{{trans('reports.products')}}</th>
-                                            <th>{{trans('reports.total')}}</th>
-                                            <th>{{trans('reports.profit')}}</th>
-                                        </tr>
-                                        </thead>
 
-                                        {{--AJAX Partial--}}
-                                        <tbody></tbody>
                                     </table>
                                 </div>
 
@@ -111,7 +109,7 @@
             var results_table;
 
             function results_load() {
-                if (results.length > 0) {
+                if (results.find('tbody').length > 0) {
 
                     results_table = results.DataTable({
                                                           responsive: true,
@@ -153,7 +151,8 @@
                         url = '/admin/reports/store',
                         date_start = $('#input_date_start').val(),
                         date_end = $('#input_date_end').val(),
-                        group_by = $('#group_by').val();
+                        group_by = $('#group_by').val(),
+                        type = $('#type').val();
 
                 if (
                         typeof date_start === typeof undefined &&
@@ -177,7 +176,8 @@
                            data: {
                                'date_start': date_start,
                                'date_end': date_end,
-                               'group_by': group_by
+                               'group_by': group_by,
+                               'type': type
                            },
                            success: function (response) {
                                if (response.length > 0) {
@@ -193,7 +193,7 @@
                                        if (typeof results_table !== typeof undefined) {
                                            results_table.destroy();
                                        }
-                                       results.find('tbody').html(response);
+                                       results.html(response);
                                        results_load();
                                    }
                                }

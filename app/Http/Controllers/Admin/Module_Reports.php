@@ -78,7 +78,9 @@ class Module_Reports extends BaseController
 			exit;
 		}
 
-		if ( ! empty(($date_start = Input::get('date_start'))) && ! empty(($date_end = Input::get('date_end'))) &&
+		if ( ! empty(($type = Input::get('type'))) &&
+			! empty(($date_start = Input::get('date_start'))) &&
+			! empty(($date_end = Input::get('date_end'))) &&
 			strtotime(($date_start_unix = Input::get('date_start'))) !== FALSE &&
 			strtotime(($date_end_unix = Input::get('date_end'))) !== FALSE
 		)
@@ -125,48 +127,69 @@ class Module_Reports extends BaseController
 
 			if ( ! empty($date_range) && is_array($date_range))
 			{
-//					dd($date_range);
-				foreach ($date_range as $date)
+				if ($type == 'orders')
 				{
-					$results = [
-						'date_start'     => date('Y-m-d', strtotime($date['date_start'])),
-						'date_end'       => date('Y-m-d', strtotime($date['date_end'])),
-						'orders'         => 0,
-						'products'       => 0,
-						'total'          => 0,
-						'profit'         => 0,
-						'original_total' => 0,
-					];
+					$response['type'] = 'orders';
 
-					if (($data = Model_Reports::getOrders($date['date_start'], $date['date_end'])))
+					foreach ($date_range as $date)
 					{
-						//Loop trough results
-						if ( ! empty($data) && is_array($data))
+						$results = [
+							'date_start'     => date('Y-m-d', strtotime($date['date_start'])),
+							'date_end'       => date('Y-m-d', strtotime($date['date_end'])),
+							'orders'         => 0,
+							'products'       => 0,
+							'total'          => 0,
+							'profit'         => 0,
+							'original_total' => 0,
+						];
+
+						if (($data = Model_Reports::getOrders($date['date_start'], $date['date_end'])))
 						{
-							foreach ($data as $key => $item)
+							//Loop trough results
+							if ( ! empty($data) && is_array($data))
 							{
-								$results['orders']         = $results['orders'] + 1;
-								$results['products']       = $results['products'] + $item['products'];
-								$results['total']          = $results['total'] + $item['total'];
-								$results['original_total'] = $results['original_total'] + floatval($item['original_total']);
+								foreach ($data as $key => $item)
+								{
+									$results['orders']         = $results['orders'] + 1;
+									$results['products']       = $results['products'] + $item['products'];
+									$results['total']          = $results['total'] + $item['total'];
+									$results['original_total'] = $results['original_total'] + floatval($item['original_total']);
+								}
 							}
+						}
+
+						$response['results'][] = $results;
+					}
+
+					foreach ($response['results'] as $key => $object)
+					{
+						//Calculate profits
+						if ( ! empty($object['original_total']))
+						{
+							$response['results'][$key]['profit'] = $object['total'] - $object['original_total'];
+							unset($response['results'][$key]['original_total']);
 						}
 					}
 
-					$response['results'][] = $results;
+					return Theme::view('reports.reports_table_partial', $response);
 				}
-
-				foreach ($response['results'] as $key => $object)
+				elseif ($type == 'users')
 				{
-					//Calculate profits
-					if ( ! empty($object['original_total']))
-					{
-						$response['results'][$key]['profit'] = $object['total'] - $object['original_total'];
-						unset($response['results'][$key]['original_total']);
-					}
-				}
+					$response['type'] = 'users';
 
-				return Theme::view('reports.reports_table_partial', $response);
+					foreach ($date_range as $date)
+					{
+						$results = [
+							'date_start' => date('Y-m-d', strtotime($date['date_start'])),
+							'date_end'   => date('Y-m-d', strtotime($date['date_end'])),
+							'users'      => Model_Reports::getUsers($date['date_start'], $date['date_end']),
+						];
+
+						$response['results'][] = $results;
+					}
+
+					return Theme::view('reports.reports_table_partial', $response);
+				}
 			}
 		}
 		else
@@ -203,6 +226,7 @@ class Module_Reports extends BaseController
 
 		return $aryRange;
 	}
+
 	private function createWeeksRangeArray($strDateFrom, $strDateTo)
 	{
 		// takes two dates formatted as YYYY-MM-DD and creates an
@@ -220,14 +244,14 @@ class Module_Reports extends BaseController
 		{
 			while ($iDateFrom < $iDateTo)
 			{
-				$date_end = strtotime('next Sunday', strtotime(date('Y-m-d', $iDateFrom)));
+				$date_end       = strtotime('next Sunday', strtotime(date('Y-m-d', $iDateFrom)));
 				$date_end_print = date('Y-m-d', $date_end);
 
 				if ($iDateFrom < $iDateTo)
 				{
 					$dates = [
 						'date_start' => date('Y-m-d', $iDateFrom),
-						'date_end' => $date_end_print
+						'date_end'   => $date_end_print,
 					];
 				}
 
