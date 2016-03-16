@@ -160,6 +160,7 @@
 
                 //Sizes
                 if ($('.product_sizes').length > 0) {
+                    var total_quantity = 0;
                     var sizes = {};
 
                     $('.product_sizes').each(function () {
@@ -170,6 +171,7 @@
                                 size_discount = $(this).find('.discount input').val();
 
                         if (size_name) {
+                            total_quantity = parseInt(total_quantity) + parseInt(size_quantity);
                             sizes[size_name] = {
                                 'name': size_name,
                                 'quantity': size_quantity,
@@ -186,7 +188,7 @@
                            data: {
                                'title': $('#title').val(),
                                'description': $('#description').code(),
-                               'quantity': $('#input_quantity').val(),
+                               'quantity': total_quantity,
                                'position': $('#input_position').val(),
                                'active': active,
                                'original_price': $('#input_original_price').val(),

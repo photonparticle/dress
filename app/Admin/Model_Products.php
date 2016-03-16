@@ -224,6 +224,10 @@ class Model_Products extends Model
 			$update_objects  = [];
 			$insert_objects  = [];
 
+			if(!empty($current_objects[$product_id])) {
+				$current_objects = $current_objects[$product_id];
+			}
+
 			//Collect objects
 			if ( ! empty($data['title']))
 			{
@@ -404,6 +408,25 @@ class Model_Products extends Model
 			DB::table('products_data')
 			  ->where('product_id', '=', $product_id)
 			  ->delete();
+			DB::table('product_to_category')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+			DB::table('product_to_color')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+			DB::table('product_to_manufacturer')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+			DB::table('product_to_material')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+			DB::table('product_to_tag')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
+			DB::table('seo_url')
+			  ->where('type', '=', 'product')
+			  ->where('object', '=', $product_id)
+			  ->delete();
 
 			return TRUE;
 		}
@@ -545,7 +568,8 @@ class Model_Products extends Model
 	 */
 	public static function checkURL($url)
 	{
-		if (DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'product')->where('slug', '=', $url)->count() > 0)
+		if (DB::table('seo_url')->select('slug', 'type')
+				->where('slug', '=', $url)->count() > 0)
 		{
 			return TRUE;
 		}

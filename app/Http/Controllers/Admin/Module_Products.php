@@ -722,23 +722,4 @@ class Module_Products extends BaseController
 
 		return response()->json($response);
 	}
-
-	private function compareArrayKeys($arr, $col, $dir = SORT_ASC)
-	{
-		if ( ! empty($arr) && ! empty($col) && is_array($arr))
-		{
-			$sort_col = array();
-			foreach ($arr as $key => $row)
-			{
-				$sort_col[$key] = $row[$col];
-			}
-
-			return array_multisort($sort_col, $dir, $arr);
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
-
 }

@@ -377,6 +377,10 @@ class Model_Categories extends Model
 			DB::table('categories_data')
 			  ->where('category_id', '=', $category_id)
 			  ->delete();
+			DB::table('seo_url')
+			  ->where('type', '=', 'category')
+			  ->where('object', '=', $category_id)
+			  ->delete();
 
 			return TRUE;
 		}
@@ -473,7 +477,7 @@ class Model_Categories extends Model
 	 */
 	public static function checkURL($url)
 	{
-		if (DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'category')->where('slug', '=', $url)->count() > 0)
+		if (DB::table('seo_url')->select('slug', 'type')->where('slug', '=', $url)->count() > 0)
 		{
 			return TRUE;
 		}

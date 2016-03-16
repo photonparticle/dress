@@ -132,7 +132,7 @@ class Model_Pages extends Model
 	 */
 	public static function checkURL($url)
 	{
-		if (DB::table('seo_url')->select('slug', 'type')->where('type', '=', 'page')->where('slug', '=', $url)->count() > 0)
+		if (DB::table('seo_url')->select('slug', 'type')->where('slug', '=', $url)->count() > 0)
 		{
 			return TRUE;
 		}

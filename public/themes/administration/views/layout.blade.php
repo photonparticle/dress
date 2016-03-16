@@ -131,7 +131,7 @@
 <script src="/themes/administration/assets/admin/layout2/scripts/demo.js" type="text/javascript"></script>
 <script src="/themes/administration/assets/custom/js/translations/translations.js" type="text/javascript"></script>
 <script src="/themes/administration/assets/custom/js/translations/{{Lang::locale()}}.js" type="text/javascript"></script>
-<script src="/themes/administration/assets/custom/js/main.js" type="text/javascript"></script>
+{{--<script src="/themes/administration/assets/custom/js/main.js" type="text/javascript"></script>--}}
 
     @if(!empty($blade_custom_js))
         @foreach($blade_custom_js as $file)
