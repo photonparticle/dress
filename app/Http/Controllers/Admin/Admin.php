@@ -120,13 +120,13 @@ class Admin extends BaseController
 			$response['last_users_count'] = count($response['last_users']);
 		}
 
-		$date_seven_days_ago    = date('Y-m-d 00:00:00', strtotime('-7 days'));
+		$date_seven_days_ago    = date('Y-m-d 00:00:00', strtotime('-6 days'));
 		$last_seven_days_orders = Model_Orders::getOrders(FALSE, TRUE, FALSE, 0, 0, $date_seven_days_ago, date('Y-m-d H:i:s', time()));
 
 		$count = 1;
 		$response['graph'][date('d.m', time())] = 0.00;
 		$response['graph2'][date('d.m', time())] = 0;
-		while ($count <= 6)
+		while ($count < 7)
 		{
 			$date                     = date('d.m', strtotime('-'.$count.' days'));
 			$response['graph'][$date] = 0.00;
