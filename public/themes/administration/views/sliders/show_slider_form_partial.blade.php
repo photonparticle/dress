@@ -30,7 +30,7 @@
                     <div class="col-xs-6 col-sm-8 col-md-9 col-lg-10">
 
                         {{--Slider_CLASS_PARENT--}}
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin no-padding">
                             
                             {{--Slider_Title--}}
                             <div class="caption col-xs-12 margin-top-10">
@@ -74,7 +74,7 @@
                         </div>
                                                 
                         {{--Buttons_CLASS--}}
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin no-padding">
                             
                             {{--Button--}}
                             <div class="caption col-xs-12 margin-top-10">
