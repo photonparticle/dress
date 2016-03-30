@@ -8,61 +8,71 @@
                 <li class="top-left">
                     <img src="images/banner-1.jpg"/>
                     <div class="captions">
-                        <p class="flex-caption">Мъжки тениски</p>
-                        <div class="clearfix"></div>
-                        <p class="flex-sub-caption">Тотална разпродажба</p>
-                        <div class="clearfix"></div>
-                        <a href="#" class="action-btn">
-                            Виж всички
-                        </a>
+                        <div class="captions-holder">
+                            <p class="flex-caption">Мъжки тениски</p>
+                            <div class="clearfix"></div>
+                            <p class="flex-sub-caption">Тотална разпродажба</p>
+                            <div class="clearfix"></div>
+                            <a href="#" class="action-btn">
+                                Виж всички
+                            </a>
+                        </div>
                     </div>
                 </li>
                 <li class="top-right">
                     <img src="images/banner-2.jpg"/>
                     <div class="captions">
-                        <p class="flex-caption">Дамски туники</p>
-                        <div class="clearfix"></div>
-                        <p class="flex-sub-caption">Стилни, удобни и качествени</p>
-                        <div class="clearfix"></div>
-                        <a href="#" class="action-btn">
-                            Виж всички
-                        </a>
+                        <div class="captions-holder">
+                            <p class="flex-caption">Дамски туники</p>
+                            <div class="clearfix"></div>
+                            <p class="flex-sub-caption">Стилни, удобни и качествени</p>
+                            <div class="clearfix"></div>
+                            <a href="#" class="action-btn">
+                                Виж всички
+                            </a>
+                        </div>
                     </div>
                 </li>
                 <li class="bottom-left">
                     <img src="images/banner-3.jpg"/>
                     <div class="captions">
-                        <p class="flex-caption">Къси мъжки дънки</p>
-                        <div class="clearfix"></div>
-                        <p class="flex-sub-caption">Страхотни модели на ниски цени</p>
-                        <div class="clearfix"></div>
-                        <a href="#" class="action-btn">
-                            Разгледай
-                        </a>
+                        <div class="captions-holder">
+                            <p class="flex-caption">Къси мъжки дънки</p>
+                            <div class="clearfix"></div>
+                            <p class="flex-sub-caption">Страхотни модели на ниски цени</p>
+                            <div class="clearfix"></div>
+                            <a href="#" class="action-btn">
+                                Разгледай
+                            </a>
+                        </div>
                     </div>
                 </li>
                 <li class="bottom-right">
                     <img src="images/banner-4.jpg"/>
                     <div class="captions">
-                        <p class="flex-caption">Мъжки якета</p>
-                        <div class="clearfix"></div>
-                        <p class="flex-sub-caption">Високо качество на много ниски цени</p>
-                        <div class="clearfix"></div>
-                        <a href="#" class="action-btn">
-                            Виж оше
-                        </a>
+                        <div class="captions-holder">
+                            <p class="flex-caption">Мъжки якета</p>
+                            <div class="clearfix"></div>
+                            <p class="flex-sub-caption">Високо качество на много ниски цени</p>
+                            <div class="clearfix"></div>
+                            <a href="#" class="action-btn">
+                                Виж оше
+                            </a>
+                        </div>
                     </div>
                 </li>
                 <li class="top-left">
                     <img src="images/banner-5.jpg"/>
                     <div class="captions">
-                        <p class="flex-caption">Дамски тениски</p>
-                        <div class="clearfix"></div>
-                        <p class="flex-sub-caption">Свобода и прохлада през лятото</p>
-                        <div class="clearfix"></div>
-                        <a href="#" class="action-btn">
-                            Виж нашите предложения
-                        </a>
+                        <div class="captions-holder">
+                            <p class="flex-caption" style="color: #000000 !important;">Дамски тениски</p>
+                            <div class="clearfix"></div>
+                            <p class="flex-sub-caption" style="color: #ff0000 !important;">Свобода и прохлада през лятото</p>
+                            <div class="clearfix"></div>
+                            <a href="#" class="action-btn">
+                                Виж нашите предложения
+                            </a>
+                        </div>
                     </div>
                 </li>
             </ul>
