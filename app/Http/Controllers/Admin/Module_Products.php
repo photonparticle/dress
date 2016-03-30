@@ -82,7 +82,11 @@ class Module_Products extends BaseController
 
 					reset($product['images']);
 					$product['images'] = key($product['images']);
-					if (file_exists($upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images']))
+					if (file_exists(
+						iconv("UTF-8", "WINDOWS-1251",
+							  $upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images']
+						)
+					))
 					{
 						$response['products'][$product['id']]['image'] = $product['images'];
 					}
@@ -202,6 +206,7 @@ class Module_Products extends BaseController
 					{
 						foreach ($images as $key => $data)
 						{
+							$data                = iconv("WINDOWS-1251", "UTF-8", $data);
 							$images_array[$data] = $key;
 						}
 					}
@@ -539,6 +544,7 @@ class Module_Products extends BaseController
 					{
 						foreach ($local_images as $key => $data)
 						{
+							$data                = iconv("WINDOWS-1251", "UTF-8", $data);
 							$images_array[$data] = 0;
 						}
 					}

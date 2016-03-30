@@ -11,10 +11,18 @@
 |
 */
 
-Route::get('/', function ()
-{
-	return view('welcome');
-});
+Route::get('/', 'Homepage@homepage');
+
+//Route::group(
+//	[
+//		'namespace' => 'Client',
+//		'prefix'    => '',
+//	],
+//	function ()
+//	{
+//
+//	}
+//);
 
 Route::group(
 	[
@@ -52,5 +60,15 @@ Route::group(
 	}
 );
 
+Route::group(
+	[
+		'namespace' => 'API',
+		'prefix'    => 'api',
+	],
+	function ()
+	{
+		Route::get('/get_categories', 'API@getCategories');
+	}
+);
 //Image upload
 Route::post('upload', ['as' => 'upload-post', 'uses' =>'ImageController@postUpload']);

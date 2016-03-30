@@ -41,7 +41,7 @@ class ImageRepository
 			$originalName           = $photo->getClientOriginalName();
 			$originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - 4);
 
-			$filename         = basename($originalNameWithoutExt);
+			$filename         = iconv("UTF-8","WINDOWS-1251", html_entity_decode(htmlentities(basename($originalNameWithoutExt), ENT_QUOTES, 'UTF-8')));
 
 			$filenameExt = $filename.'.jpg';
 

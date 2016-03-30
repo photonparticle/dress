@@ -102,9 +102,9 @@
 
                         <div class="input-group date" id="datetimepicker_active_from">
                             <input type="text" id="active_from" size="16" readonly class="form-control" value="{{isset($carousel['active_from']) ? $carousel['active_from'] : ''}}">
-                <span class="input-group-btn">
-                    <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
-                </span>
+                            <span class="input-group-btn">
+                                <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                            </span>
                         </div>
                     </div>
 
@@ -115,9 +115,9 @@
 
                         <div class="input-group date" id="datetimepicker_active_to">
                             <input type="text" id="active_to" size="16" readonly class="form-control" value="{{isset($carousel['active_to']) ? $carousel['active_to'] : ''}}">
-                <span class="input-group-btn">
-                    <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
-                </span>
+                            <span class="input-group-btn">
+                                <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                            </span>
                         </div>
                     </div>
 
@@ -248,8 +248,7 @@
                         target = '',
                         slider_type = $('#slider_type').val(),
                         products = $('#products').val(),
-                        max_products  = $('#max_products').val();
-
+                        max_products = $('#max_products').val();
 
                 if (type == 'categories') {
                     target = categories;
