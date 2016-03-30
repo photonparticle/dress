@@ -30,10 +30,10 @@
                     <div class="col-xs-6 col-sm-8 col-md-9 col-lg-10">
 
                         {{--Slider_CLASS_PARENT--}}
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin no-padding">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin">
                             
                             {{--Slider_Title--}}
-                            <div class="caption col-xs-12 margin-top-10">
+                            <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
                                     <div class="input-icon right margin-10">
                                         <input id="title-{{$image}}" type="text" class="form-control input-sm input-title edited" value="{{isset($image_data[$image]['title']) ? $image_data[$image]['title'] : ''}}"/>
@@ -46,7 +46,7 @@
                             </div>
                             
                             {{--Slider_Text--}}
-                            <div class="caption col-xs-12 margin-top-10">
+                            <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
                                     <div class="input-icon right margin-10">
                                         <input id="text-{{$image}}" type="text" class="form-control input-sm input-text edited" value="{{isset($image_data[$image]['text']) ? $image_data[$image]['text'] : ''}}"/>
@@ -60,7 +60,7 @@
                             
                             {{--Text_color--}}
 
-                            <div class="caption col-xs-12 margin-top-10">
+                            <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group">
                                     <label class="col-xs-12 control-label">Hue (default)</label>
                                     <div class="col-xs-12">
@@ -70,7 +70,7 @@
                             </div>
                             
                             {{--Position--}}
-                            <div class="caption col-xs-12 margin-top-10">
+                            <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
                                     <div class="input-icon right margin-10">
                                         <input id="position-{{$image}}" type="number" class="form-control input-sm input-position edited" value="{{isset($position) ? $position : '0'}}"/>
@@ -85,10 +85,10 @@
                         </div>
                                                 
                         {{--Buttons_CLASS--}}
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin no-padding">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin">
                             
                             {{--Button--}}
-                            <div class="caption col-xs-12 margin-top-10">
+                            <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
                                     <div class="input-icon right margin-10">
                                         <input id="buttonText-{{$image}}" type="text" class="form-control input-sm input-buttonText edited" value="{{isset($image_data[$image]['buttonText']) ? $image_data[$image]['buttonText'] : ''}}"/>
@@ -101,7 +101,7 @@
                             </div>
                             
                             {{--Button_URL--}}
-                            <div class="caption col-xs-12 margin-top-10">
+                            <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
                                     <div class="input-icon right margin-10">
                                         <input id="buttonURL-{{$image}}" type="buttonURL" class="form-control input-sm input-buttonURL edited" value="{{isset($image_data[$image]['buttonURL']) ? $image_data[$image]['buttonURL'] : ''}}"/>
@@ -114,13 +114,27 @@
                             </div>
                             
                             {{--btn_text_color--}}
-                            <div class="caption col-xs-12 margin-top-10">
+                            <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group">
                                     <label class="col-xs-12 control-label">Hue (default)</label>
                                     <div class="col-xs-12">
                                         <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="#ffffff">
                                     </div>
                                 </div>
+                            </div>
+                            
+                            {{--Place--}}
+                            <div class="col-xs-12 margin-top-10">
+                                <label for="type" class="control-label col-xs-12 no-margin no-padding">
+                                    {{trans('sliders.place')}}
+                                </label>
+                                <select id="place" name="place" class="form-control input-md">
+                                    <option value="">{{trans('sliders.choose_place')}}</option>
+                                    <option value="top_left" @if(!empty($slider['palce']) && $slider['palce'] == 'top_left') selected="selected" @endif>{{trans('sliders.top_left')}}</option>
+                                    <option value="top_right" @if(!empty($slider['palce']) && $slider['palce'] == 'top_right') selected="selected" @endif>{{trans('sliders.top_right')}}</option>
+                                    <option value="bott_left" @if(!empty($slider['palce']) && $slider['palce'] == 'bott_left') selected="selected" @endif>{{trans('sliders.bott_left')}}</option>
+                                    <option value="bott_right" @if(!empty($slider['palce']) && $slider['palce'] == 'bott_right') selected="selected" @endif>{{trans('sliders.bott_right')}}</option>
+                                </select>
                             </div>
                             
                         </div>
