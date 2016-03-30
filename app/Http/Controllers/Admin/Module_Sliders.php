@@ -68,6 +68,8 @@ class Module_Sliders extends BaseController
 			'global/plugins/dropzone/css/dropzone',
 			'global/plugins/select2/select2',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+            //MiniColors_CSS\\
+            'global/plugins/jquery-minicolors/jquery.minicolors',
 		];
 
 		$response['blade_custom_js'] = [
@@ -77,6 +79,8 @@ class Module_Sliders extends BaseController
 			'global/plugins/select2/select2.min',
 			'admin/pages/scripts/components-dropdowns',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
+            //MiniColors_JS\\
+            'global/plugins/jquery-minicolors/jquery.minicolors.min',
 		];
 
 		$response['slider_dir']        = uniqid('slider_');
@@ -245,6 +249,8 @@ class Module_Sliders extends BaseController
 			'global/plugins/dropzone/css/dropzone',
 			'global/plugins/select2/select2',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+            //MiniColors_CSS\\
+            'global/plugins/jquery-minicolors/jquery.minicolors',
 		];
 
 		$response['blade_custom_js'] = [
@@ -254,6 +260,8 @@ class Module_Sliders extends BaseController
 			'global/plugins/select2/select2.min',
 			'admin/pages/scripts/components-dropdowns',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
+            //MiniColors_JS\\
+            'global/plugins/jquery-minicolors/jquery.minicolors.min',
 		];
 
 		$response['images_dir']        = Config::get('system_settings.sliders_upload_path');

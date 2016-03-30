@@ -29,66 +29,93 @@
                     {{--FORM--}}
                     <div class="col-xs-6 col-sm-8 col-md-9 col-lg-10">
 
-                        {{--Texts--}}
-                        <div class="caption col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-10">
-                            <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
-                                <div class="input-icon right margin-10">
-                                    <input id="title-{{$image}}" type="text" class="form-control input-sm input-title edited" value="{{isset($image_data[$image]['title']) ? $image_data[$image]['title'] : ''}}"/>
+                        {{--Slider_CLASS_PARENT--}}
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            
+                            {{--Slider_Title--}}
+                            <div class="caption col-xs-12 margin-top-10">
+                                <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
+                                    <div class="input-icon right margin-10">
+                                        <input id="title-{{$image}}" type="text" class="form-control input-sm input-title edited" value="{{isset($image_data[$image]['title']) ? $image_data[$image]['title'] : ''}}"/>
 
-                                    <label for="title-{{$image}}">{{trans('sliders.title')}}</label>
-                                    <span class="help-block"></span>
-                                    <i class="fa fa fa-font"></i>
+                                        <label for="title-{{$image}}">{{trans('sliders.title')}}</label>
+                                        <span class="help-block"></span>
+                                        <i class="fa fa fa-font"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {{--Slider_Text--}}
+                            <div class="caption col-xs-12 margin-top-10">
+                                <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
+                                    <div class="input-icon right margin-10">
+                                        <input id="text-{{$image}}" type="text" class="form-control input-sm input-text edited" value="{{isset($image_data[$image]['text']) ? $image_data[$image]['text'] : ''}}"/>
+
+                                        <label for="text-{{$image}}">{{trans('sliders.text')}}</label>
+                                        <span class="help-block"></span>
+                                        <i class="fa fa fa-font"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {{--Position--}}
+                            <div class="caption col-xs-12 margin-top-10">
+                                <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
+                                    <div class="input-icon right margin-10">
+                                        <input id="position-{{$image}}" type="number" class="form-control input-sm input-position edited" value="{{isset($position) ? $position : '0'}}"/>
+
+                                        <label for="position-{{$image}}">{{trans('sliders.position')}}</label>
+                                        <span class="help-block"></span>
+                                        <i class="fa fa-arrows-v"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                                                
+                        {{--Buttons_CLASS--}}
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            
+                            {{--Button--}}
+                            <div class="caption col-xs-12 margin-top-10">
+                                <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
+                                    <div class="input-icon right margin-10">
+                                        <input id="buttonText-{{$image}}" type="text" class="form-control input-sm input-buttonText edited" value="{{isset($image_data[$image]['buttonText']) ? $image_data[$image]['buttonText'] : ''}}"/>
+
+                                        <label for="buttonText-{{$image}}">{{trans('sliders.buttonText')}}</label>
+                                        <span class="help-block"></span>
+                                        <i class="fa fa-font"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {{--Button_URL--}}
+                            <div class="caption col-xs-12 margin-top-10">
+                                <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
+                                    <div class="input-icon right margin-10">
+                                        <input id="buttonURL-{{$image}}" type="buttonURL" class="form-control input-sm input-buttonURL edited" value="{{isset($image_data[$image]['buttonURL']) ? $image_data[$image]['buttonURL'] : ''}}"/>
+
+                                        <label for="buttonURL-{{$image}}">{{trans('sliders.buttonURL')}}</label>
+                                        <span class="help-block"></span>
+                                        <i class="fa fa-link"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        {{--Text_color--}}
+
+                        <div class="caption col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-10">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Hue (default)</label>
+                                <div class="col-md-5">
+                                    <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="#ffffff">
                                 </div>
                             </div>
                         </div>
-                        <div class="caption col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-10">
-                            <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
-                                <div class="input-icon right margin-10">
-                                    <input id="text-{{$image}}" type="text" class="form-control input-sm input-text edited" value="{{isset($image_data[$image]['text']) ? $image_data[$image]['text'] : ''}}"/>
 
-                                    <label for="text-{{$image}}">{{trans('sliders.text')}}</label>
-                                    <span class="help-block"></span>
-                                    <i class="fa fa fa-font"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{--Button--}}
-                        <div class="caption col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-10">
-                            <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
-                                <div class="input-icon right margin-10">
-                                    <input id="buttonText-{{$image}}" type="text" class="form-control input-sm input-buttonText edited" value="{{isset($image_data[$image]['buttonText']) ? $image_data[$image]['buttonText'] : ''}}"/>
-
-                                    <label for="buttonText-{{$image}}">{{trans('sliders.buttonText')}}</label>
-                                    <span class="help-block"></span>
-                                    <i class="fa fa-font"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="caption col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-10">
-                            <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
-                                <div class="input-icon right margin-10">
-                                    <input id="buttonURL-{{$image}}" type="buttonURL" class="form-control input-sm input-buttonURL edited" value="{{isset($image_data[$image]['buttonURL']) ? $image_data[$image]['buttonURL'] : ''}}"/>
-
-                                    <label for="buttonURL-{{$image}}">{{trans('sliders.buttonURL')}}</label>
-                                    <span class="help-block"></span>
-                                    <i class="fa fa-link"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{--Position--}}
-                        <div class="caption col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-10">
-                            <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
-                                <div class="input-icon right margin-10">
-                                    <input id="position-{{$image}}" type="number" class="form-control input-sm input-position edited" value="{{isset($position) ? $position : '0'}}"/>
-
-                                    <label for="position-{{$image}}">{{trans('sliders.position')}}</label>
-                                    <span class="help-block"></span>
-                                    <i class="fa fa-arrows-v"></i>
-                                </div>
-                            </div>
-                        </div>
+                        {{--btn_text_color--}}
 
                     </div>
                     <div class="clearfix"></div>
