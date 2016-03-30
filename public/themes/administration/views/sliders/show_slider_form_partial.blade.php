@@ -58,6 +58,17 @@
                                 </div>
                             </div>
                             
+                            {{--Text_color--}}
+
+                            <div class="caption col-xs-12 margin-top-10">
+                                <div class="form-group">
+                                    <label class="col-xs-12 control-label">Hue (default)</label>
+                                    <div class="col-xs-12">
+                                        <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="#ffffff">
+                                    </div>
+                                </div>
+                            </div>
+                            
                             {{--Position--}}
                             <div class="caption col-xs-12 margin-top-10">
                                 <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
@@ -102,20 +113,17 @@
                                 </div>
                             </div>
                             
-                        </div>
-                        
-                        {{--Text_color--}}
-
-                        <div class="caption col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-top-10">
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Hue (default)</label>
-                                <div class="col-md-5">
-                                    <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="#ffffff">
+                            {{--btn_text_color--}}
+                            <div class="caption col-xs-12 margin-top-10">
+                                <div class="form-group">
+                                    <label class="col-xs-12 control-label">Hue (default)</label>
+                                    <div class="col-xs-12">
+                                        <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="#ffffff">
+                                    </div>
                                 </div>
                             </div>
+                            
                         </div>
-
-                        {{--btn_text_color--}}
 
                     </div>
                     <div class="clearfix"></div>
