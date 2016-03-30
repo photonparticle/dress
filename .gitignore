@@ -7,3 +7,4 @@ Homestead.json
 /public/images
 /public/images/*
 config/database.php
+public/images.zip
