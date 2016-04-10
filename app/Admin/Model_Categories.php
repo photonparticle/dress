@@ -28,6 +28,7 @@ class Model_Categories extends Model
 		$categories = DB::table('categories')
 						->orderBy('created_at', 'DESC');
 		$response   = [];
+		$categories_ids = [];
 
 		if (is_array($category_id))
 		{
@@ -47,11 +48,12 @@ class Model_Categories extends Model
 				if ( ! empty($category) && is_array($category))
 				{
 					$response[$category['id']] = $category;
+					$categories_ids[] = $category['id'];
 				}
 			}
 		}
 
-		if (is_array(($category_objects = self::getCategoryObjects($category_id, $objects))))
+		if (is_array(($category_objects = self::getCategoryObjects($categories_ids, $objects))))
 		{
 			foreach ($category_objects as $key => $objects)
 			{
@@ -85,7 +87,7 @@ class Model_Categories extends Model
 		}
 
 		$categories = DB::table('categories')
-							->select($select);
+						->select($select);
 
 		if (isset($level) && in_array($level, [0, 1, 2]) && $level !== FALSE)
 		{
@@ -104,7 +106,6 @@ class Model_Categories extends Model
 	{
 		if ( ! empty($data))
 		{
-
 
 			//Set defaults
 			if (empty($data['level']))
@@ -236,11 +237,20 @@ class Model_Categories extends Model
 					'type'  => 'string',
 				];
 			}
+
 			if ( ! empty($data['description']))
 			{
 				$objects['description'] = [
 					'value' => $data['description'],
 					'type'  => 'text',
+				];
+			}
+
+			if ( ! empty($data['size_group']))
+			{
+				$objects['size_group'] = [
+					'value' => $data['size_group'],
+					'type'  => 'string',
 				];
 			}
 
@@ -271,9 +281,9 @@ class Model_Categories extends Model
 			//Determine update and insert objects
 			foreach ($objects as $name => $object)
 			{
-				if (is_array($current_objects))
+				if (is_array($current_objects) && ! empty($current_objects[$category_id]))
 				{
-					if (array_key_exists($name, $current_objects))
+					if (array_key_exists($name, $current_objects[$category_id]))
 					{
 						$update_objects[$name] = $object;
 					}
@@ -403,10 +413,10 @@ class Model_Categories extends Model
 		{
 			$categories = self::getCategory($category_id);
 		}
-		$response = [];
-		$first_level = [];
+		$response     = [];
+		$first_level  = [];
 		$second_level = [];
-		$third_level = [];
+		$third_level  = [];
 
 		if ( ! empty($categories) && is_array($categories))
 		{
@@ -426,19 +436,21 @@ class Model_Categories extends Model
 					}
 					elseif ($category['level'] == 2)
 					{
-						$third_level[$category['id']]= $category;
+						$third_level[$category['id']] = $category;
 					}
 				}
 			}
 		}
 
 		//If first level level
-		foreach($first_level as $cat_id => $category) {
+		foreach ($first_level as $cat_id => $category)
+		{
 			$response[$cat_id] = $category;
 		}
 
 		//If second level level
-		foreach($second_level as $cat_id => $category) {
+		foreach ($second_level as $cat_id => $category)
+		{
 			if ( ! empty($response[$category['parent_id']]))
 			{
 				$response[$category['parent_id']]['children'][$category['id']] = $category;
@@ -446,7 +458,8 @@ class Model_Categories extends Model
 		}
 
 		//If third level level
-		foreach($third_level as $category) {
+		foreach ($third_level as $category)
+		{
 			if ( ! empty($response) && is_array($response))
 			{
 				foreach ($response as $cat_id => $response_cat)
@@ -535,11 +548,39 @@ class Model_Categories extends Model
 									   ]);
 			}
 
-			if($response) {
+			if ($response)
+			{
 				return TRUE;
-			} else {
+			}
+			else
+			{
 				return FALSE;
 			}
 		}
+	}
+
+	public static function getSizes()
+	{
+		$response = [];
+		$sizes    = DB::table('sizes')
+					  ->select(['group'])
+					  ->groupBy('group');
+
+		$sizes = $sizes
+			->orderBy('group', 'ASC')
+			->get();
+
+		if ( ! empty($sizes) && is_array($sizes))
+		{
+			foreach ($sizes as $key => $size)
+			{
+				if ( ! empty($sizes) && is_array($size))
+				{
+					$response[] = $size['group'];
+				}
+			}
+		}
+
+		return $response;
 	}
 }

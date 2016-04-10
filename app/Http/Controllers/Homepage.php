@@ -46,6 +46,8 @@ class Homepage extends BaseControllerClient
 
 		$response['thumbs_path'] = Config::get('system_settings.product_public_path');
 		$response['icon_size']   = Config::get('images.sm_icon_size');
+		$response['sliders_path'] = Config::get('system_settings.sliders_public_path');
+
 		$products = [];
 
 		/* Load Carousels */
@@ -86,6 +88,36 @@ class Homepage extends BaseControllerClient
 		/* Send products to response */
 		$response['products'] = $products;
 		unset($products);
+
+		/* Get Sliders */
+		$sliders = Model_Main::getSliders('homepage');
+
+		if(!empty($sliders) && is_array($sliders)) {
+			foreach($sliders as $key => $slider) {
+				if(!empty($slider['slides']) && !empty($slider['slides_positions'])) {
+					$slider['slides'] = json_decode($slider['slides'], TRUE);
+					$slider['slides_positions'] = json_decode($slider['slides_positions'], TRUE);
+
+					//Sort by position
+					if ( ! empty($slider['slides_positions']) && is_array($slider['slides_positions']))
+					{
+						uasort($slider['slides_positions'], function ($a, $b)
+						{
+							if ($a == $b)
+							{
+								return 0;
+							}
+
+							return ($a < $b) ? -1 : 1;
+						});
+					}
+
+					$response['sliders'][$key] = $slider;
+				}
+			}
+		}
+
+//		dd($response['sliders']);
 
 		return Theme::view('homepage.homepage', $response);
 	}

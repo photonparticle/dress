@@ -149,6 +149,10 @@ class Module_Orders extends BaseController
 
 	/**
 	 * Store a newly created resource in storage.
+	 *
+	 * @param bool $id
+	 * @param bool $method
+	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function postStore($id = FALSE, $method = FALSE)
@@ -447,7 +451,7 @@ class Module_Orders extends BaseController
 
 									reset($product['images']);
 									$product['images'] = key($product['images']);
-									if (file_exists($upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images']))
+									if (file_exists(iconv("UTF-8", "WINDOWS-1251", $upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images'])))
 									{
 										$products_images[$product['id']] = $product['images'];
 									}

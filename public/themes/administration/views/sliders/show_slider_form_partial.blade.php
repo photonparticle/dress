@@ -29,7 +29,7 @@
                     {{--FORM--}}
                     <div class="col-xs-6 col-sm-8 col-md-9 col-lg-10">
 
-                        {{--Slider_CLASS_PARENT--}}
+                        {{--TEXT OPTIONS--}}
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin">
                             
                             {{--Slider_Title--}}
@@ -62,9 +62,9 @@
 
                             <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group">
-                                    <label class="col-xs-12 control-label">Hue (default)</label>
+                                    <label class="col-xs-12 control-label" for="text_color">{{trans('sliders.text_color')}}</label>
                                     <div class="col-xs-12">
-                                        <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="#ffffff">
+                                        <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="{{isset($image_data[$image]['textColor']) ? $image_data[$image]['textColor'] : '#ffffff'}}">
                                     </div>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                             
                         </div>
                                                 
-                        {{--Buttons_CLASS--}}
+                        {{--BUTTON OPTIONS--}}
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 no-margin">
                             
                             {{--Button--}}
@@ -104,7 +104,7 @@
                             <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group form-md-line-input has-success form-md-floating-label col-xs-12 no-margin">
                                     <div class="input-icon right margin-10">
-                                        <input id="buttonURL-{{$image}}" type="buttonURL" class="form-control input-sm input-buttonURL edited" value="{{isset($image_data[$image]['buttonURL']) ? $image_data[$image]['buttonURL'] : ''}}"/>
+                                        <input id="buttonURL-{{$image}}" type="text" class="form-control input-sm input-buttonURL edited" value="{{isset($image_data[$image]['buttonURL']) ? $image_data[$image]['buttonURL'] : ''}}"/>
 
                                         <label for="buttonURL-{{$image}}">{{trans('sliders.buttonURL')}}</label>
                                         <span class="help-block"></span>
@@ -113,27 +113,27 @@
                                 </div>
                             </div>
                             
-                            {{--btn_text_color--}}
+                            {{--btn color--}}
                             <div class="caption col-xs-12 margin-top-10 no-padding">
                                 <div class="form-group">
-                                    <label class="col-xs-12 control-label">Hue (default)</label>
+                                    <label for="btn_color" class="col-xs-12 control-label">{{trans('sliders.btn_color')}}</label>
                                     <div class="col-xs-12">
-                                        <input type="text" id="text_color" class="form-control input-text-color" data-control="hue" value="#ffffff">
+                                        <input type="text" id="btn_color" class="form-control input-btn-color" data-control="hue" value="{{isset($image_data[$image]['buttonColor']) ? $image_data[$image]['buttonColor'] : '#ffffff'}}">
                                     </div>
                                 </div>
                             </div>
                             
                             {{--Place--}}
                             <div class="col-xs-12 margin-top-10">
-                                <label for="type" class="control-label col-xs-12 no-margin no-padding">
+                                <label for="place" class="control-label col-xs-12 no-margin no-padding">
                                     {{trans('sliders.place')}}
                                 </label>
-                                <select id="place" name="place" class="form-control input-md">
+                                <select id="place" name="place" class="form-control input-md input-place">
                                     <option value="">{{trans('sliders.choose_place')}}</option>
-                                    <option value="top_left" @if(!empty($slider['palce']) && $slider['palce'] == 'top_left') selected="selected" @endif>{{trans('sliders.top_left')}}</option>
-                                    <option value="top_right" @if(!empty($slider['palce']) && $slider['palce'] == 'top_right') selected="selected" @endif>{{trans('sliders.top_right')}}</option>
-                                    <option value="bott_left" @if(!empty($slider['palce']) && $slider['palce'] == 'bott_left') selected="selected" @endif>{{trans('sliders.bott_left')}}</option>
-                                    <option value="bott_right" @if(!empty($slider['palce']) && $slider['palce'] == 'bott_right') selected="selected" @endif>{{trans('sliders.bott_right')}}</option>
+                                    <option value="top-left" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'top-left') selected="selected" @endif>{{trans('sliders.top_left')}}</option>
+                                    <option value="top-right" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'top-right') selected="selected" @endif>{{trans('sliders.top_right')}}</option>
+                                    <option value="bottom-left" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'bottom-left') selected="selected" @endif>{{trans('sliders.bott_left')}}</option>
+                                    <option value="bottom-right" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'bottom-right') selected="selected" @endif>{{trans('sliders.bott_right')}}</option>
                                 </select>
                             </div>
                             

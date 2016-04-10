@@ -40,8 +40,13 @@ class Module_System_Settings extends BaseController
 	{
 		$response['pageTitle'] = trans('system_settings.system_settings');
 
+		$response['blade_custom_css'] = [
+			'global/plugins/bootstrap-summernote/summernote',
+		];
+
 		$response['blade_custom_js'] = [
 			'global/plugins/fuelux/js/spinner.min',
+			'global/plugins/bootstrap-summernote/summernote.min',
 		];
 
 		$response['system_settings'] = Model_System_Settings::getSetting(FALSE, FALSE, TRUE);
@@ -61,16 +66,17 @@ class Module_System_Settings extends BaseController
 		if ( ! empty($_POST))
 		{
 			$data = [
-				'title'      => trim(Input::get('title')),
-				'email'      => trim(Input::get('email')),
-				'phone'      => trim(Input::get('phone')),
-				'quantity'      => trim(Input::get('quantity')),
-				'page_title'      => trim(Input::get('page_title')),
-				'meta_description'      => trim(Input::get('meta_description')),
-				'meta_keywords'      => trim(Input::get('meta_keywords')),
-				'delivery_to_office'      => trim(Input::get('delivery_to_office')),
-				'delivery_to_address'      => trim(Input::get('delivery_to_address')),
-				'delivery_free_delivery'      => trim(Input::get('delivery_free_delivery')),
+				'title'                  => trim(Input::get('title')),
+				'email'                  => trim(Input::get('email')),
+				'phone'                  => trim(Input::get('phone')),
+				'work_time'              => trim(Input::get('work_time')),
+				'quantity'               => trim(Input::get('quantity')),
+				'page_title'             => trim(Input::get('page_title')),
+				'meta_description'       => trim(Input::get('meta_description')),
+				'meta_keywords'          => trim(Input::get('meta_keywords')),
+				'delivery_to_office'     => trim(Input::get('delivery_to_office')),
+				'delivery_to_address'    => trim(Input::get('delivery_to_address')),
+				'delivery_free_delivery' => trim(Input::get('delivery_free_delivery')),
 			];
 
 			if (Model_System_Settings::saveSettings($data) != FALSE)

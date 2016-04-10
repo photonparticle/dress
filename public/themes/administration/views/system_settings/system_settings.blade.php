@@ -66,6 +66,9 @@
             $('#to_addr').spinner({value: 0, min: 0, max: 1000, step: 1.00, numberFormat: "c"});
             $('#giveaway').spinner({value: 0, min: 0, max: 1000, step: 1.00, numberFormat: "c"});
 
+            //Init summernote
+            $('#work_time').summernote({height: 300});
+
             //Settings save
             $('body').on('click', '#save', function () {
 
@@ -76,6 +79,7 @@
                                'title': $('#title').val(),
                                'email': $('#email').val(),
                                'phone': $('#phone').val(),
+                               'work_time': $('#work_time').code(),
                                'quantity': $('#input_quantity').val(),
                                'page_title': $('#page_title').val(),
                                'meta_description': $('#meta_description').val(),

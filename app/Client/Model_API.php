@@ -106,32 +106,4 @@ class Model_API extends Model
 		return $response;
 	}
 
-	public static function getURL($object, $type)
-	{
-		if (in_array($type, ['category', 'product', 'page']) &&
-			is_numeric($object) || is_array($object)
-		)
-		{
-			$urls = DB::table('seo_url')
-						->select(['object', 'slug'])
-					  ->where('type', '=', $type);
-
-			if(is_numeric($object)) {
-				$urls = $urls->where('object', '=', $object);
-			} else {
-				$urls = $urls->whereIn('object',$object);
-			}
-
-			$urls = $urls->get();
-
-			if(count($urls) == 1) {
-				return $urls[0];
-			} else {
-				return $urls;
-			}
-		} else {
-			return FALSE;
-		}
-	}
-
 }

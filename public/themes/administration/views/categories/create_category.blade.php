@@ -96,14 +96,29 @@
                                             </div>
                                             <div class="clearfix"></div>
 
+                                            <div class="col-xs-12 margin-top-20">
+                                                <label for="size_group" class="control-label col-xs-12 default no-padding">
+                                                    {{trans('categories.size_group')}}
+                                                </label>
+                                                <select id="size_group" name="size_group" class="form-control select2me input-lg no-padding">
+                                                    <option value="" selected>{{trans('global.none')}}</option>
+                                                    @if(isset($size_groups) && is_array($size_groups))
+                                                        @foreach($size_groups as $key => $group)
+                                                            <option value="{{$group}}">{{$group}}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                            <div class="clearfix"></div>
+
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20">
-                                                <label for="position" class="control-label col-xs-12 default no-padding">
+                                                <label for="input_position" class="control-label col-xs-12 default no-padding">
                                                     {{trans('categories.position')}}
                                                 </label>
 
                                                 <div id="position">
                                                     <div class="input-group" style="width:150px;">
-                                                        <input type="text" name="position" class="spinner-input form-control" maxlength="2" readonly="">
+                                                        <input type="text" id="input_position" name="position" class="spinner-input form-control" maxlength="2" readonly="">
                                                         <div class="spinner-buttons input-group-btn">
                                                             <button type="button" class="btn spinner-up default">
                                                                 <i class="fa fa-angle-up"></i>
@@ -268,7 +283,7 @@
                             } else {
                                 $(this).removeAttr('disabled');
                             }
-                        } else if(opt_level == '2') {
+                        } else if (opt_level == '2') {
                             $(this).attr('disabled', 'disabled');
                         }
                     });
@@ -316,6 +331,7 @@
                                'description': $('#description').code(),
                                'level': $('#level').val(),
                                'parent': $('#parent').val(),
+                               'size_group': $('#size_group').val(),
                                'position': $('#position').spinner('value'),
                                'visible': visible,
                                'active': active,
@@ -331,7 +347,7 @@
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['message']);
 
-                                   if(response['status'] == 'success' && response['category_id']) {
+                                   if (response['status'] == 'success' && response['category_id']) {
                                        setTimeout(function () {
                                            window.location.href = "/admin/categories/edit/" + response['category_id'];
                                        }, 2000);

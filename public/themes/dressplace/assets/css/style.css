@@ -317,7 +317,7 @@ a.buy-now:hover{
 	text-align:center;
 }
 
- label.line{
+ label.line, div.line{
 	width:200px;
 	height:2px;
 	display:block;
@@ -666,7 +666,7 @@ a.cart:hover{
 	border-bottom:1px solid #fa7455	;
 }
 .single {
-  padding: 5em 0 0;
+  padding: 1em 0 0;
 }
 .available h6{
 	color:#52D0C4;
@@ -744,13 +744,15 @@ ul.kid-menu li,ul.cute li{
     padding-bottom: 0em;
 }
 /*--single--*/
-.span_2_of_a1 h3 {
+.span_2_of_a1 h3,
+.span_2_of_a1 h1 {
 	color: #000;
     text-transform: uppercase;
     font-size: 1.8em;
     font-family: 'Open Sans Semibold', sans-serif;
 }
-p.in-para{
+p.in-para,
+div.in-para{
 color: #B3B3B3;
     font-size: 0.9em;
     line-height: 2em;
@@ -781,8 +783,9 @@ h4.quick {
 	text-transform: uppercase;
 	margin-top: 1em;
 }
-p.quick_desc {
-	color:#B3B3B3;
+p.quick_desc,
+div.quick_desc{
+	color:#333;
 	font-size:0.9em;
 	line-height: 2em;
 	margin: 1em 0 2em;
@@ -2044,7 +2047,7 @@ h4.grid2 {
 .content-mid h3 {
     font-size: 1.5em;
 }
-label.line {
+label.line, div.line {
     width: 107px;
 }
 .zoom-icon .icon {

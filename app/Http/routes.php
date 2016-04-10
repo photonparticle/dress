@@ -11,19 +11,6 @@
 |
 */
 
-Route::get('/', 'Homepage@homepage');
-
-//Route::group(
-//	[
-//		'namespace' => 'Client',
-//		'prefix'    => '',
-//	],
-//	function ()
-//	{
-//
-//	}
-//);
-
 Route::group(
 	[
 		'namespace' => 'Admin',
@@ -70,5 +57,13 @@ Route::group(
 		Route::get('/get_categories', 'API@getCategories');
 	}
 );
+
 //Image upload
 Route::post('upload', ['as' => 'upload-post', 'uses' =>'ImageController@postUpload']);
+
+
+//Client routes
+Route::get('/', 'Homepage@homepage');
+Route::get('/{slug}', 'Client@route');
+Route::post('/{slug}', 'Client@route');
+Route::get('/{slug}/{page}', 'Client@route');

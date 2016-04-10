@@ -195,4 +195,15 @@ class Model_Sliders extends Model
 			return FALSE;
 		}
 	}
+
+	public static function removeSlides($id) {
+		DB::table('sliders')
+			->where('id', '=', $id)
+			->update([
+						 'slides'           => '',
+						 'slides_positions' => '',
+					 ]);
+
+		return TRUE;
+	}
 }

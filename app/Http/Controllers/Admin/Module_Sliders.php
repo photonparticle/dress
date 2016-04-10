@@ -41,13 +41,13 @@ class Module_Sliders extends BaseController
 	{
 		$response['pageTitle'] = trans('sliders.sliders');
 
-		$response['sliders']            = Model_Sliders::getSliders();
+		$response['sliders'] = Model_Sliders::getSliders();
 
 		$response['blade_custom_css'] = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
 
-		$response['blade_custom_js']  = [
+		$response['blade_custom_js'] = [
 			'global/plugins/datatables/media/js/jquery.dataTables.min',
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 			'global/plugins/bootbox/bootbox.min',
@@ -68,8 +68,8 @@ class Module_Sliders extends BaseController
 			'global/plugins/dropzone/css/dropzone',
 			'global/plugins/select2/select2',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
-            //MiniColors_CSS\\
-            'global/plugins/jquery-minicolors/jquery.minicolors',
+			//MiniColors_CSS\\
+			'global/plugins/jquery-minicolors/jquery.minicolors',
 		];
 
 		$response['blade_custom_js'] = [
@@ -79,8 +79,8 @@ class Module_Sliders extends BaseController
 			'global/plugins/select2/select2.min',
 			'admin/pages/scripts/components-dropdowns',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
-            //MiniColors_JS\\
-            'global/plugins/jquery-minicolors/jquery.minicolors.min',
+			//MiniColors_JS\\
+			'global/plugins/jquery-minicolors/jquery.minicolors.min',
 		];
 
 		$response['slider_dir']        = uniqid('slider_');
@@ -106,14 +106,25 @@ class Module_Sliders extends BaseController
 		if ( ! empty($_POST))
 		{
 //			Save slides
-			if ( ! empty($slides) && $slides == 'slides' && ! empty(Input::get('slides')) && ! empty(Input::get('slides_positions')) && ! empty(Input::get('slider_id')))
+			if ( ! empty($slides) && $slides == 'slides')
 			{
 				$response['message'] = trans('sliders.slides_not_saved');
 
-				if (Model_Sliders::setSlides(intval(Input::get('slider_id')), Input::get('slides'), Input::get('slides_positions')) === TRUE)
+				if ( ! empty(Input::get('slides')) && ! empty(Input::get('slides_positions')) && ! empty(Input::get('slider_id')))
 				{
-					$response['status']  = 'success';
-					$response['message'] = trans('sliders.slides_saved');
+					if (Model_Sliders::setSlides(intval(Input::get('slider_id')), Input::get('slides'), Input::get('slides_positions')) === TRUE)
+					{
+						$response['status']  = 'success';
+						$response['message'] = trans('sliders.slides_saved');
+					}
+				}
+				else
+				{
+					if (Model_Sliders::removeSlides(intval(Input::get('slider_id'))) === TRUE)
+					{
+						$response['status']  = 'success';
+						$response['message'] = trans('sliders.slides_saved');
+					}
 				}
 
 			}
@@ -246,22 +257,20 @@ class Module_Sliders extends BaseController
 		$response['pageTitle'] = trans('sliders.edit');
 
 		$response['blade_custom_css'] = [
+			'global/plugins/jquery-minicolors/jquery.minicolors',
 			'global/plugins/dropzone/css/dropzone',
 			'global/plugins/select2/select2',
 			'global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
-            //MiniColors_CSS\\
-            'global/plugins/jquery-minicolors/jquery.minicolors',
 		];
 
 		$response['blade_custom_js'] = [
+			'global/plugins/jquery-minicolors/jquery.minicolors.min',
 			'global/plugins/dropzone/dropzone',
 			'admin/pages/scripts/form-dropzone',
 			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
 			'admin/pages/scripts/components-dropdowns',
 			'global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
-            //MiniColors_JS\\
-            'global/plugins/jquery-minicolors/jquery.minicolors.min',
 		];
 
 		$response['images_dir']        = Config::get('system_settings.sliders_upload_path');
@@ -272,6 +281,16 @@ class Module_Sliders extends BaseController
 		if ( ! empty($response['slider']) && ! empty($response['slider'][0]))
 		{
 			$response['slider'] = $response['slider'][0];
+		}
+
+		if ( ! empty($response['slider']['active_from']) && $response['slider']['active_from'] == '0000-00-00 00:00:00')
+		{
+			$response['slider']['active_from'] = '';
+		}
+
+		if ( ! empty($response['slider']['active_to']) && $response['slider']['active_to'] == '0000-00-00 00:00:00')
+		{
+			$response['slider']['active_to'] = '';
 		}
 
 		return Theme::view('sliders.create_edit_slider', $response);
@@ -289,18 +308,15 @@ class Module_Sliders extends BaseController
 	{
 		if ($method == 'image' && ! empty(Input::get('image')) && ! empty(Input::get('dir')))
 		{
-			$response['status']  = 'error';
-			$response['message'] = trans('sliders.image_not_removed');
-			$path                = Config::get('system_settings.sliders_upload_path');
+			$path = Config::get('system_settings.sliders_upload_path');
 
 			if (file_exists($path.Input::get('dir').DIRECTORY_SEPARATOR.Input::get('image')))
 			{
-				if (unlink($path.Input::get('dir').DIRECTORY_SEPARATOR.Input::get('image')))
-				{
-					$response['status']  = 'success';
-					$response['message'] = trans('sliders.image_removed');
-				}
+				unlink($path.Input::get('dir').DIRECTORY_SEPARATOR.Input::get('image'));
 			}
+
+			$response['status']  = 'success';
+			$response['message'] = trans('sliders.image_removed');
 		}
 		elseif ($method === FALSE || $method == 'slider')
 		{

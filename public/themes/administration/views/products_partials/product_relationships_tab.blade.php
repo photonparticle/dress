@@ -16,6 +16,21 @@
         </div>
         <div class="clearfix"></div>
 
+        <div class="col-xs-12 margin-top-20 categories-container">
+            <label for="main_category" class="control-label col-xs-12 default no-padding">
+                {{trans('products.main_category')}}
+            </label>
+            <select id="main_category" name="main_category" class="form-control select2me input-lg no-padding" data-placeholder="{{trans('products.select_main_category')}}">
+                <option value="">{{trans('products.select_main_category')}}</option>
+                @if(isset($categories) && is_array($categories))
+                    @foreach($categories as $key => $category)
+                        <option value="{{$category['id']}}" @if(!empty($product['main_category']) && $category['id'] == $product['main_category']) selected="selected" @endif>{{$category['title'] or ''}}</option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
+        <div class="clearfix"></div>
+
         <div class="col-xs-12 margin-top-20">
             <label for="manufacturer" class="control-label col-xs-12 default no-padding">
                 {{trans('products.manufacturer')}}

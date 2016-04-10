@@ -212,9 +212,20 @@ class Module_Products extends BaseController
 					}
 				}
 
+				$available_sizes = [];
+
+				if ( ! empty(Input::get('sizes')) && is_array(Input::get('sizes')))
+				{
+					foreach (Input::get('sizes') as $size_name => $size)
+					{
+						$available_sizes[] = $size_name;
+					}
+				}
+
 				$data = [
 					'title'            => trim(Input::get('title')),
 					'description'      => Input::get('description'),
+					'main_category'    => Input::get('main_category'),
 					'quantity'         => Input::get('quantity'),
 					'position'         => Input::get('position'),
 					'active'           => Input::get('active'),
@@ -237,6 +248,12 @@ class Module_Products extends BaseController
 				{
 					try
 					{
+						//Manage sizes relations
+						if ( ! empty($available_sizes) && is_array($available_sizes))
+						{
+							Model_Products::setProductToCategory($id, $available_sizes);
+						}
+
 						//Manage categories relations
 						if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
 						{
@@ -417,14 +434,25 @@ class Module_Products extends BaseController
 			}
 		}
 
+		//Get product and it's data
 		$product = Model_Products::getProducts($id);
 
+		//Prepare product for response
 		if ( ! empty($product[$id]))
 		{
 			$response['product'] = $product[$id];
 			if ( ! empty($product[$id]['sizes']))
 			{
 				$response['sizes'] = json_decode($product[$id]['sizes'], TRUE);
+			}
+			if ( ! empty($response['product']['discount_start']) && $response['product']['discount_start'] == '0000-00-00 00:00:00')
+			{
+				$response['product']['discount_start'] = '';
+			}
+
+			if ( ! empty($response['product']['discount_end']) && $response['product']['discount_end'] == '0000-00-00 00:00:00')
+			{
+				$response['product']['discount_end'] = '';
 			}
 		}
 
@@ -627,11 +655,22 @@ class Module_Products extends BaseController
 					$error               = TRUE;
 				}
 
+				$available_sizes = [];
+
+				if ( ! empty(Input::get('sizes')) && is_array(Input::get('sizes')))
+				{
+					foreach (Input::get('sizes') as $size_name => $size)
+					{
+						$available_sizes[] = $size_name;
+					}
+				}
+
 				if ($error === FALSE)
 				{
 					$data = [
 						'title'            => trim(Input::get('title')),
 						'description'      => Input::get('description'),
+						'main_category'    => Input::get('main_category'),
 						'quantity'         => Input::get('quantity'),
 						'position'         => Input::get('position'),
 						'active'           => Input::get('active'),
@@ -653,11 +692,18 @@ class Module_Products extends BaseController
 					{
 						try
 						{
-							//Manage relations
+							//Manage sizes relations
+							if ( ! empty($available_sizes) && is_array($available_sizes))
+							{
+								Model_Products::saveProductToSize($id, $available_sizes);
+							}
+
+							//Manage categories relations
 							if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
 							{
 								Model_Products::setProductToCategory($id, Input::get('categories'));
 							}
+
 							//Manage Friendly URL
 							Model_Products::setURL($id, Input::get('friendly_url'));
 
@@ -685,6 +731,12 @@ class Module_Products extends BaseController
 							if ( ! empty($material))
 							{
 								Model_Products::setMaterial($id, $material);
+							}
+
+							//Manage colors
+							if ( ! empty(Input::get('colors')) && is_array(Input::get('colors')))
+							{
+								Model_Products::setColors($id, Input::get('colors'));
 							}
 
 							$response['status']  = 'success';

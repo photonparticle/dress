@@ -50,9 +50,12 @@ class Model_System_Settings extends Model
 			}
 		}
 
-		if($for_list === TRUE) {
-			if(!empty($response) && is_array($response)) {
-				foreach($response as $name => $setting) {
+		if ($for_list === TRUE)
+		{
+			if ( ! empty($response) && is_array($response))
+			{
+				foreach ($response as $name => $setting)
+				{
 					unset($response[$name]);
 					$response[$name] = $setting['value'];
 				}
@@ -68,6 +71,7 @@ class Model_System_Settings extends Model
 			'title'                  => 'string',
 			'email'                  => 'string',
 			'phone'                  => 'string',
+			'work_time'              => 'text',
 			'quantity'               => 'number',
 			'page_title'             => 'string',
 			'meta_description'       => 'string',
@@ -117,7 +121,7 @@ class Model_System_Settings extends Model
 					$insert_objects[$name] = $object;
 				}
 			}
-//			var_dump($current_objects);exit;
+
 			//Process update objects
 			if (is_array($update_objects))
 			{

@@ -88,8 +88,10 @@ class Module_Categories extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['pageTitle']  = trans('global.create_category');
+		$response['categories']  = Model_Categories::getCategory(FALSE, ['title']);
+		$response['size_groups'] = Model_Categories::getSizes();
+
+		$response['pageTitle'] = trans('global.create_category');
 
 		return Theme::view('categories.create_category', $response);
 	}
@@ -131,6 +133,7 @@ class Module_Categories extends BaseController
 					'description'      => Input::get('description'),
 					'level'            => $category_level,
 					'parent'           => $parent,
+					'size_group'       => Input::get('size_group'),
 					'position'         => Input::get('position'),
 					'visible'          => Input::get('visible'),
 					'active'           => Input::get('active'),
@@ -237,8 +240,9 @@ class Module_Categories extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
-		$response['pageTitle']  = trans('categories.edit_category');
+		$response['categories']  = Model_Categories::getCategory(FALSE, ['title']);
+		$response['size_groups'] = Model_Categories::getSizes();
+		$response['pageTitle']   = trans('categories.edit_category');
 
 		$category_data        = Model_Categories::getCategory($id);
 		$response['category'] = $category_data[$id];
@@ -312,6 +316,7 @@ class Module_Categories extends BaseController
 					'description'      => Input::get('description'),
 					'level'            => $category_level,
 					'parent'           => $parent,
+					'size_group'       => Input::get('size_group'),
 					'position'         => Input::get('position'),
 					'visible'          => Input::get('visible'),
 					'active'           => Input::get('active'),

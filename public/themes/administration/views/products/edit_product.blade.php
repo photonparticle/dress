@@ -203,6 +203,7 @@
                                'meta_keywords': $('#meta_keywords').val(),
                                'related_products': $('#related_products').val(),
                                'categories': $('#categories').val(),
+                               'main_category': $('#main_category').val(),
                                'sizes': sizes,
                                'tags': $('#tags').val(),
                                'manufacturer': $('#manufacturer').val(),

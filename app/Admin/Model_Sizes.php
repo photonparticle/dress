@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Mockery\CountValidator\Exception;
 
-class Model_Sizes extends Model
+class
+Model_Sizes extends Model
 {
 
 	/**

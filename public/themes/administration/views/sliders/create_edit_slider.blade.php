@@ -67,26 +67,6 @@
                                             format: "yyyy.mm.dd hh:ii",
                                             pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left")
                                         });
-            //Init colorpicker
-                $('.input-text-color').each(function(){
-                    $(this).minicolors({
-                        control: $(this).attr('data-control') || 'hue',
-                        defaultValue: $(this).attr('data-defaultValue') || '',
-                        inline: $(this).attr('data-inline') === 'true',
-                        letterCase: $(this).attr('data-letterCase') || 'lowercase',
-                        opacity: $(this).attr('data-opacity'),
-                        position: $(this).attr('data-position') || 'bottom left',
-                        change: function(hex, opacity) {
-                            if (!hex) return;
-                            if (opacity) hex += ', ' + opacity;
-                            if (typeof console === 'object') {
-                                console.log(hex);
-                            }
-                        },
-                        theme: 'bootstrap'
-                    });
-                });
-            
 
             $('body').on('change', '#type', function () {
                 showHideTarget();
@@ -123,6 +103,7 @@
                                    if (response) {
                                        if (holder.length > 0) {
                                            holder.html(response);
+                                           initColorPickers();
                                        }
                                    }
                                },
@@ -188,12 +169,12 @@
                         active_to = $('#active_to').val(),
                         target = '';
 
-                        if(type == 'categories') {
-                            target = categories;
-                        }
-                        if(type == 'pages') {
-                            target = pages;
-                        }
+                if (type == 'categories') {
+                    target = categories;
+                }
+                if (type == 'pages') {
+                    target = pages;
+                }
 
                 $.ajax({
                            type: 'post',
@@ -212,10 +193,10 @@
                                if (typeof response == typeof {} && response['status'] && response['message']) {
                                    showNotification(response['status'], response['message']);
 
-                                   if(response['status'] == 'success' && response['id']) {
+                                   if (response['status'] == 'success' && response['id']) {
                                        saveSlides(response['id']);
                                    }
-                                   if(response['status'] == 'success' && response['redirect']) {
+                                   if (response['status'] == 'success' && response['redirect']) {
                                        setTimeout(function () {
                                            window.location.href = "/admin/module/sliders/edit/" + response['id'];
                                        }, 2000);
@@ -245,9 +226,12 @@
                                 slide = $(this).attr('data-image'),
                                 title = $(this).find('.input-title').val(),
                                 text = $(this).find('.input-text').val(),
+                                textColor = $(this).find('.input-text-color').val(),
                                 buttonText = $(this).find('.input-buttonText').val(),
                                 buttonURL = $(this).find('.input-buttonURL').val(),
-                                position = $(this).find('.input-position').val();
+                                buttonColor = $(this).find('.input-btn-color').val(),
+                                position = $(this).find('.input-position').val(),
+                                place = $(this).find('.input-place').val();
 
                         //Remember positioning
                         if (!position) {
@@ -260,8 +244,11 @@
                             slides[slide] = {
                                 'title': title,
                                 'text': text,
+                                'textColor': textColor,
                                 'buttonText': buttonText,
-                                'buttonURL': buttonURL
+                                'buttonColor': buttonColor,
+                                'buttonURL': buttonURL,
+                                'place': place
                             };
                         }
 
@@ -280,28 +267,30 @@
             function saveSlides(slider_id) {
                 var slides = getSlides();
 
-                if (slides) {
-                    $.ajax({
-                               type: 'post',
-                               url: '/admin/module/sliders/store/slides',
-                               data: {
-                                   'slides': slides['slides'],
-                                   'slides_positions': slides['slides_positions'],
-                                   'slider_id': slider_id
-                               },
-                               success: function (response) {
-                                   if (typeof response == typeof {} && response['status'] && response['message']) {
-                                       showNotification(response['status'], response['message']);
-                                   } else {
-                                       showNotification('error', translate('request_not_completed'), translate('contact_support'));
-                                   }
-                               },
-                               error: function () {
+                if(!slides) {
+                    slides = {};
+                }
+
+                $.ajax({
+                           type: 'post',
+                           url: '/admin/module/sliders/store/slides',
+                           data: {
+                               'slides': slides['slides'],
+                               'slides_positions': slides['slides_positions'],
+                               'slider_id': slider_id
+                           },
+                           success: function (response) {
+                               if (typeof response == typeof {} && response['status'] && response['message']) {
+                                   showNotification(response['status'], response['message']);
+                               } else {
                                    showNotification('error', translate('request_not_completed'), translate('contact_support'));
                                }
+                           },
+                           error: function () {
+                               showNotification('error', translate('request_not_completed'), translate('contact_support'));
+                           }
 
-                           });
-                }
+                       });
             }
 
             $('#save').click(function (e) {
@@ -310,6 +299,25 @@
                 //Save the slider
                 saveSlider();
             });
+
+            //Init color picker
+            function initColorPickers() {
+                $('.input-text-color, .input-btn-color').each(function () {
+                    $(this).minicolors({
+                                           control: $(this).attr('data-control') || 'hue',
+                                           defaultValue: $(this).attr('data-defaultValue') || '',
+                                           inline: $(this).attr('data-inline') === 'true',
+                                           letterCase: $(this).attr('data-letterCase') || 'lowercase',
+                                           opacity: $(this).attr('data-opacity'),
+                                           position: $(this).attr('data-position') || 'bottom left',
+                                           change: function (hex, opacity) {
+                                               if (!hex) return;
+                                               if (opacity) hex += ', ' + opacity;
+                                           },
+                                           theme: 'bootstrap'
+                                       });
+                });
+            }
 
         });
 

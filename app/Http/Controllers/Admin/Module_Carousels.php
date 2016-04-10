@@ -215,6 +215,16 @@ class Module_Carousels extends BaseController
 			$response['carousel']['products'] = json_decode($response['carousel']['products'], TRUE);
 		}
 
+		if ( ! empty($response['carousel']['active_from']) && $response['carousel']['active_from'] == '0000-00-00 00:00:00')
+		{
+			$response['carousel']['active_from'] = '';
+		}
+
+		if ( ! empty($response['carousel']['active_to']) && $response['carousel']['active_to'] == '0000-00-00 00:00:00')
+		{
+			$response['carousel']['active_to'] = '';
+		}
+
 		return Theme::view('carousels.create_edit_carousel', $response);
 	}
 

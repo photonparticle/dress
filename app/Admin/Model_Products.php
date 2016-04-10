@@ -30,13 +30,15 @@ class Model_Products extends Model
 		$products = DB::table('products')
 					  ->orderBy('id', 'DESC');
 
-		if($skip > 0 && $limit > 0) {
+		if ($skip > 0 && $limit > 0)
+		{
 			$products = $products->skip($skip)->take($limit);
 		}
 
 		$response = [];
 
-		if($for_list === TRUE) {
+		if ($for_list === TRUE)
+		{
 			$products = $products->select(['id']);
 		}
 
@@ -112,17 +114,18 @@ class Model_Products extends Model
 			}
 			if (empty($data['discount_start']))
 			{
-				$data['discount_start'] = date('Y-m-d H:i:s');
+				$data['discount_start'] = '';
 			}
 			if (empty($data['discount_end']))
 			{
-				$data['discount_end'] = date('Y-m-d H:i:s');
+				$data['discount_end'] = '';
 			}
 
 			$product_id = DB::table('products')
 							->insertGetId([
 											  'active'         => $data['active'],
 											  'quantity'       => $data['quantity'],
+											  'main_category'  => $data['main_category'],
 											  'original_price' => $data['original_price'],
 											  'price'          => $data['price'],
 											  'discount_price' => $data['discount_price'],
@@ -178,11 +181,11 @@ class Model_Products extends Model
 			}
 			if (empty($data['discount_start']))
 			{
-				$data['discount_start'] = date('Y-m-d H:i:s');
+				$data['discount_start'] = '';
 			}
 			if (empty($data['discount_end']))
 			{
-				$data['discount_end'] = date('Y-m-d H:i:s');
+				$data['discount_end'] = '';
 			}
 
 			DB::table('products')
@@ -190,6 +193,7 @@ class Model_Products extends Model
 			  ->update([
 						   'active'         => $data['active'],
 						   'quantity'       => $data['quantity'],
+						   'main_category'  => $data['main_category'],
 						   'original_price' => $data['original_price'],
 						   'price'          => $data['price'],
 						   'discount_price' => $data['discount_price'],
@@ -224,7 +228,8 @@ class Model_Products extends Model
 			$update_objects  = [];
 			$insert_objects  = [];
 
-			if(!empty($current_objects[$product_id])) {
+			if ( ! empty($current_objects[$product_id]))
+			{
 				$current_objects = $current_objects[$product_id];
 			}
 
@@ -569,7 +574,8 @@ class Model_Products extends Model
 	public static function checkURL($url)
 	{
 		if (DB::table('seo_url')->select('slug', 'type')
-				->where('slug', '=', $url)->count() > 0)
+			  ->where('slug', '=', $url)->count() > 0
+		)
 		{
 			return TRUE;
 		}
@@ -862,8 +868,11 @@ class Model_Products extends Model
 			  ->where('product_id', '=', $product_id)
 			  ->delete();
 
-			DB::table('product_to_color')
-			  ->insert($insertColors);
+			if ( ! empty($insertColors))
+			{
+				DB::table('product_to_color')
+				  ->insert($insertColors);
+			}
 
 			return TRUE;
 		}
@@ -984,6 +993,29 @@ class Model_Products extends Model
 		else
 		{
 			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 * @param $data
+	 */
+	public static function saveProductToSize($product_id, $data)
+	{
+		DB::table('product_to_size')
+		  ->where('product_id', '=', $product_id)
+		  ->delete();
+
+		if ( ! empty($data) && is_array($data))
+		{
+			foreach ($data as $size)
+			{
+				DB::table('product_to_size')
+				  ->insert([
+							   'product_id' => $product_id,
+							   'size'       => $size,
+						   ]);
+			}
 		}
 	}
 }

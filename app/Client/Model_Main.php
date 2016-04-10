@@ -9,6 +9,64 @@ use Mockery\CountValidator\Exception;
 
 class Model_Main extends Model
 {
+	/**
+	 * Fetch system settings
+	 *
+	 * @param bool $object - int|array - FALSE for to get all pages
+	 * @param array $objects
+	 * @param bool $for_list
+	 *
+	 * @return array
+	 */
+	public static function getSetting($object = FALSE, $objects = [], $for_list = FALSE)
+	{
+		$settings = DB::table('system_settings')
+					  ->orderBy('object', 'ASC');
+
+		if ( ! empty($objects) && is_array($objects))
+		{
+			$settings = $settings->select($objects);
+		}
+
+		if (is_array($object))
+		{
+			$settings = $settings->whereIn('id', $object);
+		}
+		elseif (is_string($object) || is_int($object))
+		{
+			$settings = $settings->where('id', '=', $object);
+		}
+
+		$settings = $settings->get();
+
+		//Rebuild array
+		$response = [];
+
+		if ( ! empty($settings) && is_array($settings))
+		{
+			foreach ($settings as $setting)
+			{
+				$response[$setting['object']] = [
+					'value' => $setting[$setting['type']],
+					'type'  => $setting['type'],
+				];
+			}
+		}
+
+		if ($for_list === TRUE)
+		{
+			if ( ! empty($response) && is_array($response))
+			{
+				foreach ($response as $name => $setting)
+				{
+					unset($response[$name]);
+					$response[$name] = $setting['value'];
+				}
+			}
+		}
+
+		return $response;
+	}
 
 	/**
 	 * @param bool $category_id - int|array - FALSE for to get all categories
@@ -18,10 +76,10 @@ class Model_Main extends Model
 	 */
 	public static function getCategory($category_id = FALSE, $objects = [])
 	{
-		$categories = DB::table('categories')
-						->select('id')
-						->orderBy('id', 'asc');
-		$response   = [];
+		$categories     = DB::table('categories')
+							->orderBy('id', 'asc');
+		$response       = [];
+		$categories_ids = [];
 
 		if (is_array($category_id))
 		{
@@ -33,6 +91,7 @@ class Model_Main extends Model
 		}
 
 		$categories = $categories->where('active', '=', 1)
+								 ->where('menu_visibility', '=', 1)
 								 ->get();
 
 		if ( ! empty($categories) && is_array($categories))
@@ -41,12 +100,13 @@ class Model_Main extends Model
 			{
 				if ( ! empty($category) && is_array($category))
 				{
+					$categories_ids[]          = $category['id'];
 					$response[$category['id']] = $category;
 				}
 			}
 		}
 
-		if (is_array(($category_objects = self::getCategoryObjects($category_id, $objects))))
+		if (is_array(($category_objects = self::getCategoryObjects($categories_ids, $objects))))
 		{
 			foreach ($category_objects as $key => $objects)
 			{
@@ -104,6 +164,11 @@ class Model_Main extends Model
 		return $response;
 	}
 
+	/**
+	 * @param int $limit
+	 *
+	 * @return array
+	 */
 	private static function getNewestProducts($limit = 20)
 	{
 		$response = [];
@@ -128,6 +193,11 @@ class Model_Main extends Model
 		return $response;
 	}
 
+	/**
+	 * @param int $limit
+	 *
+	 * @return array
+	 */
 	private static function getDiscountedProducts($limit = 20)
 	{
 		$response = [];
@@ -153,49 +223,6 @@ class Model_Main extends Model
 		return $response;
 	}
 
-	public static function getCarousels($type, $target = FALSE)
-	{
-		if ( ! empty($type) && in_array($type, ['homepage', 'categories', 'pages']))
-		{
-			$now       = date('Y-m-d H:i:s');
-			$carousels = DB::table('carousels')
-						   ->where('type', '=', $type)
-						   ->where('active_from', '<=', $now)
-						   ->orWhere('active_from', '<=', '')
-						   ->where('active_to', '>=', $now)
-						   ->orWhere('active_to', '<=', '');
-
-			if ( ! empty($target) && is_numeric($target))
-			{
-				$carousels = $carousels->where('target', '=', $target)->orWhere('target', '=', '');
-			}
-
-			$carousels = $carousels->orderBy('position', 'ASC')
-								   ->get();
-
-			if ( ! empty($carousels) && is_array($carousels))
-			{
-				foreach ($carousels as $key => $carousel)
-				{
-					//If type is newest or discounted fetch products ID's
-					if ($carousel['products'] == 'newest')
-					{
-						$carousels[$key]['products'] = implode(', ', self::getNewestProducts($carousel['max_products']));
-					}
-					elseif ($carousel['products'] == 'discounted')
-					{
-						$carousels[$key]['products'] = implode(', ', self::getDiscountedProducts($carousel['max_products']));
-					}
-				}
-			}
-
-			return $carousels;
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
 	/**
 	 * Returns array of all products
 	 *
@@ -204,18 +231,15 @@ class Model_Main extends Model
 	 *
 	 * @return array
 	 */
-	public static function getProducts($product_id = FALSE, $objects = [], $for_list = FALSE, $skip = 0, $limit = 0)
+	public static function getProducts($product_id = FALSE, $objects = [], $for_list = FALSE, $skip = 0, $limit = 0, $order_by = FALSE)
 	{
-		$products = DB::table('products')
-					  ->orderBy('id', 'DESC');
+		$products = DB::table('products');
 
-		if($skip > 0 && $limit > 0) {
-			$products = $products->skip($skip)->take($limit);
-		}
+		$response        = [];
+		$loaded_products = [];
 
-		$response = [];
-
-		if($for_list === TRUE) {
+		if ($for_list === TRUE)
+		{
 			$products = $products->select(['id']);
 		}
 
@@ -228,7 +252,29 @@ class Model_Main extends Model
 			$products = $products->where('id', '=', $product_id);
 		}
 
-		$products = $products->get();
+		if ($limit > 0)
+		{
+			$products = $products->skip($skip)->take($limit);
+		}
+
+		$products = $products->where('active', '=', '1');
+
+		if ($order_by == 'discounted')
+		{
+			$products = $products->orderBy('discount_price', 'DESC');
+		}
+		elseif ($order_by == 'price_asc')
+		{
+			$products = $products->orderBy('price', 'ASC');
+		}
+		elseif ($order_by == 'price_desc')
+		{
+			$products = $products->orderBy('price', 'DESC');
+		}
+
+		$products = $products->orderBy('created_at', 'DESC')
+							 ->orderBy('position', 'ASC')
+							 ->get();
 
 		if ( ! empty($products) && is_array($products))
 		{
@@ -237,11 +283,12 @@ class Model_Main extends Model
 				if ( ! empty($product) && is_array($product))
 				{
 					$response[$product['id']] = $product;
+					$loaded_products[]        = $product['id'];
 				}
 			}
 		}
 
-		if ($objects != 'none' && is_array(($product_objects = self::getProductObjects($product_id, $objects))))
+		if ($objects != 'none' && is_array(($product_objects = self::getProductObjects($loaded_products, $objects))))
 		{
 			foreach ($product_objects as $key => $objects)
 			{
@@ -256,9 +303,48 @@ class Model_Main extends Model
 			}
 		}
 
+		if ( ! empty($loaded_products) && is_array($loaded_products))
+		{
+			$slugs = self::getProductsSlug($loaded_products);
+
+			if ( ! empty($slugs) && is_array($slugs))
+			{
+				foreach ($slugs as $product_id => $slug)
+				{
+					$response[$product_id]['slug'] = $slug;
+				}
+			}
+		}
+
 		return $response;
 	}
 
+	private static function getProductsSlug($ids)
+	{
+		$slugs    = DB::table('seo_url')
+					  ->select(['slug', 'object'])
+					  ->where('type', '=', 'product')
+					  ->whereIn('object', $ids)
+					  ->get();
+		$response = [];
+
+		if ( ! empty($slugs) && is_array($slugs))
+		{
+			foreach ($slugs as $data)
+			{
+				$response[$data['object']] = $data['slug'];
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * @param $product_id
+	 * @param array $objects
+	 *
+	 * @return array
+	 */
 	private static function getProductObjects($product_id, $objects = array())
 	{
 		$response = [];
@@ -292,5 +378,326 @@ class Model_Main extends Model
 		}
 
 		return $response;
+	}
+
+	/**
+	 * @param $category_id
+	 * @param $page
+	 * @param int $products_per_page
+	 * @param bool $order_by
+	 *
+	 * @return array
+	 */
+	public static function getProductsToCategoryPage($category_id, $page, $products_per_page = 16, $order_by = FALSE)
+	{
+		$products             = DB::table('product_to_category')
+								  ->select('product_id')
+								  ->where('category_id', '=', $category_id)
+								  ->orderBy('product_id', 'DESC')
+								  ->get();
+		$response             = [];
+		$products_to_load     = [];
+		$products_to_category = [];
+
+		//Calculate skipped results
+		if ( ! empty($page) && $page > 1)
+		{
+			$skip = ($page - 1) * $products_per_page;
+		}
+		else
+		{
+			$skip = 0;
+		}
+
+		if ( ! empty($products) && is_array($products))
+		{
+			foreach ($products as $result)
+			{
+				$products_to_category[] = $result['product_id'];
+			}
+		}
+
+		if ( ! empty($products_to_category) && is_array($products_to_category))
+		{
+			$products_to_load = self::getProducts($products_to_category, 'none', TRUE, $skip, $products_per_page, $order_by);
+		}
+
+		if ( ! empty($products_to_load) && is_array($products_to_load))
+		{
+			foreach ($products_to_load as $product)
+			{
+				$response[] = $product['id'];
+			}
+		}
+
+		return $response;
+	}
+
+	public static function getProductsToCategoryId($category_id)
+	{
+		$ids      = DB::table('product_to_category')
+					  ->join('products', 'product_to_category.product_id', '=', 'products.id')
+					  ->select('products.id')
+					  ->where('product_to_category.category_id', '=', $category_id)
+					  ->where('products.active', '=', 1)
+					  ->get();
+		$response = [];
+
+		if ( ! empty($ids) && is_array($ids))
+		{
+			foreach ($ids as $data)
+			{
+				$response[] = $data['id'];
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * @param bool $type
+	 * @param bool $target
+	 *
+	 * @return array
+	 */
+	public static function getSliders($type, $target = FALSE)
+	{
+		if ( ! empty($type) && in_array($type, ['homepage', 'categories', 'pages']))
+		{
+			$sliders = DB::table('sliders')
+						 ->select(['slides', 'slides_positions', 'dir', 'position']);
+
+			if ($type != FALSE && in_array($type, ['homepage', 'categories', 'pages']))
+			{
+				$sliders = $sliders->where('type', '=', $type);
+			}
+
+			if ($target != FALSE && intval($target) > 0)
+			{
+				$sliders = $sliders->where(function ($query)
+				{
+					global $target;
+					$query->where('target', '=', intval($target))->orWhere('target', '=', '');
+				});
+			}
+
+			$sliders = $sliders->where(function ($query)
+			{
+				$now = date('Y-m-d H:i:s');
+				$query->where('active_from', '<=', $now)->orWhere('active_from', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+			});
+
+			$sliders = $sliders->where(function ($query)
+			{
+				$now = date('Y-m-d H:i:s');
+				$query->where('active_to', '>=', $now)->orWhere('active_to', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+			});
+
+			$sliders = $sliders
+				->orderBy('position', 'ASC')
+				->get();
+
+			return $sliders;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $type
+	 * @param bool $target
+	 *
+	 * @return array|bool
+	 */
+	public static function getCarousels($type, $target = FALSE)
+	{
+		if ( ! empty($type) && in_array($type, ['homepage', 'categories', 'pages']))
+		{
+			$now       = date('Y-m-d H:i:s');
+			$carousels = DB::table('carousels')
+						   ->where('type', '=', $type);
+
+			if ($target != FALSE && intval($target) > 0)
+			{
+				$carousels = $carousels->where(function ($query)
+				{
+					global $target;
+					$query->where('target', '=', intval($target))->orWhere('target', '=', '');
+				});
+			}
+
+			$carousels = $carousels->where(function ($query)
+			{
+				$now = date('Y-m-d H:i:s');
+				$query->where('active_from', '<=', $now)->orWhere('active_from', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+			});
+
+			$carousels = $carousels->where(function ($query)
+			{
+				$now = date('Y-m-d H:i:s');
+				$query->where('active_to', '>=', $now)->orWhere('active_to', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+			});
+
+			$carousels = $carousels->orderBy('position', 'ASC')
+								   ->get();
+
+			if ( ! empty($carousels) && is_array($carousels))
+			{
+				foreach ($carousels as $key => $carousel)
+				{
+					//If type is newest or discounted fetch products ID's
+					if ($carousel['products'] == 'newest')
+					{
+						$carousels[$key]['products'] = implode(', ', self::getNewestProducts($carousel['max_products']));
+					}
+					elseif ($carousel['products'] == 'discounted')
+					{
+						$carousels[$key]['products'] = implode(', ', self::getDiscountedProducts($carousel['max_products']));
+					}
+				}
+			}
+
+			return $carousels;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function getTags($product_id)
+	{
+		if ( ! empty($product_id))
+		{
+			$response = DB::table('product_to_tag')
+						  ->join('tags', 'product_to_tag.tag_id', '=', 'tags.id')
+						  ->select('product_to_tag.product_id', 'product_to_tag.tag_id', 'tags.title')
+						  ->where('product_to_tag.product_id', '=', $product_id)
+						  ->orderBy('product_to_tag.id', 'ASC')
+						  ->get();
+
+			if ($response)
+			{
+				return $response;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function getManufacturer($product_id)
+	{
+		if ( ! empty($product_id))
+		{
+			$response = DB::table('product_to_manufacturer')
+						  ->select(['manufacturers.title'])
+						  ->join('manufacturers', 'product_to_manufacturer.manufacturer_id', '=', 'manufacturers.id')
+						  ->where('product_to_manufacturer.product_id', '=', $product_id)
+						  ->get();
+
+			if ($response)
+			{
+				return $response[0]['title'];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function getMaterial($product_id)
+	{
+		if ( ! empty($product_id) && $product_id > 0)
+		{
+			$query = DB::table('product_to_material')
+					   ->select('product_to_material.material_id')
+					   ->where('product_to_material.product_id', '=', $product_id)
+					   ->orderBy('product_to_material.id', 'ASC')
+					   ->get();
+
+			if ($query && is_array($query))
+			{
+				$response = [];
+				foreach ($query as $key => $value)
+				{
+					$response[] = $value['material_id'];
+				}
+
+				return $response;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function getColor($product_id)
+	{
+		if ( ! empty($product_id) && $product_id > 0)
+		{
+			$query = DB::table('product_to_color')
+					   ->select('colors.title')
+					   ->join('colors', 'product_to_color.color_id', '=', 'colors.id')
+					   ->where('product_to_color.product_id', '=', $product_id)
+					   ->orderBy('product_to_color.id', 'ASC')
+					   ->get();
+
+			if ($query && is_array($query))
+			{
+				$response = [];
+				foreach ($query as $key => $value)
+				{
+					$response[] = $value['title'];
+				}
+
+				return $response;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 }

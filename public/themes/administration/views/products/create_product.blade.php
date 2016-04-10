@@ -202,6 +202,7 @@
                                'meta_description': $('#meta_description').val(),
                                'meta_keywords': $('#meta_keywords').val(),
                                'categories': $('#categories').val(),
+                               'main_category': $('#main_category').val(),
                                'related_products': $('#related_products').val(),
                                'sizes': sizes,
                                'images_dir': '{{ $images_dir }}',

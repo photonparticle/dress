@@ -31,7 +31,7 @@
             <div class="head-main">
                 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                     <div class="logo">
-                        <a href="/"><img src="images/logo.png" alt=""></a>
+                        <a href="/"><img src="/images/logo.png" alt=""></a>
                     </div>
                 </div>
 
@@ -82,7 +82,7 @@
                         @if(!empty($main_categories) && is_array($main_categories))
                             @foreach($main_categories as $key => $main_category)
                                 <li>
-                                    <a href="#" class="main-category">
+                                    <a href="/{{$main_category['slug']}}" class="main-category">
                                         {{$main_category['title'] or ''}}
                                         @if(!empty($second_level_categories[$main_category['id']]) && is_array($second_level_categories[$main_category['id']]))
                                             <span class="drop-icon"><i class="fa fa-caret-down"></i></span>
@@ -95,7 +95,7 @@
                                         <ul class="sub-menu" class="second-level-category">
                                             @foreach($second_level_categories[$main_category['id']] as $second_level_category)
                                                 <li>
-                                                    <a href="#">
+                                                    <a href="/{{$second_level_category['slug']}}">
                                                         {{$second_level_category['title'] or ''}}
                                                         @if(!empty($third_level_categories[$second_level_category['id']]) && is_array($third_level_categories[$second_level_category['id']]))
                                                             <span class="drop-icon"><i class="fa fa-caret-right"></i></span>
@@ -108,7 +108,7 @@
                                                         <ul class="sub-menu">
                                                             @foreach($third_level_categories[$second_level_category['id']] as $th_key => $third_level_category)
                                                                 <li>
-                                                                    <a href="#" class="third-level-category">
+                                                                    <a href="/{{$third_level_category['slug']}}" class="third-level-category">
                                                                         {{$third_level_category['title'] or ''}}
                                                                     </a>
                                                                 </li>
