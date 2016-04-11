@@ -15,9 +15,8 @@ $(document).ready(function () {
 	                });
 
 	//Hide loader
-	setTimeout(function () {
-		$("div.loadingOverlayInit").remove();
-	}, 1000);
+	$('body').removeClass('loading');
+	$("div.loadingOverlayInit").remove();
 });
 
 $(document).ajaxStart(function () {

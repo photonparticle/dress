@@ -3,6 +3,9 @@ body {
 	padding: 0 !important;
 	margin: 0 !important;
 }
+body.loading {
+	overflow: hidden;
+}
 * {
 	outline: none !important;
 }
@@ -58,7 +61,6 @@ div.tooltip {
 .no-margin-bottom {
 	margin-bottom: 0;
 }
-
 .clearfix {
 	clear: both;
 	width: 100%;
@@ -66,7 +68,6 @@ div.tooltip {
 	padding: 0 !important;
 	margin: 0 !important;
 }
-
 /* Scrollbar */
 ::-webkit-scrollbar {
 	width: 5px;
@@ -102,7 +103,6 @@ div.tooltip {
 ::-webkit-scrollbar-corner {
 	background: transparent;
 }
-
 /* PAGE CONTAINER */
 .page-content-wrapper {
 	/*-webkit-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.25);*/
@@ -297,32 +297,27 @@ div.tooltip {
 		display: block;
 	}
 }
-
 /* Breadcrumbs */
 .breadcrumb {
 	background-color: #f7f7f7;
 }
-
 .breadcrumb.product {
 	margin-top: 2.5em;
 	padding: 0.5em;
 }
-
 .breadcrumb ul li {
 	line-height: 24px;
 }
-
 .breadcrumb li:first-child {
 	font-size: 24px;
 }
-
 /* Product Page */
 .call_us div {
 	display: inline;
 	float: right;
 	margin: 0.5em;
 }
-.call_us i{
+.call_us i {
 	font-size: 64px;
 	color: #f04646;
 	vertical-align: middle;
@@ -338,50 +333,75 @@ div.tooltip {
 	font-size: 18px;
 	font-weight: 600;
 }
-
+.product-image-zoom {
+	margin: 10px 0;
+	padding: 0.5em;
+	width: 100%;
+	text-align: center;
+	background-color: #f04646;
+	text-transform: uppercase;
+	cursor: pointer;
+	font-size: 16px;
+	color: #fff;
+	text-decoration: none;
+	z-index: 9969;
+	display: block;
+}
+.product-image-zoom:hover,
+.product-image-zoom:active,
+.product-image-zoom:focus {
+	background-color: #f04646;
+	text-decoration: none;
+	color: #fff;
+}
+/*TABS*/
+.tabs li a {
+	color: #333;
+}
+.tab-pane {
+	font-size: 0.8em !important;
+}
+.tab-pane ul {
+	padding: 1em 2em;
+}
 /* Dimensions table */
 table.dimensions-table {
 	border-collapse: collapse;
 }
-
 table.dimensions-table th {
-	border-top: 1px solid #ddd !important;
+	border-top: 1px solid #dedede !important;
+	font-size: 1.1em !important;
+	font-weight: 400 !important;
 }
-
 table.dimensions-table th,
 table.dimensions-table td.title {
 	font-weight: bold;
 	color: #00a0e3;
 }
-
 table.dimensions-table th.image {
 	width: 148px;
 	border: none !important;
 }
-
-table.dimensions-table th.image img{
+table.dimensions-table th.image img {
 	max-width: 128px;
 	margin: 0 10px;
 }
-
 table.dimensions-table th,
 table.dimensions-table td {
-	border: 1px solid #ccc;
+	border: 1px solid #dedede;
 	text-align: center;
 	line-height: 24px;
 }
-
 /* PAGES */
 .content-mid {
 	margin-bottom: 10px;
 	padding: 20px 10px;
 }
-
 /* CATEGORY */
 .category-holder {
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
-	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
 	background-color: #fff;
 	margin-bottom: 30px;
 }
@@ -405,18 +425,15 @@ table.dimensions-table td {
 .category-holder .filter {
 	margin-top: 10px;
 }
-
 .category-holder .filter select,
 .category-holder .filter select option {
 	cursor: pointer;
 }
-
 /* Products */
 .products-holder {
 	margin-bottom: 30px;
 	padding: 10px;
 }
-
 .mid-pop {
 	border: none !important;
 }
@@ -482,18 +499,15 @@ em.item_old_price {
 	text-decoration: line-through;
 	display: inline-block;
 }
-
 /* Product Page */
 .zoomWindowContainer > div {
 	z-index: 2;
 	background-color: #fafafa;
 }
-
 /* Pagination */
 #pagination ul {
 	/*margin: 0 auto 20px auto;*/
 }
-
 /* FLEX SLIDER */
 .slider-holder {
 	margin-top: 2em;
@@ -617,7 +631,6 @@ em.item_old_price {
 	-moz-box-shadow: 2px 4px 7px 0px rgba(0, 0, 0, 0.5);
 	box-shadow: 2px 4px 7px 0px rgba(0, 0, 0, 0.5);
 }
-
 .flexslider a.action-btn.default {
 	border: none !important;
 	background: rgba(240, 70, 70, 1);
@@ -673,7 +686,6 @@ em.item_old_price {
 .carousel .mid-pop {
 	margin: 0 10px;
 }
-
 /* PAGE HEADER */
 .header {
 	background-color: #fafafa;
@@ -686,31 +698,32 @@ em.item_old_price {
 	-ms-animation: fadeIn 500ms ease-in 0ms both;
 	animation: fadeIn 500ms ease-in 0ms both;
 }
-
-.header-fixed {
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 9997;
-	-webkit-box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
-	-moz-box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
-	box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
-	-webkit-animation: slideInDown 400ms ease-in-out 0ms both;
-	-moz-animation: slideInDown 400ms ease-in-out 0ms both;
-	-o-animation: slideInDown 400ms ease-in-out 0ms both;
-	-ms-animation: slideInDown 400ms ease-in-out 0ms both;
-	animation: slideInDown 400ms ease-in-out 0ms both;
-}
-.header-fixed > .header-top {
-	display: none;
-}
-.header-fixed .head-main {
-	margin: 25px 0 0 0;
-}
-.header-fixed #menu {
-	-webkit-box-shadow: none !important;
-	-moz-box-shadow: none !important;
-	box-shadow: none !important;
+@media only screen and (min-width: 768px) {
+	.header-fixed {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 9997;
+		-webkit-box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
+		-moz-box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
+		box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
+		-webkit-animation: slideInDown 400ms ease-in-out 0ms both;
+		-moz-animation: slideInDown 400ms ease-in-out 0ms both;
+		-o-animation: slideInDown 400ms ease-in-out 0ms both;
+		-ms-animation: slideInDown 400ms ease-in-out 0ms both;
+		animation: slideInDown 400ms ease-in-out 0ms both;
+	}
+	.header-fixed > .header-top {
+		display: none;
+	}
+	.header-fixed .head-main {
+		margin: 25px 0 0 0;
+	}
+	.header-fixed #menu {
+		-webkit-box-shadow: none !important;
+		-moz-box-shadow: none !important;
+		box-shadow: none !important;
+	}
 }
 /* PAGE FOOTER */
 div.footer,
@@ -719,7 +732,6 @@ div.footer-bottom {
 	-moz-box-shadow: 0px -2px 10px 0px rgba(0, 0, 0, 0.25);
 	box-shadow: 0px -2px 10px 0px rgba(0, 0, 0, 0.25);
 }
-
 /*Loading overlay*/
 .loadingOverlayInit {
 	display: flex;
@@ -737,4 +749,5 @@ div.footer-bottom {
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	z-index: 9999;
+	overflow: hidden;
 }

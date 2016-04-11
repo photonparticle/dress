@@ -72,7 +72,16 @@
                                 @foreach($product['images'] as $image => $position)
                                     <li data-thumb="{{$thumbs_path}}/{{$image}}">
                                         <div class="thumb-image">
-                                            <img src="{{$md_path}}/{{$image}}" data-zoom-image="{{$images_path}}/{{$image}}" data-imagezoom="true" class="img-responsive product-image"/>
+                                            <img src="{{$md_path}}/{{$image}}"
+                                                 data-zoom-image="{{$images_path}}/{{$image}}"
+                                                 data-imagezoom="true"
+                                                 class="img-responsive product-image"
+                                            />
+                                            <div class="clearfix"></div>
+                                            <a href="{{$images_path}}/{{$image}}" class="product-image-zoom">
+                                                <i class="fa fa-search"></i>
+                                                {{trans('client.zoom')}}
+                                            </a>
                                         </div>
                                     </li>
                                 @endforeach
@@ -115,8 +124,8 @@
                         </div>
                         <div class="wish-list">
                             {{--<ul>--}}
-                                {{--<li class="wish"><a href="#"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Add to Wishlist</a></li>--}}
-                                {{--<li class="compare"><a href="#"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>Add to Compare</a></li>--}}
+                            {{--<li class="wish"><a href="#"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Add to Wishlist</a></li>--}}
+                            {{--<li class="compare"><a href="#"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>Add to Compare</a></li>--}}
                             {{--</ul>--}}
                         </div>
                         <div class="quantity">
@@ -226,11 +235,12 @@
             $('.zoom').elevateZoom({
                                        zoomType: "inner",
                                        cursor: 'crosshair',
-                                       scrollZoom: true,
+//                                       scrollZoom: true,
                                        imageCrossfade: true,
                                        easing: true,
                                        easingDuration: 500,
                                        responsive: true,
+//                                       zoomWindowOffety: -1
                                    });
         }
 
@@ -251,22 +261,51 @@
                                           mousewheel: false,
                                           smoothHeight: true,
                                           start: function () {
-                                              productsSliderResize();
                                               $('.products-flexslider .flex-direction-nav').css({visibility: 'hidden'});
+                                              var window_width = $(window).width();
                                               var width = $('.thumb-image').width();
                                               $('.product-image').eq(0).addClass('zoom').css('width', width).css('height', 'auto');
-                                              $('.zoomWindow').remove();
-                                              createImageZoom();
+                                              colorbox();
+
+                                              setTimeout(function () {
+                                                  productsSliderResize();
+                                                  if (window_width >= 768) {
+                                                      $('.zoomContainer').each(function () {
+                                                          $(this).remove();
+                                                      });
+                                                      createImageZoom();
+                                                  }
+                                              }, 500);
+                                          },
+                                          before: function (slider) {
+                                              var window_width = $(window).width();
+                                              if (window_width >= 768) {
+                                                  $('.zoomContainer').each(function () {
+                                                      $(this).remove();
+                                                  });
+                                              }
                                           },
                                           after: function (slider) {
-                                              productsSliderResize();
-                                              $('.product-image').removeClass('zoom');
+                                              var window_width = $(window).width();
                                               var width = $('.thumb-image').width();
+                                              $('.product-image').removeClass('zoom');
                                               $('.product-image').eq(slider.animatingTo).addClass('zoom').css('width', width).css('height', 'auto');
-                                              $('.zoomWindow').remove();
-                                              createImageZoom();
+                                              colorbox(slider.animatingTo);
+
+                                              setTimeout(function () {
+                                                  productsSliderResize();
+
+                                                  if (window_width >= 768) {
+                                                      $('.zoomContainer').each(function () {
+                                                          $(this).remove();
+                                                      });
+                                                      createImageZoom();
+
+                                                  }
+                                              }, 500);
                                           }
-                                      });
+                                      })
+            ;
 
             var resizeEnd;
 
@@ -284,7 +323,26 @@
                 $('ol.breadcrumb li:last-child').addClass('active');
             }
 
-        });
+            function colorbox(el) {
+                if (!el) {
+                    el = 0;
+                } else {
+                    $.colorbox.remove();
+                }
+                $(".product-image-zoom").eq(el).colorbox({
+                                                             rel: '{{$product['title'] or ''}}',
+                                                             transition: 'elastic',
+                                                             speed: 1000,
+                                                             scrolling: false,
+                                                             opacity: 0.9,
+                                                             fadeOut: 500,
+                                                             maxWidth: '100%',
+                                                             maxHeight: '100%'
+                                                         });
+            }
+
+        })
+        ;
 
         $(window).on("orientationchange", function () {
             productsSliderResize();
@@ -292,11 +350,7 @@
 
         function productsSliderResize() {
             if (productsSlider.length > 0) {
-                productsSlider.data('flexslider').resize();
-                var width = $('.thumb-image').width();
-                $('.product-image').css('width', width).css('height', 'auto');
-                $('.zoomWindow').remove();
-                createImageZoom();
+                productsSlider.data('flexslider').resize()
             }
         }
     </script>

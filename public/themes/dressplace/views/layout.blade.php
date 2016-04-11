@@ -10,7 +10,7 @@
 <!-- BEGIN HEAD -->
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <title>@if(isset($pageTitle)) {{$pageTitle}} - @endif - DressPlace</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/addons/slick.css') }}" type="text/css" media="all"/>
     <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/flexslider.css') }}" type="text/css" media="all"/>
     <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/addons/slick-theme.css') }}" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/addons/colorbox.css') }}" type="text/css" media="all"/>
 
     {{--Init jQuery--}}
     <script src="{{ Theme::asset('dressplace::js/jquery.min.js') }}" type="text/javascript"></script>
@@ -49,7 +50,7 @@
     <!-- END PAGE STYLES -->
 </head>
 <!-- END HEAD -->
-<body>
+<body class="loading">
 <div class="loadingOverlayInit"></div>
 @if(!isset($blade_clean_render))
     @if(!isset($blade_hide_header))
@@ -86,6 +87,7 @@
     <script src="{{ Theme::asset('dressplace::js/addons/slick.min.js') }}" type="text/javascript"></script>
     <script src="{{ Theme::asset('dressplace::js/addons/loadingoverlay.min.js') }}" type="text/javascript"></script>
     <script src="{{ Theme::asset('dressplace::js/addons/jquery.bootpag.min.js') }}" type="text/javascript"></script>
+    <script src="{{ Theme::asset('dressplace::js/addons/jquery.colorbox.js') }}" type="text/javascript"></script>
 
     <!-- MAIN APP JS -->
     <script src="{{ Theme::asset('dressplace::js/app.js') }}" type="text/javascript"></script>

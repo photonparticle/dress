@@ -27,6 +27,7 @@ return [
 	'delivery' => 'Начин на доставка',
 	'returns' => 'Рекламации и замени',
 	'add_to_cart' => 'Добави в кошницата',
+	'zoom' => 'Цял екран',
 
 //	@TODO to be moved into database
 	'currency' => 'лв.'
