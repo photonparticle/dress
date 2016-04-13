@@ -9,7 +9,9 @@ html,body{
 	font-family: 'Open Sans', sans-serif;
 	 
 }
-body a{
+body a,
+body button,
+body input{
 	transition: 0.5s all;
 	-webkit-transition: 0.5s all;
 	-o-transition: 0.5s all;

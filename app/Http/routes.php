@@ -64,6 +64,7 @@ Route::post('upload', ['as' => 'upload-post', 'uses' =>'ImageController@postUplo
 
 //Client routes
 Route::get('/', 'Homepage@homepage');
+Route::get('/checkout/completed', 'Checkout@checkoutCompleted');
 Route::get('/{slug}', 'Client@route');
 Route::post('/{slug}', 'Client@route');
 Route::get('/{slug}/{page}', 'Client@route');

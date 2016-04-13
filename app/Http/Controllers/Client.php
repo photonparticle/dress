@@ -44,8 +44,8 @@ class Client extends BaseControllerClient
 
 			/* PRODUCTS */
 
-			$response         = self::loadProduct($object['object']);
-			$response['slug'] = $slug;
+			$response           = self::loadProduct($object['object']);
+			$response['slug']   = $slug;
 			$response['system'] = $this->system;
 
 			return Theme::view('products.product', $response);
@@ -56,8 +56,8 @@ class Client extends BaseControllerClient
 			/* CATEGORIES */
 
 			// Get category and it's products
-			$response         = self::loadCategory($object['object'], $page);
-			$response['slug'] = $slug;
+			$response           = self::loadCategory($object['object'], $page);
+			$response['slug']   = $slug;
 			$response['system'] = $this->system;
 
 			return Theme::view('categories.category', $response);
@@ -429,6 +429,20 @@ class Client extends BaseControllerClient
 					$response['product']['active_discount'] = TRUE;
 				}
 			}
+
+			if ( ! empty ($response['product']['sizes']) && is_array(($response['product']['sizes'] = json_decode($response['product']['sizes'], TRUE))))
+			{
+				foreach ($response['product']['sizes'] as $key => $size)
+				{
+					if (empty($size['name']) || empty($size['quantity']))
+					{
+						if (isset($response['product']['sizes'][$key]))
+						{
+							unset($response['product']['sizes'][$key]);
+						}
+					}
+				}
+			}
 		}
 
 		//Images
@@ -438,9 +452,9 @@ class Client extends BaseControllerClient
 
 			if (is_array($response['product']['images']))
 			{
-				$response['thumbs_path'] = Config::get('system_settings.product_public_path').$id.'/'.Config::get('images.sm_icon_size').'/';
-				$response['images_path'] = Config::get('system_settings.product_public_path').$id.'/'.Config::get('images.full_size').'/';
-				$response['md_path']     = Config::get('system_settings.product_public_path').$id.'/'.Config::get('images.md_icon_size').'/';
+				$response['product_thumbs_path'] = Config::get('system_settings.product_public_path').$id.'/'.Config::get('images.sm_icon_size').'/';
+				$response['images_path']         = Config::get('system_settings.product_public_path').$id.'/'.Config::get('images.full_size').'/';
+				$response['md_path']             = Config::get('system_settings.product_public_path').$id.'/'.Config::get('images.md_icon_size').'/';
 				uasort($response['product']['images'], function ($a, $b)
 				{
 					if ($a == $b)
@@ -478,13 +492,95 @@ class Client extends BaseControllerClient
 
 		//Color
 		$response['product']['related_colors'] = Model_Main::getColor($id);
-		$response['product']['related_colors'] = implode(', ', $response['product']['related_colors']);
+		if ( ! empty($response['product']['related_colors']))
+		{
+			$response['product']['related_colors'] = implode(', ', $response['product']['related_colors']);
+		}
 
 		//Related products
 		if ( ! empty($response['product']['related_products']))
 		{
-			$response['product']['related_products'] = json_decode($response['product']['related_products'], TRUE);
+			$response['carousel']['products'] = json_decode($response['product']['related_products'], TRUE);
 		}
+		else
+		{
+			if ( ! empty($response['product']['main_category']))
+			{
+				$response['carousel']['products'] = Model_Main::getSimilarProducts($response['product']['main_category']);
+			}
+		}
+
+		if ( ! empty($response['carousel']['products']) && is_array($response['carousel']['products']))
+		{
+			$response['icon_size']   = Config::get('images.sm_icon_size');
+			$response['thumbs_path'] = Config::get('system_settings.product_public_path');
+
+			$response['carousel']['title'] = trans('client.similar_products');
+
+			// Get products data
+			$response['products'] = Model_Main::getProducts($response['carousel']['products'], ['title', 'images']);
+
+			if ( ! empty($response['products']) && is_array($response['products']))
+			{
+				foreach ($response['carousel']['products'] as $product_id)
+				{
+					if (empty($response['products'][$product_id]))
+					{
+						unset($response['carousel']['products'][array_search($product_id, $response['carousel']['products'])]);
+					}
+				}
+			}
+			else
+			{
+				unset($response['carousel']['products']);
+			}
+
+			//Loop trough products data
+			if ( ! empty($response['products']) && is_array($response['products']))
+			{
+				foreach ($response['products'] as $id => $product)
+				{
+					if ( ! empty($product['discount_price']))
+					{
+						//Calculate is discount active
+						$now = time();
+
+						if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
+						{
+							$allow_start = TRUE;
+						}
+						else
+						{
+							$allow_start = FALSE;
+						}
+
+						if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
+						{
+							$allow_end = TRUE;
+						}
+						else
+						{
+							$allow_end = FALSE;
+						}
+
+						if ($allow_start === TRUE && $allow_end === TRUE)
+						{
+							$response['products'][$id]['active_discount'] = TRUE;
+						}
+					}
+				}
+			}
+
+			// Send products to response
+			$response['products'] = self::prepareProductsForResponse($response['products']);
+
+			//Check dimensions table
+			if ( ! empty($response['product']['dimensions_table']))
+			{
+				$response['product']['dimensions_table'] = trim($response['product']['dimensions_table']);
+			}
+		}
+
 		return $response;
 	}
 }

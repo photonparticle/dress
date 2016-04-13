@@ -1,26 +1,6 @@
 @extends('dressplace::layout')
 
 @section('content')
-    {{--FLEX SLIDER TOP--}}
-    @if(!empty($sliders) && is_array($sliders))
-        @foreach($sliders as $key => $slider)
-            @if((empty($slider['position']) || intval($slider['position']) < 2))
-                @include('dressplace::partials.render_slider', $slider)
-            @endif
-        @endforeach
-    @endif
-    {{--FLEX SLIDER TOP--}}
-
-    {{-- CAROUSELS TOP --}}
-    @if(!empty($carousels) && is_array($carousels))
-        @foreach($carousels as $carousel)
-            @if(empty($carousel['position']) || (!empty($carousel['position']) && intval($carousel['position']) < 2))
-                @include('dressplace::partials.render_carousel')
-            @endif
-        @endforeach
-    @endif
-    {{-- CAROUSELS TOP --}}
-
     @if(!empty($breadcrumbs) && is_array($breadcrumbs))
         <ol class="breadcrumb product">
             {{--Home page--}}
@@ -70,7 +50,7 @@
                         <ul class="slides">
                             @if(!empty($product['images']) && is_array($product['images']))
                                 @foreach($product['images'] as $image => $position)
-                                    <li data-thumb="{{$thumbs_path}}/{{$image}}">
+                                    <li data-thumb="{{$product_thumbs_path}}/{{$image}}">
                                         <div class="thumb-image">
                                             <img src="{{$md_path}}/{{$image}}"
                                                  data-zoom-image="{{$images_path}}/{{$image}}"
@@ -93,10 +73,20 @@
                     <div class="span_2_of_a1 simpleCart_shelfItem">
                         <h1>{{$product['title'] or ''}}</h1>
                         <div class="col-xs-12 col-md-12 in-para no-padding">
-                            <div class="col-xs-12 col-md-6">
-                                <p>{{trans('client.catalogue_number')}}: {{$product['id']}}</p>
-                                <p>{{trans('client.colors')}}: {{$product['related_colors']}}</p>
-                                <p>{{trans('client.manufacturer')}}: {{$product['manufacturer']}}</p>
+                            <div class="col-xs-12 col-md-6 product-main-info">
+                                <p class="product-id">
+                                    {{trans('client.catalogue_number')}}: {{$product['id']}}
+                                </p>
+                                @if(!empty($product['related_colors']))
+                                    <p>
+                                        {{trans('client.colors')}}: {{$product['related_colors']}}
+                                    </p>
+                                @endif
+                                @if(!empty($product['manufacturer']))
+                                    <p>
+                                        {{trans('client.manufacturer')}}: {{$product['manufacturer']}}
+                                    </p>
+                                @endif
                             </div>
                             <div class="col-xs-12 col-md-6 call_us text-right">
                                 <div>
@@ -110,6 +100,7 @@
                             </div>
                         </div>
                         <div class="price_single">
+                            <h5>{{trans('client.price')}}</h5>
                             <p>
                                 @if(isset($product['active_discount']) && $product['active_discount'] === TRUE)
                                     <em class="item_old_price">{{$product['discount_price']}} {{trans('client.currency')}}</em>
@@ -122,34 +113,52 @@
                         <div class="quick_desc">
                             {!! $product['description'] !!}
                         </div>
-                        <div class="wish-list">
-                            {{--<ul>--}}
-                            {{--<li class="wish"><a href="#"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Add to Wishlist</a></li>--}}
-                            {{--<li class="compare"><a href="#"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>Add to Compare</a></li>--}}
-                            {{--</ul>--}}
+                        <div class="sizes">
+                            @if(!empty($product['sizes']) && is_array($product['sizes']))
+                                <h5>{{trans('client.available_sizes')}}</h5>
+                                @foreach($product['sizes'] as $size)
+                                    <button type="button"
+                                            value="{{$size['name']}}"
+                                            data-quantity="{{$size['quantity']}}"
+                                            data-price="{{$size['price']}}"
+                                            data-discount="{{$size['discount']}}"
+                                            title="{{trans('client.available_quantities')}}: {{$size['quantity'] or 0}}"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                    >{{$size['name']}}</button>
+                                @endforeach
+                            @endif
                         </div>
-                        <div class="quantity">
-                            <div class="quantity-select">
-                                <div class="entry value-minus">&nbsp;</div>
-                                <div class="entry value"><span>1</span></div>
-                                <div class="entry value-plus active">&nbsp;</div>
+                        <div class="col-xs-12">
+                            <div class="quantity">
+                                <h5>{{trans('client.quantity')}}</h5>
+                                <div class="quantity-select">
+                                    <div class="rem"><i class="fa fa-minus"></i></div>
+                                    <div class="val"><span>1</span></div>
+                                    <div class="add"><i class="fa fa-plus"></i></div>
+                                </div>
                             </div>
+                            <!--quantity-->
+                            <script>
+                                $('.quantity-select .rem').on('click', function () {
+                                    var divUpd = $(this).parent().find('.val'),
+                                            newVal = parseInt(divUpd.text(), 10) - 1;
+                                    if (newVal >= 1) divUpd.text(newVal);
+                                });
+
+                                $('.quantity-select .add').on('click', function () {
+                                    var divUpd = $(this).parent().find('.val'),
+                                            newVal = parseInt(divUpd.text(), 10) + 1;
+                                    if (newVal >= 1) divUpd.text(newVal);
+                                });
+                            </script>
+                            <!--quantity-->
+                            <div class="clearfix"></div>
+                            <a href="javascript:;" class="add-to-cart">
+                                <i class="fa fa-cart-arrow-down"></i>
+                                {{trans('client.add_to_cart')}}
+                            </a>
                         </div>
-                        <!--quantity-->
-                        <script>
-                            $('.value-plus').on('click', function () {
-                                var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
-                                divUpd.text(newVal);
-                            });
-
-                            $('.value-minus').on('click', function () {
-                                var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
-                                if (newVal >= 1) divUpd.text(newVal);
-                            });
-                        </script>
-                        <!--quantity-->
-
-                        <a href="#" class="add-to item_add hvr-skew-backward">{{trans('client.add_to_cart')}}</a>
                         <div class="clearfix"></div>
                     </div>
 
@@ -159,16 +168,20 @@
                 <div class="tab-head">
                     <nav class="nav-sidebar">
                         <ul class="nav tabs">
-                            <li class="active"><a href="#tab1" data-toggle="tab">{{trans('client.dimensions_table')}}</a></li>
-                            <li class=""><a href="#tab2" data-toggle="tab">{{trans('client.delivery')}}</a></li>
+                            @if(!empty($product['dimensions_table']))
+                                <li class="active"><a href="#tab1" data-toggle="tab">{{trans('client.dimensions_table')}}</a></li>
+                            @endif
+                            <li class="@if(empty($product['dimensions_table'])) active @endif"><a href="#tab2" data-toggle="tab">{{trans('client.delivery')}}</a></li>
                             <li class=""><a href="#tab3" data-toggle="tab">{{trans('client.returns')}}</a></li>
                         </ul>
                     </nav>
                     <div class="tab-content one">
-                        <div class="tab-pane active text-style" id="tab1">
-                            {!! $product['dimensions_table'] or '' !!}
-                        </div>
-                        <div class="tab-pane text-style" id="tab2">
+                        @if(!empty($product['dimensions_table']))
+                            <div class="tab-pane active text-style" id="tab1">
+                                {!! $product['dimensions_table'] or '' !!}
+                            </div>
+                        @endif
+                        <div class="tab-pane text-style @if(empty($product['dimensions_table'])) active @endif" id="tab2">
                             <p>
                                 Екипът на DressPlace.net изпраща всяка една заявена от Вас поръчка само с куриерска фирма Еконт Експрес. Обработката,потвърждаването и изпращането на Вашата пратка се осъществява в рамкита на 24 часа. Изключение правят само неделните дни и дните,които са обявени за национални празници. Съобразно тарифния план на куриерската фирма,при покупка на стойност до 50лв. цената на доставката е както следва:<br/>
                             </p>
@@ -199,28 +212,13 @@
 
     <div class="clearfix"></div>
 
-    {{--FLEX SLIDER BOTTOM--}}
-    @if(!empty($sliders) && is_array($sliders))
-        @foreach($sliders as $key => $slider)
-            @if((!empty($slider['position']) && intval($slider['position']) > 1))
-                @include('dressplace::partials.render_slider', $slider)
-            @endif
-        @endforeach
+    {{-- RELATED PRODUCTS --}}
+    @if(!empty($carousel) && is_array($carousel))
+        @include('dressplace::partials.render_carousel')
     @endif
-    {{--FLEX SLIDER BOTTOM--}}
-
-    {{-- CAROUSELS BOTTOM --}}
-    @if(!empty($carousels) && is_array($carousels))
-        @foreach($carousels as $carousel)
-            @if((!empty($carousel['position']) && intval($carousel['position']) > 1))
-                @include('dressplace::partials.render_carousel')
-            @endif
-        @endforeach
-    @endif
-    {{-- CAROUSELS BOTTOM --}}
+    {{-- RELATED PRODUCTS --}}
 
     {{--INIT MODULES--}}
-    @include('dressplace::partials.init_slider')
     @include('dressplace::partials.init_carousel')
     @include('dressplace::partials.init_products')
 @endsection
@@ -240,13 +238,13 @@
                                        easing: true,
                                        easingDuration: 500,
                                        responsive: true,
-//                                       zoomWindowOffety: -1
+//                                       zoomWindowOffsety: -1
                                    });
         }
 
         $(document).ready(function () {
 
-            //Product image slider
+//Product image slider
             productsSlider.flexslider({
                                           animation: "slide",
                                           controlNav: "thumbnails",
@@ -316,9 +314,9 @@
                 }, 250);
             });
 
-            //End slider
+//End slider
 
-            //Breadcrumbs
+//Breadcrumbs
             if ($('ol.breadcrumb').length > 0) {
                 $('ol.breadcrumb li:last-child').addClass('active');
             }

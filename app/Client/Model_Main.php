@@ -700,4 +700,28 @@ class Model_Main extends Model
 			return FALSE;
 		}
 	}
+
+	/**
+	 * @param $category_id
+	 *
+	 * @return array
+	 */
+	public static function getSimilarProducts($category_id)
+	{
+		$results = DB::table('product_to_category')
+				 ->select('product_id')
+				 ->where('product_to_category.category_id', '=', $category_id)
+				 ->orderBy('id', 'DESC')
+				 ->skip(0)->take(16)->get();
+
+		$products = [];
+
+		if(!empty($results) && is_array($results)) {
+			foreach($results as $result) {
+				$products[] = $result['product_id'];
+			}
+		}
+
+		return $products;
+	}
 }

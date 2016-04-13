@@ -302,7 +302,6 @@ div.tooltip {
 	background-color: #f7f7f7;
 }
 .breadcrumb.product {
-	margin-top: 2.5em;
 	padding: 0.5em;
 }
 .breadcrumb ul li {
@@ -350,10 +349,132 @@ div.tooltip {
 .product-image-zoom:hover,
 .product-image-zoom:active,
 .product-image-zoom:focus {
-	background-color: #f04646;
+	background-color: #469af0;
 	text-decoration: none;
 	color: #fff;
 }
+
+div.single p.product-id {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+div.single div.price_single h5,
+div.single div.sizes h5,
+div.single div.quantity h5 {
+	font-size: 1.5em;
+	margin-bottom: 0.7em;
+}
+div.single div.price_single h5 {
+	display: inline-block;
+	margin-right: 0.5em;
+	padding: 0;
+}
+div.single div.price_single p{
+	display: inline-block;
+}
+div.single div.sizes button {
+	padding: 0.2em 1em;
+	font-size: 1.1em;
+	color: #fff;
+	background-color: #f04646;
+	border: none;
+	-webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	margin-bottom: 1em;
+}
+
+div.single div.sizes button:hover,
+div.single div.sizes button:active,
+div.single div.sizes button:focus {
+	background-color: #469af0;
+}
+
+.quantity .rem.disabled,
+.quantity .add.disabled {
+	background-color: #333;
+}
+
+.quantity .rem,
+.quantity .add {
+	background-color: #469af0;
+	padding: 0.5em 1.5em;
+	margin-right: 3px;
+	font-size: 0.9em;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	color: #fff;
+	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	border: 1px solid #b2b2b2;
+	vertical-align: bottom;
+	-webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	transition: 0.5s all;
+	-webkit-transition: 0.5s all;
+	-o-transition: 0.5s all;
+	-moz-transition: 0.5s all;
+	-ms-transition: 0.5s all;
+}
+
+.quantity .rem:hover,
+.quantity .add:hover {
+	background-color: #f04646;
+}
+
+.quantity .val {
+	padding: 0.5em 1.5em;
+	font-size: 1.1em;
+	font-weight: bolder;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+}
+
+.quantity i {
+	color: #fff;
+}
+
+div.single .product-main-info {
+	padding: 5px 0;
+}
+
+div.single a.add-to-cart,
+div.single a.add-to-cart:visited {
+	background-color: #469af0;
+	padding: 0.3em 1em;
+	margin-right: 3px;
+	font-size: 1.3em;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	color: #fff;
+	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	border: 1px solid #b2b2b2;
+	vertical-align: bottom;
+	-webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	text-transform: uppercase;
+}
+
+div.single a.add-to-cart:hover,
+div.single a.add-to-cart:active,
+div.single a.add-to-cart:focus {
+	text-decoration: none;
+	background-color: #f04646;
+}
+
+div.single a.add-to-cart i {
+	font-size: 1.2em;
+}
+
 /*TABS*/
 .tabs li a {
 	color: #333;
@@ -367,6 +488,7 @@ div.tooltip {
 /* Dimensions table */
 table.dimensions-table {
 	border-collapse: collapse;
+	margin: 0;
 }
 table.dimensions-table th {
 	border-top: 1px solid #dedede !important;
@@ -697,6 +819,7 @@ em.item_old_price {
 	-o-animation: fadeIn 500ms ease-in 0ms both;
 	-ms-animation: fadeIn 500ms ease-in 0ms both;
 	animation: fadeIn 500ms ease-in 0ms both;
+	margin-bottom: 0.5em;
 }
 @media only screen and (min-width: 768px) {
 	.header-fixed {
