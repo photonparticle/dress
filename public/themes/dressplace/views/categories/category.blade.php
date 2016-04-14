@@ -198,9 +198,7 @@
             });
 
             //Breadcrumbs
-            if ($('ol.breadcrumb').length > 0) {
-                $('ol.breadcrumb li:last-child').addClass('active');
-            }
+            initBreadCrumbs();
 
         });
     </script>

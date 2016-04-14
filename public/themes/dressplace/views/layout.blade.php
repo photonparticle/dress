@@ -73,6 +73,16 @@
         @include('dressplace::includes.footer')
     @endif
 
+    {{--QUICK BUY MODAL--}}
+    <div class="modal fade bs-example-modal-lg" id="quick_buy_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ Theme::asset('dressplace::js/addons/jquery.lazy.min.js') }}" type="text/javascript"></script>
     <script src="{{ Theme::asset('dressplace::js/bootstrap.min.js') }}" type="text/javascript"></script>
@@ -83,9 +93,7 @@
     <script src="{{ Theme::asset('dressplace::js/addons/loadingoverlay.min.js') }}" type="text/javascript"></script>
     <script src="{{ Theme::asset('dressplace::js/addons/jquery.bootpag.min.js') }}" type="text/javascript"></script>
     <script src="{{ Theme::asset('dressplace::js/addons/jquery.colorbox.js') }}" type="text/javascript"></script>
-
-    <!-- MAIN APP JS -->
-    <script src="{{ Theme::asset('dressplace::js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ Theme::asset('dressplace::js/addons/jquery.elevateZoom-3.0.8.min.js') }}" type="text/javascript"></script>
 
     {{--Load custom libraries--}}
     @if(!empty($blade_custom_js))
@@ -96,6 +104,9 @@
 
     {{--Custom JS--}}
     @yield('customJS')
+
+    <!-- MAIN APP JS -->
+    <script src="{{ Theme::asset('dressplace::js/app.js') }}" type="text/javascript"></script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

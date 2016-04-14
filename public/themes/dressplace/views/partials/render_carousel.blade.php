@@ -12,7 +12,7 @@
                                 <div class="pro-img">
                                     <img src="" data-lazy="{{$thumbs_path . $product_id . '/' . $icon_size . '/' .  $products[$product_id]['image']}}" alt="{{$products[$product_id]['image']}}" class="img-responsive lazy"/>
                                     <div class="zoom-icon ">
-                                        <a class="picture b-link-stripe b-animate-go  thickbox" href="javascript:;" rel="title" data-id="{{$product_id}}">
+                                        <a class="quick_buy_trigger" href="/{{$products[$product_id]['slug']}}" rel="title" data-id="{{$product_id}}">
                                             <i class="fa fa-cart-plus icon" title="{{trans('client.quick_buy_tip')}}" data-toggle="tooltip" data-placement="top"></i>
                                         </a>
                                         <a href="{{$products[$product_id]['slug']}}">
@@ -55,7 +55,7 @@
                                             @endif
                                         </p>
                                         <div class="img item_add">
-                                            <a class="quick_buy b-link-stripe b-animate-go  thickbox" href="javascript:;" rel="title" data-id="{{$product_id}}" title="{{trans('client.quick_buy_tip')}}" data-toggle="tooltip" data-placement="top">
+                                            <a class="quick_buy quick_buy_trigger" href="/{{$products[$product_id]['slug']}}" rel="title" data-id="{{$product_id}}" title="{{trans('client.quick_buy_tip')}}" data-toggle="tooltip" data-placement="top">
                                                 <i class="fa fa-cart-plus icon"></i>
                                             </a>
                                         </div>

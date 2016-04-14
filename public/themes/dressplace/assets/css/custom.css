@@ -378,7 +378,6 @@ input[type=text]:not(.no-focus):focus, textarea:not(.no-focus):focus {
 	font-size: 16px;
 	color: #fff;
 	text-decoration: none;
-	z-index: 9969;
 	display: block;
 }
 .product-image-zoom:hover,
@@ -685,7 +684,7 @@ em.item_discount span {
 }
 /* Product Page */
 .zoomWindowContainer > div {
-	z-index: 2;
+	z-index: 11 !important;
 	background-color: #fafafa;
 }
 .out_of_stock {
@@ -898,7 +897,7 @@ em.item_discount span {
 /* PAGE HEADER */
 .header {
 	background-color: #fafafa;
-	z-index: 1040;
+	z-index: 6;
 	position: relative;
 	overflow: visible !important;
 	-webkit-animation: fadeIn 500ms ease-in 0ms both;
@@ -973,7 +972,7 @@ em.item_discount span {
 		position: fixed;
 		top: 0;
 		left: 0;
-		z-index: 9997;
+		z-index: 8;
 		-webkit-box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
 		-moz-box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
 		box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.15);
@@ -1066,4 +1065,39 @@ div.footer.sticky {
 
 .cart-holder .action-bttns button {
 	padding: 0.3em 0.6em;
+}
+
+/* Modals */
+.modal-backdrop {
+	z-index: 9;
+}
+.modal {
+	z-index: 10;
+}
+#quick_buy_modal .modal-dialog {
+	width: 90%;
+}
+
+#quick_buy_modal .modal-content {
+	height: auto;
+	min-height: 100%;
+	border-radius: 0;
+}
+
+.modal-dialog {
+	-webkit-animation: zoomIn 500ms ease-in-out 1000ms both;
+	-moz-animation: zoomIn 500ms ease-in-out 1000ms both;
+	-o-animation: zoomIn 500ms ease-in-out 1000ms both;
+	-ms-animation: zoomIn 500ms ease-in-out 1000ms both;
+	animation: zoomIn 500ms ease-in-out 1000ms both;
+}
+
+#quick_buy_modal .modal-header h4 {
+	font-size: 1.4em;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+#quick_buy_modal .modal-header i.fa {
+	font-size: 1.4em;
 }

@@ -20,14 +20,14 @@
 
                                     {{--IMAGE--}}
                                     <td class="ring-in">
-                                        <a href="{{$products[$item['product_id']]['slug'] or ''}}" class="at-in"
+                                        <a href="/{{$products[$item['product_id']]['slug'] or ''}}" class="at-in"
                                            title="{{trans('client.view_product_tip')}}"
                                            data-toggle="tooltip"
                                            data-placement="right">
                                             <img src="" data-src="{{$thumbs_path . $item['product_id'] . '/' . $icon_size . '/' .  $products[$item['product_id']]['image']}}" alt="{{$products[$item['product_id']]['image']}}" class="img-responsive lazy"/>
                                         </a>
                                         <div class="sed">
-                                            <h5><a href="{{$products[$item['product_id']]['slug'] or ''}}"
+                                            <h5><a href="/{{$products[$item['product_id']]['slug'] or ''}}"
                                                    title="{{trans('client.view_product_tip')}}"
                                                    data-toggle="tooltip"
                                                    data-placement="bottom">{{$products[$item['product_id']]['title'] or ''}}</a></h5>
@@ -193,14 +193,6 @@
                            });
                 }
             });
-        });
-
-        $.ajaxPrefilter(function (options) {
-            if (!options.beforeSend) {
-                options.beforeSend = function (xhr) {
-                    xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-                }
-            }
         });
     </script>
 @endsection

@@ -2,6 +2,7 @@
 return [
 	'navigation'           => 'Навигация',
 	'quick_buy_tip'        => 'БЪРЗО ПАЗАРУВАНЕ',
+	'quick_buy_tip_lw'     => 'Бързо пазаруване',
 	'view_product_tip'     => 'ВИЖ ПРОДУКТА',
 	'sizes'                => 'Размери',
 	'size'                 => 'Размер',
@@ -45,6 +46,7 @@ return [
 	'update_quantities'    => 'Обнои количеството',
 	'remove'               => 'Премахни',
 	'empty_cart'           => 'Вашата кошница е празна',
+	'close'                => 'Затвори',
 
 	//	@TODO to be moved into database
 	'currency'             => 'лв.',

@@ -47,6 +47,11 @@ class Client extends BaseControllerClient
 			$response           = self::loadProduct($object['object']);
 			$response['slug']   = $slug;
 
+			if(!empty($_GET['frame']) && $_GET['frame'] == TRUE) {
+				$response['blade_standalone'] = TRUE;
+				$response['frame'] = TRUE;
+			}
+
 			return Theme::view('products.product', $response);
 		}
 		elseif ($object['type'] == 'category')
@@ -391,9 +396,6 @@ class Client extends BaseControllerClient
 	{
 		$response                    = [];
 		$product                     = Model_Main::getProducts($id);
-		$response['blade_custom_js'] = [
-			'addons/jquery.elevateZoom-3.0.8.min',
-		];
 
 		//Breadcrumbs
 		$response['all_categories'] = $this->categories['all'];
