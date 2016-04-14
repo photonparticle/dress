@@ -46,7 +46,6 @@ class Client extends BaseControllerClient
 
 			$response           = self::loadProduct($object['object']);
 			$response['slug']   = $slug;
-			$response['system'] = $this->system;
 
 			return Theme::view('products.product', $response);
 		}
@@ -301,6 +300,13 @@ class Client extends BaseControllerClient
 					{
 						$response['products'][$id]['active_discount'] = TRUE;
 					}
+
+					if(!empty($response['products'][$id]['active_discount'])) {
+						$response['products'][$id]['discount'] = intval(
+							(floatval($response['products'][$id]['price']) -
+								floatval($response['products'][$id]['discount_price']))/floatval($response['products'][$id]['price']) * 100
+						);
+					}
 				}
 			}
 		}
@@ -445,6 +451,14 @@ class Client extends BaseControllerClient
 			}
 		}
 
+		//Product discount percentage
+		if(!empty($response['product']['active_discount'])) {
+			$response['product']['discount'] = intval(
+				(floatval($response['product']['price']) -
+				floatval($response['product']['discount_price']))/floatval($response['product']['price']) * 100
+			);
+		}
+
 		//Images
 		if ( ! empty($response['product']['images']))
 		{
@@ -567,6 +581,13 @@ class Client extends BaseControllerClient
 						{
 							$response['products'][$id]['active_discount'] = TRUE;
 						}
+					}
+
+					if(!empty($response['products'][$id]['active_discount'])) {
+						$response['products'][$id]['discount'] = intval(
+							(floatval($response['products'][$id]['price']) -
+								floatval($response['products'][$id]['discount_price']))/floatval($response['products'][$id]['price']) * 100
+						);
 					}
 				}
 			}

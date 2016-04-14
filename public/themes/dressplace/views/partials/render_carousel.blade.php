@@ -1,5 +1,5 @@
 @if(!empty($carousel['products']))
-    <div class="content-mid margin-top-50">
+    <div class="content-mid carousel-holder">
         <h3>{{$carousel['title']}}</h3>
         <div class="line"></div>
         <div class="mid-popular carousel">
@@ -29,10 +29,30 @@
                                     <div class="clearfix"></div>
                                     <div class="mid-2">
                                         <p>
-                                            @if(!empty($products[$product_id]['discount_price']))
+                                            @if(
+                                            !empty($products[$product_id]['discount']) &&
+                                            !empty($products[$product_id]['discount_price']) &&
+                                            !empty($products[$product_id]['active_discount']))
                                                 <em class="item_old_price">{{$products[$product_id]['discount_price']}} {{trans('client.currency')}}</em>
                                             @endif
+
                                             <em class="item_price">{{$products[$product_id]['price']}} {{trans('client.currency')}}</em>
+
+                                            @if(
+                                            !empty($products[$product_id]['discount']) &&
+                                            !empty($products[$product_id]['discount_price']) &&
+                                            !empty($products[$product_id]['active_discount']))
+                                                <em class="item_discount"
+                                                    @if(
+                                                    !empty($products[$product_id]['discount']) &&
+                                                    !empty($products[$product_id]['discount_price']) &&
+                                                    !empty($products[$product_id]['active_discount']))
+                                                    title="{{trans('client.savings')}}"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                        @endif
+                                                ><span>-<span>{{$products[$product_id]['discount']}}</span>%</span></em>
+                                            @endif
                                         </p>
                                         <div class="img item_add">
                                             <a class="quick_buy b-link-stripe b-animate-go  thickbox" href="javascript:;" rel="title" data-id="{{$product_id}}" title="{{trans('client.quick_buy_tip')}}" data-toggle="tooltip" data-placement="top">

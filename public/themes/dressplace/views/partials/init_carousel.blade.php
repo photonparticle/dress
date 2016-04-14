@@ -8,7 +8,7 @@
                                  slidesToShow: 4,
                                  slidesToScroll: 4,
                                  arrows: true,
-                                 autoplay: true,
+//                                 autoplay: true,
                                  autoplaySpeed: 3000,
                                  lazyLoad: 'progressive',
                                  dots: true,

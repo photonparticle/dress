@@ -9,6 +9,7 @@ html,body{
 	font-family: 'Open Sans', sans-serif;
 	 
 }
+
 body a,
 body button,
 body input{
@@ -1520,9 +1521,7 @@ ul.nav_1 li a {
     padding: 6px 0px;
 	font-size: 0.85em;
 }
-.logo img{
-	width:84%;
-}
+
 .h_menu4 {
     margin-left: 21.8%;
     width: 56%;
@@ -1919,13 +1918,6 @@ td {
 .login {
     padding: 3em 0 0;
 }
-.search {
-    padding: 0.5em;
-    top: 1px;
-}
-.search input[type=submit] {
-    top: 7px;
-}
 .single {
     padding: 3em 0 0;
 }
@@ -1990,10 +1982,6 @@ h4.grid2 {
 @media(max-width:390px){
 .logo {
     /*left: -11%;*/
-}
-.logo img {
-    max-width: 200px !important;
-	min-height: 30px;
 }
 .header-top {
     padding: 0.53em 0;
@@ -2169,19 +2157,6 @@ h4.cate {
 }
 .check-out {
     padding: 1em 0em 0;
-}
-.search {
-    width: 215px;
-    right: 3.6em;
-}
-.search input[type=submit] {
-    width: 27%;
-    font-size: 0.7em;
-}
-.search input[type=text] {
-    padding: 7px;
-    width: 70%;
-    font-size: 0.75em;
 }
 th.table-grid {
     padding: 0 5em;

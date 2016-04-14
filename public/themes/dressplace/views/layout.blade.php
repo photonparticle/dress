@@ -11,9 +11,8 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    <title>@if(isset($pageTitle)) {{$pageTitle}} - @endif - DressPlace</title>
+    <title>@if(isset($pageTitle)) {{$pageTitle}} - @endif - {{$sys['title'] or ''}}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
     <meta content="" name="author"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -52,7 +51,6 @@
 <!-- END HEAD -->
 <body class="loading">
 <div class="loadingOverlayInit"></div>
-@if(!isset($blade_clean_render))
     @if(!isset($blade_hide_header))
         @include('dressplace::includes.header')
     @endif
@@ -68,12 +66,9 @@
                 </div>
                 <!-- END CONTENT -->
             </div>
-            @else
-                @yield('content')
-            @endif
         </div>
     </div>
-
+<div class="clearfix"></div>
     @if(!isset($blade_hide_footer))
         @include('dressplace::includes.footer')
     @endif

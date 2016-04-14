@@ -29,44 +29,38 @@
 
 
             <div class="head-main">
-                <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-                    <div class="logo">
-                        <a href="/"><img src="/images/logo.png" alt=""></a>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 text-center no-padding">
+
+                    <a href="/" class="logo"><img src="/images/logo.png" alt="{{$sys['title'] or ''}}" class="img-responsive"></a>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-7 text-center height-full">
+
+                    <div class="search">
+                        <form method="get" action="/search">
+                            <input type="text" name="q" placeholder="{{trans('client.search')}}..."/>
+                            <button type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </form>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
 
-                <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
-                    <div class="cart box_1">
-                        <a href="checkout.html">
-                            <h3>
-                                <div class="total">
-                                    <span class="simpleCart_total"></span></div>
-                                <img src="{{ Theme::asset('dressplace::images/cart.png') }}" alt=""/></h3>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 text-center no-padding">
+                    <div class="cart box_1 header-cart">
+                        <a href="/cart/" class="">
+                            <img src="{{ Theme::asset('dressplace::images/cart.png') }}" alt=""/>
                         </a>
-                        <p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
-
-                    </div>
-                    <ul class="heart">
-                        <li>
-                            <a href="wishlist.html">
-                                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
-                            </a></li>
-                        <li><a class="play-icon popup-with-zoom-anim" href="#small-dialog"><i class="glyphicon glyphicon-search"> </i></a></li>
-                    </ul>
-                    <div class="clearfix"></div>
-
-                    <!----->
-
-                    <!---//pop-up-box---->
-                    <div id="small-dialog" class="mfp-hide">
-                        <div class="search-top">
-                            <div class="login-search">
-                                <input type="submit" value="">
-                                <input type="text" value="Search.." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search..';}">
+                        <a href="/cart/" class="">
+                            {{trans('client.cart')}} <br/>
+                            <div class="total">
+                                <span class="cart_total">270 лв. (4)</span>
                             </div>
-                            <p>Shopin</p>
-                        </div>
+                        </a>
                     </div>
+                    <div class="clearfix"></div>
                 </div>
 
                 <div class="clearfix"></div>

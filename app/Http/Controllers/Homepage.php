@@ -62,31 +62,54 @@ class Homepage extends BaseControllerClient
 			}
 		}
 
-		/* Get Products */
-		$products = Model_Main::getProducts($products, ['title', 'images']);
+		// Get products data
+		$response['products'] = Model_Main::getProducts($products, ['title', 'images']);
 
-		//Prepare products for response
-		if(!empty($products) && is_array($products)) {
-			foreach($products as $id => $product) {
-				if(!empty($product['images']) && is_array($image = json_decode($product['images'], TRUE))) {
-					reset($image);
-					$products[$id]['image'] = key($image);
-					unset($products[$id]['images']);
+		//Loop trough products data
+		if ( ! empty($response['products']) && is_array($response['products']))
+		{
+			foreach ($response['products'] as $id => $product)
+			{
+				if ( ! empty($product['discount_price']))
+				{
+					//Calculate is discount active
+					$now = time();
 
-					if(!is_float($product['price']))
+					if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
 					{
-						$product['price'] = intval($product['price']);
+						$allow_start = TRUE;
 					}
-					if(!is_float($product['discount_price']))
+					else
 					{
-						$product['discount_price'] = intval($product['discount_price']);
+						$allow_start = FALSE;
+					}
+
+					if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
+					{
+						$allow_end = TRUE;
+					}
+					else
+					{
+						$allow_end = FALSE;
+					}
+
+					if ($allow_start === TRUE && $allow_end === TRUE)
+					{
+						$response['products'][$id]['active_discount'] = TRUE;
+					}
+
+					if(!empty($response['products'][$id]['active_discount'])) {
+						$response['products'][$id]['discount'] = intval(
+							(floatval($response['products'][$id]['price']) -
+								floatval($response['products'][$id]['discount_price']))/floatval($response['products'][$id]['price']) * 100
+						);
 					}
 				}
 			}
 		}
 
-		/* Send products to response */
-		$response['products'] = $products;
+		// Send products to response
+		$response['products'] = self::prepareProductsForResponse($response['products']);
 		unset($products);
 
 		/* Get Sliders */
@@ -120,5 +143,39 @@ class Homepage extends BaseControllerClient
 //		dd($response['sliders']);
 
 		return Theme::view('homepage.homepage', $response);
+	}
+
+	/**
+	 * Prepare products for response
+	 *
+	 * @param $products
+	 *
+	 * @return array
+	 */
+	private function prepareProductsForResponse($products)
+	{
+		if ( ! empty($products) && is_array($products))
+		{
+			foreach ($products as $id => $product)
+			{
+				if ( ! empty($product['images']) && is_array($image = json_decode($product['images'], TRUE)))
+				{
+					reset($image);
+					$products[$id]['image'] = key($image);
+					unset($products[$id]['images']);
+
+					if ( ! is_float($product['price']))
+					{
+						$products[$id]['price'] = intval($product['price']);
+					}
+					if ( ! is_float($product['discount_price']))
+					{
+						$products[$id]['discount_price'] = intval($product['discount_price']);
+					}
+				}
+			}
+		}
+
+		return $products;
 	}
 }

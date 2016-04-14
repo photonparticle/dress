@@ -22,6 +22,7 @@ class BaseControllerClient extends Controller
 {
 	protected $request;
 	protected $user = FALSE;
+	public $cart = [];
 
 	protected $routes = [
 		'/admin/auth/login',
@@ -47,18 +48,18 @@ class BaseControllerClient extends Controller
 		Theme::setActive('dressplace');
 
 		//Check user is logged in
-//		if (Sentinel::guest())
-//		{
-//			if ( ! in_array($request->getPathInfo(), $this->routes))
-//			{
-////				return Redirect::to('/admin/auth/login')->send();
-//			}
-//		}
-//		else
-//		{
-//			$this->user = Sentinel::getUser();
+		if (Sentinel::guest())
+		{
+			if ( ! in_array($request->getPathInfo(), $this->routes))
+			{
+//				return Redirect::to('/admin/auth/login')->send();
+			}
+		}
+		else
+		{
+			$this->user = Sentinel::getUser();
 //			$this->globalViewData();
-//		}
+		}
 
 		//Init system
 		$this->systemInit();
@@ -160,5 +161,13 @@ class BaseControllerClient extends Controller
 	private function systemInit()
 	{
 		$this->system = Model_Main::getSetting(FALSE, FALSE, TRUE);
+		View::share('sys', $this->system);
+
+		//Init cart
+		self::initCart();
+	}
+
+	private function initCart() {
+		$this->cart = session()->get('cart');
 	}
 }
