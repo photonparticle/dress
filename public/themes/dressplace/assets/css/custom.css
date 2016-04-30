@@ -1,0 +1,58 @@
+div.banner-actions
+{
+    margin: 60px auto;
+}
+
+div.banner-actions div.box
+{
+    -moz-box-shadow: 0 1px 2px rgba(71, 73, 72, 0.25);
+    -webkit-box-shadow: 0 1px 2px rgba(71, 73, 72, 0.25);
+    box-shadow: 0 1px 2px rgba(71, 73, 72, 0.25);
+    padding: 20px;
+    margin-right: 20px;
+    border-top: 5px solid #418dda;
+}
+div.banner-actions div.box:last-child
+{
+    margin-right: 0;
+}
+div.banner-actions div.box div.icon
+{
+    background-repeat: no-repeat;
+    width: 78px;
+    height: 51px;
+    background-image: url("../img/sprite.png");
+    background-position: 0 0;
+}
+
+div.banner-actions div.box.free-delivery div.icon
+{
+    background-position: 0 0;
+}
+
+div.banner-actions div.box.returns div.icon
+{
+    background-position: -83px 0px;
+}
+
+div.banner-actions div.box.call-us div.icon
+{
+    background-position: -162px 0px;
+}
+
+div.banner-actions div.box h3
+{
+    font-size: 1.2em;
+}
+
+div.banner-actions div.box h5
+{
+    font-size: 1em;
+    color: #939694;
+}
+
+div.banner-actions div.box p
+{
+    font-size: 1em;
+    color: #939694    
+}
