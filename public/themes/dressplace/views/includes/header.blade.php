@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <div class="logo">
-                        <a href="/"><img src="images/logo.png" alt="{{$sys['title'] or ''}}"/></a>
+                        <a href="/"><img src="/images/logo.png" alt="{{$sys['title'] or ''}}"/></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-5 col-sm-5 col-xs-12">
@@ -58,7 +58,7 @@
                         <ul>
                             <li>
                                 <div class="cart-img">
-                                    <a href="#"><img src="img/cart/total-cart.jpg" alt=""/></a>
+                                    <a href="#"><img src="/img/cart/total-cart.jpg" alt=""/></a>
                                     <span>1</span>
                                 </div>
                                 <div class="cart-info">
@@ -71,7 +71,7 @@
                             </li>
                             <li>
                                 <div class="cart-img">
-                                    <a href="#"><img src="img/cart/total-cart.jpg" alt=""/></a>
+                                    <a href="#"><img src="/img/cart/total-cart.jpg" alt=""/></a>
                                     <span>1</span>
                                 </div>
                                 <div class="cart-info">

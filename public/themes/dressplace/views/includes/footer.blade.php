@@ -7,7 +7,7 @@
                 <!-- footer-widget start -->
                 <div class="col-lg-3 col-md-3 col-sm-4">
                     <div class="footer-widget">
-                        <img src="images/logo.png" alt=""/>
+                        <img src="/images/logo.png" alt=""/>
                         <p>
 
                         </p>

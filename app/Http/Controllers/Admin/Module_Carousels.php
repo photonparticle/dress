@@ -231,7 +231,6 @@ class Module_Carousels extends BaseController
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param bool $method
 	 * @param bool|int $id
 	 *
 	 * @return \Illuminate\Http\Response

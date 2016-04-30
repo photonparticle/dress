@@ -12,7 +12,7 @@
                                     <!-- Slide Caption -->
                             <div class="tp-caption skewfromrightshort skewtorightshort tp-resizeme"
                                  data-x="center" data-hoffset="0"
-                                 data-y="center " data-voffset="-100"
+                                 data-y="center" data-voffset="-100"
                                  data-speed="500"
                                  data-start="500"
                                  data-easing="Power4.easeOut"
@@ -32,7 +32,7 @@
                             <div class="tp-caption skewfromrightshort skewtorightshort tp-resizeme splitted"
                                  data-x="center" data-hoffset="0"
                                  data-y="center" data-voffset="-30"
-                                 data-speed="100"
+                                 data-speed="500"
                                  data-start="1300"
                                  data-easing="Power4.easeInOut"
                                  data-splitin="chars"
@@ -61,7 +61,8 @@
                                  data-endspeed="500"
                                  style="z-index: 7;">
                                 <a class="btn btn-default btn-icon"
-                                   style="font-size:15px; text-align:left !important; padding: 12px 22px;font-weight:bold; color:#313131; text-transform:uppercase; line-height:24px;"
+                                   {{--background: {{!empty($slider['slides'][$image]['buttonColor']) ? $slider['slides'][$image]['buttonColor'] : '#fff'}}--}}
+                                   style="font-size:15px; text-align:left !important; padding: 12px 22px;font-weight:bold; color:#333; text-transform:uppercase; line-height:24px;"
                                    href="{{$slider['slides'][$image]['buttonURL']}}"
                                 >{{$slider['slides'][$image]['buttonText']}}
                                 </a>

@@ -58,20 +58,20 @@
 		stopAfterLoops:-1,
 		stopAtSlide:-1,
 		
-		hideTimerBar:"on",
+		hideTimerBar:"off",
 
 		shuffle:"off",
 		
 		autoHeight:"off",						
 		forceFullWidth:"off",
 								
-		hideThumbsOnMobile:"off",
+		hideThumbsOnMobile:"on",
 		hideNavDelayOnMobile:1500,						
 		hideBulletsOnMobile:"off",
-		hideArrowsOnMobile:"off",
-		hideThumbsUnderResolution:0,
+		hideArrowsOnMobile:"on",
+		hideThumbsUnderResolution:1024,
 		
-		hideSliderAtLimit:0,
+		hideSliderAtLimit:480,
 		hideCaptionAtLimit:0,
 		hideAllCaptionAtLilmit:0,
 		startWithSlide:0,

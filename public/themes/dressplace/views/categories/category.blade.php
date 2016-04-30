@@ -1,15 +1,6 @@
 @extends('dressplace::layout')
 
 @section('content')
-    {{--FLEX SLIDER TOP--}}
-    @if(!empty($sliders) && is_array($sliders))
-        @foreach($sliders as $key => $slider)
-            @if((empty($slider['position']) || intval($slider['position']) < 2))
-                @include('dressplace::partials.render_slider', $slider)
-            @endif
-        @endforeach
-    @endif
-    {{--FLEX SLIDER TOP--}}
 
     {{-- CAROUSELS TOP --}}
     @if(!empty($carousels) && is_array($carousels))
@@ -135,30 +126,29 @@
 
     <div class="clearfix"></div>
 
-    {{--FLEX SLIDER BOTTOM--}}
+    {{--SLIDER--}}
     @if(!empty($sliders) && is_array($sliders))
         @foreach($sliders as $key => $slider)
-            @if((!empty($slider['position']) && intval($slider['position']) > 1))
+            @if(!empty($slider['slides']) && is_array($slider['slides']) && !empty($slider['slides_positions']) && is_array($slider['slides_positions']))
                 @include('dressplace::partials.render_slider', $slider)
             @endif
         @endforeach
     @endif
-    {{--FLEX SLIDER BOTTOM--}}
 
     {{-- CAROUSELS BOTTOM --}}
     @if(!empty($carousels) && is_array($carousels))
         @foreach($carousels as $carousel)
             @if((!empty($carousel['position']) && intval($carousel['position']) > 1))
-                @include('dressplace::partials.render_carousel')
+{{--                @include('dressplace::partials.render_carousel')--}}
             @endif
         @endforeach
     @endif
     {{-- CAROUSELS BOTTOM --}}
 
     {{--INIT MODULES--}}
-    @include('dressplace::partials.init_slider')
-    @include('dressplace::partials.init_carousel')
-    @include('dressplace::partials.init_products')
+    {{--@include('dressplace::partials.init_slider')--}}
+    {{--@include('dressplace::partials.init_carousel')--}}
+    {{--@include('dressplace::partials.init_products')--}}
 @endsection
 
 @section('customJS')

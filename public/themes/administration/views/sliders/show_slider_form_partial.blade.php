@@ -114,7 +114,7 @@
                             </div>
                             
                             {{--btn color--}}
-                            <div class="caption col-xs-12 margin-top-10 no-padding">
+                            <div class="caption col-xs-12 margin-top-10 no-padding hidden">
                                 <div class="form-group">
                                     <label for="btn_color" class="col-xs-12 control-label">{{trans('sliders.btn_color')}}</label>
                                     <div class="col-xs-12">
@@ -130,10 +130,9 @@
                                 </label>
                                 <select id="place" name="place" class="form-control input-md input-place">
                                     <option value="">{{trans('sliders.choose_place')}}</option>
-                                    <option value="top-left" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'top-left') selected="selected" @endif>{{trans('sliders.top_left')}}</option>
-                                    <option value="top-right" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'top-right') selected="selected" @endif>{{trans('sliders.top_right')}}</option>
-                                    <option value="bottom-left" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'bottom-left') selected="selected" @endif>{{trans('sliders.bott_left')}}</option>
-                                    <option value="bottom-right" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'bottom-right') selected="selected" @endif>{{trans('sliders.bott_right')}}</option>
+                                    <option value="left" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'left') selected="selected" @endif>{{trans('sliders.left')}}</option>
+                                    <option value="center" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'center') selected="selected" @endif>{{trans('sliders.center')}}</option>
+                                    <option value="right" @if(!empty($image_data[$image]['place']) && $image_data[$image]['place'] == 'right') selected="selected" @endif>{{trans('sliders.right')}}</option>
                                 </select>
                             </div>
                             
