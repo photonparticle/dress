@@ -137,7 +137,7 @@ body {
 	margin-top: 0;
 }
 a#scrollUp {
-	background: #222 none repeat scroll 0 0;
+	background: #418dda none repeat scroll 0 0;
 	bottom: 12px;
 	color: #fff;
 	height: 45px;
@@ -149,7 +149,7 @@ a#scrollUp {
 	font-size: 25px;
 }
 a#scrollUp:hover {
-	background-color: #418dda;
+	background-color: #222;
 }
 /* -------------------------
 2. header-top-area

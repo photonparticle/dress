@@ -38,21 +38,33 @@ div.banner-actions div.box.returns div.icon
 div.banner-actions div.box.call-us div.icon
 {
     background-position: -162px 0px;
+    width: 50px;
 }
 
 div.banner-actions div.box h3
 {
+    text-transform: uppercase;
     font-size: 1.2em;
 }
 
 div.banner-actions div.box h5
 {
+    text-transform: uppercase;
     font-size: 1em;
     color: #939694;
 }
 
 div.banner-actions div.box p
 {
-    font-size: 1em;
-    color: #939694    
+    margin-top: 15px;
+    font-size: 1.1em;
+    color: #939694;
+}
+
+div.banner-actions div.box p i {
+    color: #418dda;
+}
+
+div.banner-actions div.box p a {
+    color: #418dda;
 }

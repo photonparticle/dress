@@ -10,39 +10,8 @@
         @endforeach
     @endif
 
-<div class="container banner-actions">
-    <div class="row">
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
-            <div class="box free-delivery">
-            <div class="icon pull-right">
-            </div>
-                <h3>Free UK shipping!</h3>
-                <h5>This is a snappy sub-title</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque beatae tempore porro officiis!</p>
-            </div>
-        </div>
-
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div class="box returns">
-            <div class="icon pull-right">
-            </div>
-                <h3>We're now global!</h3>
-                <h5>This is a snappy sub-title</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque beatae tempore porro officiis!</p>
-            </div>
-        </div>
-
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
-            <div class="box call-us">
-            <div class="icon pull-right">
-            </div>
-                <h3>Lowest price guarantee!</h3>
-                <h5>This is a snappy sub-title</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque beatae tempore porro officiis!</p>
-            </div>
-        </div>
-    </div>
-</div>
+    {{--CALLBACK ACTIONS--}}
+    @include('dressplace::partials.render_callback_actions')
 
     {{--CAROUSELS--}}
     @if(!empty($carousels) && is_array($carousels))
