@@ -1,115 +1,104 @@
 @if(empty($blade_standalone) || (isset($blade_standalone) && $blade_standalone !== TRUE))
-        <!DOCTYPE html>
-<!--[if IE 8]>
-<html lang="{{Lang::locale()}}" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]>
-<html lang="{{Lang::locale()}}" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="{{Lang::locale()}}" class="no-js">
-<!--<![endif]-->
-<!-- BEGIN HEAD -->
+<!DOCTYPE html>
+<html class="no-js" lang="">
 <head>
     <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@if(isset($page_title)){{$page_title}} | @else{{$sys['page_title'] or ''}}@endif | {{$sys['title']}}</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    <title>@if(isset($pageTitle)) {{$pageTitle}} - @endif - {{$sys['title'] or ''}}</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="" name="description"/>
-    <meta content="" name="author"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
 
-    {{--CSS--}}
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/bootstrap.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/animate.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/font-awesome.min.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/chocolat.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/jstarbox.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/popuo-box.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/jstarbox.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/popuo-box.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/style.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/style4.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/custom.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/addons/slick.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/flexslider.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/addons/slick-theme.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/addons/colorbox.css') }}" type="text/css" media="all"/>
+    <meta name="description" content="{{$page_meta_description or $sys['meta_description']}}">
+    <meta name="keywords" content="{{$page_meta_keywords or $sys['meta_keywords']}}">
 
-    {{--Init jQuery--}}
-    <script src="{{ Theme::asset('dressplace::js/jquery.min.js') }}" type="text/javascript"></script>
+    <meta property="og:title" content="@if(isset($page_title)) {{$page_title}} - @endif{{$sys['title'] or ''}}"/>
+    <meta property="og:description" content="{{$page_meta_description or $sys['meta_description']}}" />
+    <meta property="og:type" content="website"/>
+
+    <meta name="DC.Publisher" content="{{$sys['title'] or ''}}">
+    <meta name="DC.Language" content="{{Lang::locale()}}">
+    <meta name="DC.Title" content="@if(isset($page_title)) {{$page_title}} - @endif{{$sys['title'] or ''}}">
+
+    <meta name="googlebot" content="index,follow" />
+    <meta name="robots" content="index,follow" />
+    <meta name="revisit-after" content="1 days" />
+    <meta name="slurp" content="index,follow" />
+
+    <!-- google fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,900,700,300' rel='stylesheet' type='text/css'>
+
+
+    <!-- all css here -->
+    <!-- bootstrap v3.3.6 css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/bootstrap.min.css') }}">
+    <!-- animate css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/animate.css') }}">
+    <!-- jquery-ui.min css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/jquery-ui.min.css') }}">
+    <!-- meanmenu css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/meanmenu.min.css') }}">
+    <!-- RS slider css -->
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('dressplace::rs-plugin/css/settings.css')}}" media="screen">
+    <!-- owl.carousel css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/owl.carousel.css') }}">
+    <!-- font-awesome css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/font-awesome.min.css') }}">
+    <!-- style css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/style.css') }}">
+    <!-- responsive css -->
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/responsive.css') }}">
+    <!-- modernizr css -->
+    <script src="{{ Theme::asset('dressplace::js/vendor/modernizr-2.8.3.min.js') }}"></script>
 
     <!-- BEGIN PAGE STYLES -->
     @if(!empty($blade_custom_css))
         @foreach($blade_custom_css as $file)
-            <link href="/themes/dressplace/assets/css/{{$file}}.css" rel="stylesheet" type="text/css"/>
+            @if(!empty($file))
+                <link href="{{ Theme::asset('dressplace::css/' . $file . '.css') }}" rel="stylesheet" type="text/css"/>
+            @endif
         @endforeach
     @endif
-    <!-- END PAGE STYLES -->
+                        <!-- END PAGE STYLES -->
 </head>
 <!-- END HEAD -->
-<body class="loading">
-<div class="loadingOverlayInit"></div>
-    @if(!isset($blade_hide_header))
-        @include('dressplace::includes.header')
-    @endif
-    <div class="clearfix"></div>
-
-    <!-- BEGIN CONTAINER -->
-    <div class="container">
-        <div class="page-container">
-            <!-- BEGIN CONTENT -->
-            <div class="page-content-wrapper">
-                <div class="page-content">
-                    @yield('content')
-                </div>
-                <!-- END CONTENT -->
-            </div>
-        </div>
-    </div>
+<body>
+@if(!isset($blade_hide_header))
+    @include('dressplace::includes.header')
+@endif
 <div class="clearfix"></div>
-    @if(!isset($blade_hide_footer))
-        @include('dressplace::includes.footer')
-    @endif
 
-    {{--QUICK BUY MODAL--}}
-    <div class="modal fade bs-example-modal-lg" id="quick_buy_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
+@yield('content')
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="{{ Theme::asset('dressplace::js/addons/jquery.lazy.min.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/bootstrap.min.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/jquery.chocolat.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/jquery.magnific-popup.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/jquery.flexslider-min.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/addons/slick.min.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/addons/loadingoverlay.min.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/addons/jquery.bootpag.min.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/addons/jquery.colorbox.js') }}" type="text/javascript"></script>
-    <script src="{{ Theme::asset('dressplace::js/addons/jquery.elevateZoom-3.0.8.min.js') }}" type="text/javascript"></script>
+<div class="clearfix"></div>
+@if(!isset($blade_hide_footer))
+    @include('dressplace::includes.footer')
+@endif
 
-    {{--Load custom libraries--}}
-    @if(!empty($blade_custom_js))
-        @foreach($blade_custom_js as $file)
-            <script src="{{ Theme::asset('dressplace::js/' . $file . '.js')}}" type="text/javascript"></script>
-        @endforeach
-    @endif
-
-    {{--Custom JS--}}
-    @yield('customJS')
-
-    <!-- MAIN APP JS -->
-    <script src="{{ Theme::asset('dressplace::js/app.js') }}" type="text/javascript"></script>
-<!-- END JAVASCRIPTS -->
+<!-- all js here -->
+<!-- jquery latest version -->
+<script src="{{ Theme::asset('dressplace::js/vendor/jquery-1.12.0.min.js') }}"></script>
+<!-- bootstrap js -->
+<script src="{{ Theme::asset('dressplace::js/bootstrap.min.js') }}"></script>
+<!-- owl.carousel js -->
+<script src="{{ Theme::asset('dressplace::js/owl.carousel.min.js') }}"></script>
+<!-- jquery-ui js -->
+<script src="{{ Theme::asset('dressplace::js/jquery-ui.min.js') }}"></script>
+<!-- RS-Plugin JS -->
+<script type="text/javascript" src="{{ Theme::asset('dressplace::rs-plugin/js/jquery.themepunch.tools.min.js') }}"></script>
+<script type="text/javascript" src="{{ Theme::asset('dressplace::rs-plugin/js/jquery.themepunch.revolution.min.js') }}"></script>
+<script src="{{ Theme::asset('dressplace::rs-plugin/rs.home.js') }}"></script>
+<!-- meanmenu js -->
+<script src="{{ Theme::asset('dressplace::js/jquery.meanmenu.js') }}"></script>
+<!-- wow js -->
+<script src="{{ Theme::asset('dressplace::js/wow.min.js') }}"></script>
+<!-- plugins js -->
+<script src="{{ Theme::asset('dressplace::js/plugins.js') }}"></script>
+<!-- main js -->
+<script src="{{ Theme::asset('dressplace::js/main.js') }}"></script>
 </body>
-<!-- END BODY -->
 </html>
 @else
     @yield('content')

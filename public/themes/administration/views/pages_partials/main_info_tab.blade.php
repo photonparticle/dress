@@ -35,6 +35,15 @@
             </div>
         </div>
 
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20">
+            <label for="show_footer" class="control-label col-xs-12 default no-padding">
+                {{trans('pages.show_footer')}}
+            </label>
+            <div class="col-xs-12 no-padding">
+                <input id="show_footer" name="show_footer" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('pages.visible')}}&nbsp;" data-off-text="&nbsp;{{trans('pages.hidden')}}&nbsp;" @if(isset($page['show_footer']) && $page['show_footer'] == '1') checked @endif>
+            </div>
+        </div>
+
         <div class="clearfix"></div>
     </form>
 

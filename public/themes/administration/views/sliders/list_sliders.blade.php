@@ -5,7 +5,7 @@
 <div class="portlet box blue-madison">
     <div class="portlet-title">
         <div class="caption">
-            <i class="fa fa-table"></i>{{$pageTitle}}
+            <i class="fa fa-image"></i>{{$pageTitle}}
         </div>
         <div class="actions">
             <a href="/admin/module/sliders/create" class="btn btn-success" title="{{trans('sliders.create')}}">

@@ -10,7 +10,7 @@
                         <div class="portlet light">
                             <div class="portlet-title tabbable-line">
                                 <div class="caption caption-lg col-xs-12 col-sm-12 col-md-4 col-lg-8">
-                                    <i class="fa fa-archive"></i>
+                                    <i class="fa fa-sitemap"></i>
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4 text-right no-padding margin-top-5">

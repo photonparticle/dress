@@ -29,6 +29,7 @@ class CreateOrdersTable extends Migration
             $table->enum('status', ['pending', 'confirmed', 'completed', 'canceled']);
             $table->enum('delivery_type', ['to_office', 'to_address']);
             $table->float('total');
+            $table->json('cart');
             $table->timestamps();
         });
     }

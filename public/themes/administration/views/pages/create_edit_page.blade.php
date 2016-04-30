@@ -10,7 +10,7 @@
                         <div class="portlet light">
                             <div class="portlet-title tabbable-line">
                                 <div class="caption caption-lg col-xs-12 col-sm-12 col-md-4 col-lg-8">
-                                    <i class="fa fa-archive"></i>
+                                    <i class="fa fa-file-text-o"></i>
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4 text-right margin-top-5 no-padding">
@@ -107,6 +107,11 @@
                 } else {
                     var active = 0;
                 }
+                if ($('#show_footer').is(':checked')) {
+                    var show_footer = 1;
+                } else {
+                    var show_footer = 0;
+                }
 
                 $.ajax({
                            type: 'post',
@@ -115,6 +120,7 @@
                                'title': title,
                                'content': content,
                                'active': active,
+                               'show_footer': show_footer,
                                'friendly_url': $slug.val(),
                                'page_title': page_title,
                                'meta_description': meta_description,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Model_Users;
 use App\Client\Model_API;
 use App\Client\Model_Client;
 use App\Client\Model_Main;
@@ -22,6 +23,7 @@ class BaseControllerClient extends Controller
 {
 	protected $request;
 	protected $user = FALSE;
+	protected $user_data = FALSE;
 	public $cart = [];
 
 	protected $routes = [
@@ -58,7 +60,7 @@ class BaseControllerClient extends Controller
 		else
 		{
 			$this->user = Sentinel::getUser();
-//			$this->globalViewData();
+			self::getActiveUser();
 		}
 
 		//Init system
@@ -83,6 +85,7 @@ class BaseControllerClient extends Controller
 			}
 		}
 
+		$this->user_data = $user_data;
 		View::share('current_user', $user_data);
 	}
 
@@ -146,7 +149,7 @@ class BaseControllerClient extends Controller
 				}
 			}
 
-			$this->categories['all']    = $categories;
+			$this->categories['all'] = $categories;
 
 			View::share('main_categories', $main_categories);
 			View::share('second_level_categories', $second_level_categories);
@@ -165,9 +168,26 @@ class BaseControllerClient extends Controller
 
 		//Init cart
 		self::initCart();
+
+		//Init footer pages
+		self::getFooterPages();
 	}
 
-	private function initCart() {
-		$this->cart = session()->get('cart');
+	private function initCart()
+	{
+		$this->cart  = session()->get('cart');
+		$count_items = session()->get('count_items');
+		$total       = session()->get('total');
+
+		if ( ! empty($count_items) && $total)
+		{
+			View::share('cart_items', $count_items);
+			View::share('cart_total', $total);
+		}
+	}
+
+	private function getFooterPages()
+	{
+		View::share('footer_pages', Model_Main::getFooterPages());
 	}
 }

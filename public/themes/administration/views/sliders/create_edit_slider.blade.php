@@ -8,7 +8,7 @@
             <div class="portlet light">
                 <div class="portlet-title tabbable-line">
                     <div class="caption caption-lg margin-top-10">
-                        <i class="fa fa-arrows"></i>
+                        <i class="fa fa-image"></i>
                         <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                     </div>
                     <div class="actions">

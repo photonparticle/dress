@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Model_Users;
+use App\Client\Model_Client;
 use App\Client\Model_Main;
 use App\Http\Controllers\BaseControllerClient;
 use Illuminate\Http\Request;
@@ -14,6 +16,8 @@ use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 
 use Caffeinated\Themes\Facades\Theme;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use View;
 
 class Homepage extends BaseControllerClient
@@ -44,8 +48,8 @@ class Homepage extends BaseControllerClient
 			'blade_custom_js'  => $customJS,
 		];
 
-		$response['thumbs_path'] = Config::get('system_settings.product_public_path');
-		$response['icon_size']   = Config::get('images.sm_icon_size');
+		$response['thumbs_path']  = Config::get('system_settings.product_public_path');
+		$response['icon_size']    = Config::get('images.sm_icon_size');
 		$response['sliders_path'] = Config::get('system_settings.sliders_public_path');
 
 		$products = [];
@@ -53,11 +57,14 @@ class Homepage extends BaseControllerClient
 		/* Load Carousels */
 		$response['carousels'] = Model_Main::getCarousels($this->active_module);
 
-		if(!empty($response['carousels']) && is_array($response['carousels'])) {
-			foreach($response['carousels'] as $key => $carousel) {
-				if(!empty($carousel['products'])) {
+		if ( ! empty($response['carousels']) && is_array($response['carousels']))
+		{
+			foreach ($response['carousels'] as $key => $carousel)
+			{
+				if ( ! empty($carousel['products']))
+				{
 					$response['carousels'][$key]['products'] = explode(', ', $carousel['products']);
-					$products = array_merge($products, $response['carousels'][$key]['products']);
+					$products                                = array_merge($products, $response['carousels'][$key]['products']);
 				}
 			}
 		}
@@ -98,10 +105,11 @@ class Homepage extends BaseControllerClient
 						$response['products'][$id]['active_discount'] = TRUE;
 					}
 
-					if(!empty($response['products'][$id]['active_discount'])) {
+					if ( ! empty($response['products'][$id]['active_discount']))
+					{
 						$response['products'][$id]['discount'] = intval(
 							(floatval($response['products'][$id]['price']) -
-								floatval($response['products'][$id]['discount_price']))/floatval($response['products'][$id]['price']) * 100
+								floatval($response['products'][$id]['discount_price'])) / floatval($response['products'][$id]['price']) * 100
 						);
 					}
 				}
@@ -115,10 +123,13 @@ class Homepage extends BaseControllerClient
 		/* Get Sliders */
 		$sliders = Model_Main::getSliders('homepage');
 
-		if(!empty($sliders) && is_array($sliders)) {
-			foreach($sliders as $key => $slider) {
-				if(!empty($slider['slides']) && !empty($slider['slides_positions'])) {
-					$slider['slides'] = json_decode($slider['slides'], TRUE);
+		if ( ! empty($sliders) && is_array($sliders))
+		{
+			foreach ($sliders as $key => $slider)
+			{
+				if ( ! empty($slider['slides']) && ! empty($slider['slides_positions']))
+				{
+					$slider['slides']           = json_decode($slider['slides'], TRUE);
 					$slider['slides_positions'] = json_decode($slider['slides_positions'], TRUE);
 
 					//Sort by position
@@ -140,9 +151,341 @@ class Homepage extends BaseControllerClient
 			}
 		}
 
-//		dd($response['sliders']);
-
 		return Theme::view('homepage.homepage', $response);
+	}
+
+	public function login(Request $request)
+	{
+		//If user is not logged in
+		if ($this->user == FALSE)
+		{
+			$customCSS = [
+
+			];
+			$customJS  = [
+			];
+
+			$response = [
+				'blade_custom_css' => $customCSS,
+				'blade_custom_js'  => $customJS,
+			];
+
+			if ($request->ajax())
+			{
+				$response['blade_standalone'] = TRUE;
+				$response['ajax']             = TRUE;
+			}
+
+			return Theme::view('homepage.login', $response);
+		}
+		else
+		{
+			//If user is logged in - make redirect
+			return Redirect::to('/')->send();
+		}
+	}
+
+	public function doLogin()
+	{
+		$response['status']  = 'error';
+		$response['title']   = trans('users.check_login_details');
+		$response['message'] = trans('users.auth_not_successful');
+
+		if ( ! empty($_POST) && ! empty(Input::get('email')) && ! empty(Input::get('password')))
+		{
+			//User data and Authentication
+			$credentials = [
+				'email'    => Input::get('email'),
+				'password' => Input::get('password'),
+			];
+
+			$user = Sentinel::authenticate($credentials);
+
+			//If Authentication was successful
+			if ( ! empty($user))
+			{
+				//Login and remember
+				if ( ! empty(Input::get('remember')))
+				{
+					Sentinel::loginAndRemember($user);
+				}
+				else
+				{
+					//Login without remember
+					Sentinel::login($user);
+				}
+
+				$response['status']  = 'success';
+				$response['title']   = trans('global.redirecting').'...';
+				$response['message'] = trans('users.auth_successful');
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function logout()
+	{
+		Sentinel::logout();
+
+		return Redirect::to('/')->send();
+	}
+
+	public function register(Request $request)
+	{
+		//If user is not logged in
+		if ($this->user == FALSE)
+		{
+			$customCSS = [
+
+			];
+			$customJS  = [
+			];
+
+			$response = [
+				'blade_custom_css' => $customCSS,
+				'blade_custom_js'  => $customJS,
+			];
+
+			if ($request->ajax())
+			{
+				$response['blade_standalone'] = TRUE;
+				$response['ajax']             = TRUE;
+			}
+
+			return Theme::view('homepage.register', $response);
+		}
+		else
+		{
+			//If user is logged in - make redirect
+			return Redirect::to('/')->send();
+		}
+	}
+
+	public function doRegister()
+	{
+		if ( ! empty(($request['email'] = Input::get('email'))) &&
+			! empty(($request['password'] = Input::get('password')))
+		)
+		{
+
+			if ( ! Sentinel::findByCredentials($request))
+			{
+				if ( ! filter_var($request['email'], FILTER_VALIDATE_EMAIL))
+				{
+					$response['status']  = 'warning';
+					$response['message'] = trans('user_notifications.invalid_email');
+				}
+				else
+				{
+					if (mb_strlen(Input::get('password')) < 8)
+					{
+						$response['status']  = 'warning';
+						$response['message'] = trans('user_notifications.password_length');
+					}
+					else
+					{
+						if (Sentinel::registerAndActivate($request))
+						{
+							$user = Sentinel::authenticate($request);
+
+							//If Authentication was successful
+							if ( ! empty($user))
+							{
+								Sentinel::loginAndRemember($user);
+							}
+
+							$response['status']  = 'success';
+							$response['message'] = trans('user_notifications.user_created');
+						}
+						else
+						{
+							$response['status']  = 'error';
+							$response['message'] = trans('user_notifications.user_not_created');
+						}
+					}
+				}
+			}
+			else
+			{
+				$response['status']  = 'error';
+				$response['message'] = trans('user_notifications.user_exists');
+			}
+
+		}
+		else
+		{
+			$response['status']  = 'warning';
+			$response['message'] = trans('global.all_fields_required');
+		}
+
+		echo json_encode($response);
+	}
+
+	public function account(Request $request)
+	{
+		//If user is logged in
+		if ( ! $this->user == FALSE)
+		{
+			$customCSS = [
+
+			];
+			$customJS  = [
+			];
+
+			$response = [
+				'blade_custom_css' => $customCSS,
+				'blade_custom_js'  => $customJS,
+			];
+
+			if ($request->ajax())
+			{
+				$response['blade_standalone'] = TRUE;
+				$response['ajax']             = TRUE;
+			}
+
+			return Theme::view('homepage.my_profile', $response);
+		}
+		else
+		{
+			//If user is not logged in - make redirect
+			return Redirect::to('/login')->send();
+		}
+	}
+
+	public function updateAccount(Request $request, $id = FALSE, $action = FALSE)
+	{
+		$response['status']  = 'error';
+		$response['message'] = trans('user_notifications.user_info_not_updated');
+
+		if ( ! empty(($request)) && ! empty($id) && ! empty($action))
+		{
+			if ($action == 'personal_info')
+			{
+				$user_data['first_name'] = ( ! empty(Input::get('first_name'))) ? Input::get('first_name') : '';
+				$user_data['last_name']  = ( ! empty(Input::get('last_name'))) ? Input::get('last_name') : '';
+				$user_data['phone']      = ( ! empty(Input::get('phone'))) ? Input::get('phone') : '';
+				$user_data['address']    = ( ! empty(Input::get('address'))) ? Input::get('address') : '';
+				$user_data['city']       = ( ! empty(Input::get('city'))) ? Input::get('city') : '';
+				$user_data['country']    = ( ! empty(Input::get('country'))) ? Input::get('country') : '';
+
+				if (Model_Users::updateUserInfo($id, $user_data) === TRUE)
+				{
+					$response['status']  = 'success';
+					$response['message'] = trans('user_notifications.personal_info_updated');
+				}
+				else
+				{
+					$response['message'] = trans('user_notifications.personal_info_not_updated');
+				}
+			}
+			elseif ($action == 'change_password')
+			{
+				$user_data['password']        = ( ! empty(Input::get('password'))) ? Input::get('password') : '';
+				$user_data['new_password']    = ( ! empty(Input::get('new_password'))) ? Input::get('new_password') : '';
+				$user_data['re_new_password'] = ( ! empty(Input::get('re_new_password'))) ? Input::get('re_new_password') : '';
+
+				if ( ! empty($user_data['password']) && ! empty($user_data['new_password']) && ! empty($user_data['re_new_password']))
+				{
+					$user   = Model_Users::getSentinelUserByID($id);
+					$hasher = Sentinel::getHasher();
+
+					if ( ! Sentinel::validateCredentials($user, ['email' => $user->email, 'password' => $user_data['password']]))
+					{
+						$response['message'] = trans('user_notifications.old_password_do_not_match');
+					}
+					elseif (
+						$hasher->check($user_data['password'], $user_data['new_password']) ||
+						$user_data['new_password'] != $user_data['re_new_password']
+					)
+					{
+						$response['message'] = trans('user_notifications.new_passwords_do_not_match');
+					}
+					elseif (
+						mb_strlen($user_data['new_password']) < 8
+					)
+					{
+						$response['status']  = 'warning';
+						$response['message'] = trans('user_notifications.password_length');
+					}
+					else
+					{
+						if (Sentinel::update($user, ['password' => $user_data['new_password']]))
+						{
+							$response['status']  = 'success';
+							$response['message'] = trans('user_notifications.password_changed');
+						}
+					}
+				}
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function orders(Request $request)
+	{
+		//If user is logged in
+		if ( ! $this->user == FALSE)
+		{
+			$customCSS = [
+				'addons/datatables/dataTables.bootstrap',
+			];
+			$customJS  = [
+				'addons/datatables/jquery.dataTables.min',
+				'addons/datatables/dataTables.bootstrap',
+			];
+
+			$response = [
+				'blade_custom_css' => $customCSS,
+				'blade_custom_js'  => $customJS,
+			];
+
+			if ($request->ajax())
+			{
+				$response['blade_standalone'] = TRUE;
+				$response['ajax']             = TRUE;
+			}
+			$user_data = $this->user_data;
+
+			$response['orders'] = Model_Client::getOrders($user_data['id'], $user_data['email'], $user_data['phone']);
+
+			return Theme::view('homepage.my_orders', $response);
+		}
+		else
+		{
+			//If user is not logged in - make redirect
+			return Redirect::to('/login')->send();
+		}
+	}
+
+	public static function contact() {
+		$customCSS = [
+		];
+		$customJS  = [
+		];
+
+		$response = [
+			'blade_custom_css' => $customCSS,
+			'blade_custom_js'  => $customJS,
+		];
+
+		return Theme::view('homepage.contact', $response);
+	}
+
+	public function notFound()
+	{
+		$customCSS = [
+		];
+		$customJS  = [
+		];
+
+		$response = [
+			'blade_custom_css' => $customCSS,
+			'blade_custom_js'  => $customJS,
+		];
+
+		return Theme::view('homepage.not_found', $response);
 	}
 
 	/**

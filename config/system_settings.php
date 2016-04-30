@@ -19,13 +19,13 @@ return [
 		'categories',
 		'products',
 		'pages',
-		'reports'
+		'reports',
 	],
 	'plug-ins'            => [
 		'sliders'        => [
 			'title'     => 'Slider',
 			'icon'      => 'fa-image',
-			'color'     => 'bg-blue-steel',
+			'color'     => 'bg-blue-hoki',
 			'tile-size' => 'double-down',
 		],
 		'carousels'      => [
@@ -34,22 +34,22 @@ return [
 			'color'     => 'bg-green-seagreen',
 			'tile-size' => 'double-down',
 		],
+		'upcoming-product'          => [
+			'title'     => 'UpcomingProduct',
+			'icon'      => 'fa-clock-o',
+			'color'     => 'bg-yellow-saffron',
+			'tile-size' => 'double',
+		],
 		'manufacturers' => [
 			'title'     => 'Manufacturers',
 			'icon'      => 'fa-link',
 			'color'     => 'bg-purple-studio',
 			'tile-size' => 'double',
 		],
-		'colors'        => [
-			'title'     => 'Colors',
-			'icon'      => 'fa-paint-brush',
-			'color'     => 'bg-yellow-casablanca',
-			'tile-size' => '',
-		],
 		'sizes'         => [
 			'title'     => 'Sizes',
 			'icon'      => 'fa-arrows',
-			'color'     => 'bg-purple-plum',
+			'color'     => 'bg-green-haze',
 			'tile-size' => '',
 		],
 		'tables'        => [
@@ -61,13 +61,19 @@ return [
 		'materials'     => [
 			'title'     => 'Materials',
 			'icon'      => 'fa-info-circle',
-			'color'     => 'bg-green',
+			'color'     => 'bg-green-jungle',
 			'tile-size' => '',
 		],
 		'tags'          => [
 			'title'     => 'Tags',
 			'icon'      => 'fa-tags',
 			'color'     => 'bg-red-sunglo',
+			'tile-size' => '',
+		],
+		'colors'        => [
+			'title'     => 'Colors',
+			'icon'      => 'fa-paint-brush',
+			'color'     => 'bg-yellow-casablanca',
 			'tile-size' => '',
 		],
 	],

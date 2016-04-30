@@ -123,7 +123,6 @@ class Module_Products extends BaseController
 			'global/plugins/bootstrap-summernote/summernote.min',
 			'admin/pages/scripts/components-dropdowns',
 			'global/plugins/bootstrap-select/bootstrap-select.min',
-			'global/plugins/bootstrap-select/bootstrap-select.min',
 			'global/plugins/select2/select2.min',
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
 			'global/plugins/fuelux/js/spinner.min',

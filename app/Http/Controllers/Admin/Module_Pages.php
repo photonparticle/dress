@@ -108,6 +108,7 @@ class Module_Pages extends BaseController
 					'meta_description' => Input::get('meta_description'),
 					'meta_keywords'    => Input::get('meta_keywords'),
 					'active'           => Input::get('active'),
+					'show_footer'      => Input::get('show_footer'),
 				];
 
 				if (empty(Input::get('id')))

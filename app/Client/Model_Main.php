@@ -724,4 +724,14 @@ class Model_Main extends Model
 
 		return $products;
 	}
+
+	public static function getFooterPages() {
+		return DB::table('pages')
+				->select(['pages.title', 'seo_url.slug'])
+				->join('seo_url', 'seo_url.object', '=', 'pages.id')
+				->where('pages.show_footer', '=', 1)
+				->where('pages.active', '=', 1)
+				->where('seo_url.type', '=', 'page')
+			->get();
+	}
 }

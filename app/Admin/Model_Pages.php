@@ -51,12 +51,21 @@ class Model_Pages extends Model
 			{
 				$data['active'] = 1;
 			}
+			if (empty($data['show_footer']))
+			{
+				$data['show_footer'] = 0;
+			}
+			else
+			{
+				$data['show_footer'] = 1;
+			}
 
 			$page_id = DB::table('pages')
 						 ->insertGetId([
 										   'title'            => $data['title'],
 										   'content'          => $data['content'],
 										   'active'           => $data['active'],
+										   'show_footer'      => $data['show_footer'],
 										   'page_title'       => $data['page_title'],
 										   'meta_description' => $data['meta_description'],
 										   'meta_keywords'    => $data['meta_keywords'],
@@ -84,6 +93,14 @@ class Model_Pages extends Model
 			{
 				$data['active'] = 1;
 			}
+			if (empty($data['show_footer']))
+			{
+				$data['show_footer'] = 0;
+			}
+			else
+			{
+				$data['show_footer'] = 1;
+			}
 
 			DB::table('pages')
 			  ->where('id', '=', $page_id)
@@ -91,6 +108,7 @@ class Model_Pages extends Model
 						   'title'            => $data['title'],
 						   'content'          => $data['content'],
 						   'active'           => $data['active'],
+						   'show_footer'      => $data['show_footer'],
 						   'page_title'       => $data['page_title'],
 						   'meta_description' => $data['meta_description'],
 						   'meta_keywords'    => $data['meta_keywords'],

@@ -326,8 +326,6 @@ class Module_Orders extends BaseController
 							$product['sizes'] = json_decode($product['sizes'], TRUE);
 						}
 
-						$product_total = intval($product['quantity']);
-
 						foreach($product['sizes'] as $size_name => $product_size) {
 							if($product_size['name'] == $size && intval($quantity) > 0) {
 								$product['sizes'][$size_name]['quantity'] = $product_size['quantity'] - $quantity;
@@ -340,7 +338,7 @@ class Module_Orders extends BaseController
 							$product['quantity'] = intval($product['quantity']) - intval($quantity);
 						}
 
-						Model_orders::discountProduct($product['id'], $sizes, $product['quantity']);
+						Model_Orders::discountProduct($product['id'], $sizes, $product['quantity']);
 
 						$response['status']  = 'success';
 						$response['message'] = trans('orders.product_saved');

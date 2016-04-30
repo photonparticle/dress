@@ -318,4 +318,24 @@ class Model_Orders extends Model
 
 		return $count;
 	}
+
+	public static function getOrigPrices($ids) {
+		if(!empty($ids) && is_array($ids)) {
+			$results = DB::table('products')
+				->select(['id', 'original_price'])
+				->whereIn('id', $ids)
+				->get();
+			$response = [];
+
+			if(!empty($results) && is_array($results)) {
+				foreach ($results as $result) {
+					$response[$result['id']] = $result['original_price'];
+				}
+			}
+
+			return $response;
+		} else {
+			return FALSE;
+		}
+	}
 }

@@ -19,4 +19,7 @@ return [
 	'not_activated'    => 'Неактивирана',
 	'url_exists'       => 'Този URL вече съществува',
 	'url_required'     => 'Моля попълнете SEO URL адрес',
+	'show_footer'      => 'Покажи във footer',
+	'visible'          => 'Видима',
+	'hidden'           => 'Невидима',
 ];

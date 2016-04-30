@@ -5,7 +5,7 @@
 <div class="portlet box blue-madison">
     <div class="portlet-title">
         <div class="caption">
-            <i class="fa fa-orders"></i>{{$pageTitle}}
+            <i class="fa fa-shopping-cart"></i>{{$pageTitle}}
         </div>
         <div class="actions">
             <a href="/admin/orders/create" class="btn btn-success" title="{{trans('orders.create')}}">

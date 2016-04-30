@@ -1,44 +1,109 @@
-<div class="footer">
-    <div class="footer-middle">
+<!-- footer start -->
+<footer>
+    <!-- footer-top-area start -->
+    <div class="footer-top-area">
         <div class="container">
-            <div class="col-md-4 footer-middle-in">
-                <a href="/">
-                    <img src="/images/logo.png" alt="" class="img-responsive" />
-                </a>
-                <p>Suspendisse sed accumsan risus. Curabitur rhoncus, elit vel tincidunt elementum, nunc urna tristique nisi, in interdum libero magna tristique ante. adipiscing varius. Vestibulum dolor lorem.</p>
-            </div>
+            <div class="row">
+                <!-- footer-widget start -->
+                <div class="col-lg-3 col-md-3 col-sm-4">
+                    <div class="footer-widget">
+                        <img src="images/logo.png" alt=""/>
+                        <p>
 
-            <div class="col-md-4 footer-middle-in">
-                <h6>Information</h6>
-                <ul class=" in">
-                    <li><a href="404.html">About</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="#">Returns</a></li>
-                    <li><a href="contact.html">Site Map</a></li>
-                </ul>
-                <ul class="in in1">
-                    <li><a href="#">Order History</a></li>
-                    <li><a href="wishlist.html">Wish List</a></li>
-                    <li><a href="login.html">Login</a></li>
-                </ul>
-                <div class="clearfix"></div>
+                        </p>
+                        <div class="widget-icon">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-google-plus"></i></a>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- footer-widget end -->
+                <!-- footer-widget start -->
+                <div class="col-lg-3 col-md-3 col-sm-4">
+                    <div class="footer-widget">
+                        <h3>{{trans('client.information')}}</h3>
+                        <ul class="footer-menu">
+                            <li><a href="/contact">{{trans('client.contact_us')}}</a></li>
+                            @if(!empty($footer_pages) && is_array($footer_pages))
+                                @foreach($footer_pages as $page)
+                                    <li><a href="{{$page['slug']}}">{{$page['title']}}</a></li>
+                                @endforeach
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+                <!-- footer-widget end -->
+                <!-- footer-widget start -->
+                <div class="col-lg-3 col-md-3 col-sm-4 hidden-sm">
+                    <div class="footer-widget">
+                        <h3>{{trans('client.my-account')}}</h3>
+                        <ul class="footer-menu">
+                            @if(empty($current_user))
+                                <li><a href="/login">{{trans('client.login')}}</a></li>
+                                <li><a href="/register">{{trans('client.register')}}</a></li>
+                            @else
+                                <li>
+                                    <a href="/my-profile">{{trans('client.my-account')}}</a>
+                                </li>
+                                <li><a href="/my-orders">{{trans('client.my-orders')}}</a></li>
+                                <li><a href="/logout">{{trans('client.logout')}}</a></li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+                <!-- footer-widget end -->
+                <!-- footer-widget start -->
+                <div class="col-lg-3 col-md-3 col-sm-4">
+                    <div class="footer-widget">
+                        <h3>{{trans('client.contact_us')}}</h3>
+                        <ul class="footer-contact">
+                            @if(!empty($sys['email']))
+                                <li>
+                                    <i class="fa fa-envelope"> </i>
+                                    {{$sys['email']}}
+                                </li>
+                            @endif
+                            @if(!empty($sys['phone']))
+                                <li>
+                                    <i class="fa fa-phone"> </i>
+                                    {{$sys['phone']}}
+                                </li>
+                            @endif
+                            @if(!empty($sys['work_time']))
+                                <li class="work_time">
+                                    <div>
+                                        <i class="fa fa-clock-o"> </i>
+                                    </div>
+                                    <div>
+                                        {!! $sys['work_time'] or '' !!}
+                                    </div>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+                <!-- footer-widget end -->
             </div>
-            <div class="col-md-4 footer-middle-in">
-                <h6>Tags</h6>
-            </div>
-            <div class="clearfix"> </div>
         </div>
     </div>
-    <div class="footer-bottom">
-        <div class="container">
-            <ul class="footer-bottom-top">
-                {{--<li><a href="#"><img src="/images/f1.png" class="img-responsive" alt=""></a></li>--}}
-                {{--<li><a href="#"><img src="/images/f2.png" class="img-responsive" alt=""></a></li>--}}
-                {{--<li><a href="#"><img src="/images/f3.png" class="img-responsive" alt=""></a></li>--}}
-            </ul>
-            <p class="footer-class">&copy; 2016 Shopin. All Rights Reserved | Design by  <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
-            <div class="clearfix"> </div>
+    <!-- footer-top-area end -->
+    <!-- footer-bottom-area start -->
+    @if(!empty($sys['title']))
+        <div class="footer-bottom-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <div class="copyright">
+                            <p>&copy; {{date('Y')}} <a href="/">{{$sys['title'] or ''}}</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<!--//footer-->
+        @endif
+                <!-- footer-bottom-area end -->
+</footer>
+<!-- footer end -->

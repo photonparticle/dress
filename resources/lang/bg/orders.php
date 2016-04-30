@@ -50,8 +50,8 @@ return [
 	'select'                   => 'Избери',
 	'select_product'           => 'Избери продукт',
 	'image'                    => 'Изображение',
-	'original_price'           => 'Цена',
-	'price'                    => 'Цена за клиент',
+	'price'                    => 'Цена',
+	'original_price'           => 'Цена за клиент',
 	'discount'                 => 'Намалена цена',
 	'size'                     => 'Размер',
 	'quantity'                 => 'Количество',
@@ -87,8 +87,7 @@ return [
 	'removed'                  => 'Поръчката беше премахната',
 	'not_removed'              => 'Поръчката не беше премахната',
 	'create'                   => 'Създай поръчка',
-	'user_names' => 'Имена',
-
+	'user_names'               => 'Имена',
 
 	'blagoevgrad'    => 'Благоевград',
 	'burgas'         => 'Бургас',

@@ -52,11 +52,17 @@ class BaseController extends Controller
 		else
 		{
 			$this->user = Sentinel::getUser();
-			$this->globalViewData();
+			if(self::isAdmin() == 1)
+			{
+				$this->globalViewData();
+			} else {
+				Redirect::to('/404')->send();
+			}
 		}
 	}
 
-	private function globalViewData() {
+	private function globalViewData()
+	{
 		$user_data = Model_Users::getUserFullInfo($this->user->id);
 
 		//Do not pass sensitive data to view
@@ -68,5 +74,11 @@ class BaseController extends Controller
 		}
 
 		View::share('current_user', $user_data);
+	}
+
+	private function isAdmin()
+	{
+		$is_admin = Model_Users::getUserGroup($this->user->id, $this->user->email);
+		return $is_admin;
 	}
 }

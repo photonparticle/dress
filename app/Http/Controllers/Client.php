@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Model_Pages;
 use App\Client\Model_Client;
 use App\Client\Model_Main;
 use App\Http\Controllers\BaseControllerClient;
@@ -71,7 +72,10 @@ class Client extends BaseControllerClient
 		{
 
 			/* PAGES */
+			$response           = self::loadPage($object['object']);
 			$response['system'] = $this->system;
+
+			return Theme::view('homepage.page', $response);
 		}
 		else
 		{
@@ -165,6 +169,17 @@ class Client extends BaseControllerClient
 		$response['category']       = $category[$id];
 		$response['all_categories'] = $this->categories['all'];
 		$response['breadcrumbs']    = self::generateCategoryBreadcrumbs($category[$id]);
+
+		//SEO
+		if(!empty($category['title'])) {
+			View::share('page_title', $category['title']);
+		}
+		if(!empty($category['meta_description'])) {
+			View::share('page_meta_description', $category['meta_description']);
+		}
+		if(!empty($category['meta_keywords'])) {
+			View::share('page_meta_keywords', $category['meta_keywords']);
+		}
 
 		// Order category products
 		if ( ! empty(Input::get('order_by')))
@@ -409,6 +424,16 @@ class Client extends BaseControllerClient
 		{
 			$response['product'] = $product[$id];
 
+			if(!empty($response['product']['title'])) {
+				View::share('page_title', $response['product']['title']);
+			}
+			if(!empty($response['product']['meta_description'])) {
+				View::share('page_meta_description', $response['product']['meta_description']);
+			}
+			if(!empty($response['product']['meta_keywords'])) {
+				View::share('page_meta_keywords', $response['product']['meta_keywords']);
+			}
+
 			if ( ! empty($response['product']['discount_price']))
 			{
 				//Calculate is discount active
@@ -602,6 +627,28 @@ class Client extends BaseControllerClient
 			{
 				$response['product']['dimensions_table'] = trim($response['product']['dimensions_table']);
 			}
+		}
+
+		return $response;
+	}
+
+	private function loadPage($id) {
+		$response = Model_Pages::getPage($id);
+
+		if ( ! empty($response[0]))
+		{
+			$response = $response[0];
+		}
+
+		//SEO
+		if(!empty($response['title'])) {
+			View::share('page_title', $response['title']);
+		}
+		if(!empty($response['meta_description'])) {
+			View::share('page_meta_description', $response['meta_description']);
+		}
+		if(!empty($response['meta_keywords'])) {
+			View::share('page_meta_keywords', $response['meta_keywords']);
 		}
 
 		return $response;

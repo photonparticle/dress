@@ -5,7 +5,7 @@
 <div class="portlet box blue-madison">
     <div class="portlet-title">
         <div class="caption">
-            <i class="fa fa-table"></i>{{$pageTitle}}
+            <i class="fa fa-file-text-o"></i>{{$pageTitle}}
         </div>
         <div class="actions">
             <a href="/admin/pages/create" class="btn btn-success" title="{{trans('pages.create_page')}}">

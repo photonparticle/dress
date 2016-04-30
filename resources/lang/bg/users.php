@@ -35,7 +35,7 @@ return [
 	'remember_me'            => 'Запомни ме',
 	'forgotten_password'     => 'Забравена парола?',
 	'forgotten_password_tip' => 'Въведете Вашия e-mail адрес за да възстановите паролата си.',
-	'auth_successful'        => 'Успешно влязохте в системата.',
+	'auth_successful'        => 'Успешно влязохте във Вашия профил.',
 	'auth_not_successful'    => 'Вие не влязохте в системата',
 	'check_login_details'    => 'Проверете въведените данни.',
 	'user_group'             => 'Потребителска група',

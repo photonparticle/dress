@@ -18,12 +18,12 @@ use View;
 
 class Cart extends BaseControllerClient
 {
-	private $active_module = 'homepage';
+	private $active_module = 'cart';
 
 	public function __construct(Request $request)
 	{
 		$modules = Config::get('system_settings.modules');
-		if (in_array('homepage', $modules))
+		if (in_array('cart', $modules))
 		{
 			$this->active_module = 'homepage';
 			View::share('active_module', $this->active_module);
@@ -31,21 +31,26 @@ class Cart extends BaseControllerClient
 		parent::__construct($request);
 	}
 
-	public function cart()
+	public function cart(Request $request)
 	{
-//		session()->flush();
 		$customCSS = [
 
 		];
 		$customJS  = [
 		];
 
-		$response         = [
+		$response          = [
 			'blade_custom_css' => $customCSS,
 			'blade_custom_js'  => $customJS,
 		];
-		$response['cart'] = session()->get('cart');
+		$response['cart']  = session()->get('cart');
 		$response['total'] = session()->get('total');
+		$response['delivery_type'] = session()->get('delivery_type');
+
+		if($request->ajax()) {
+			$response['blade_standalone'] = TRUE;
+			$response['ajax'] = TRUE;
+		}
 
 		$products_to_cart = [];
 
@@ -153,11 +158,9 @@ class Cart extends BaseControllerClient
 		)
 		{
 			//Get cart from session
-			$cart = session()->pull('cart');
-			$total = session()->pull('total');
-			if(empty($total)) {
-				$total = 0;
-			}
+			$cart = session()->get('cart');
+			session()->forget('count');
+			session()->forget('total');
 
 			if (empty($cart))
 			{
@@ -166,10 +169,10 @@ class Cart extends BaseControllerClient
 
 			//Get product
 			$product = [
-				'product_id' => $product_id,
+				'product_id' => intval($product_id),
 				'size'       => $size,
-				'quantity'   => $quantity,
-				'price'      => $price,
+				'quantity'   => intval($quantity),
+				'price'      => floatval($price),
 				'subtotal'   => floatval($price) * intval($quantity),
 			];
 
@@ -181,13 +184,9 @@ class Cart extends BaseControllerClient
 			)
 			{
 				$product['active_discount'] = TRUE;
-				$product['discount_price']  = $discount_price;
-				$product['discount']        = $discount;
-				$product['subtotal'] = floatval($discount_price) * intval($quantity);
-			}
-
-			if(!empty($product['subtotal'])) {
-				$total = $total + $product['subtotal'];
+				$product['discount_price']  = floatval($discount_price);
+				$product['discount']        = floatval($discount);
+				$product['subtotal']        = floatval($discount_price) * intval($quantity);
 			}
 
 			//Unset old product with that id
@@ -199,8 +198,100 @@ class Cart extends BaseControllerClient
 			//Add product to cart
 			$cart[$product_id.'-'.$size] = $product;
 
+			$total = 0;
+			if ( ! empty($cart) && is_array($cart))
+			{
+				foreach ($cart as $item)
+				{
+					if(!empty($item['subtotal'])) {
+						$total = $total + floatval($item['subtotal']);
+					}
+				}
+			}
+
 			//Set cart at session
-			session()->put(['cart' => $cart, 'count_items' => count($cart), 'total' => $total]);
+			session()->put('cart', $cart);
+			session()->put('count_items', count($cart));
+			session()->put('total', $total);
+			session()->migrate();
+
+			return response()->json(['success' => TRUE]);
+		}
+		else
+		{
+			return response()->json(['success' => FALSE]);
+		}
+	}
+
+	public function update()
+	{
+		//If have product to update
+		if (
+			! empty(($key = Input::get('key'))) &&
+			! empty(($quantity = Input::get('quantity')))
+		)
+		{
+			//Get cart from session
+			$cart = session()->get('cart');
+			session()->forget('total');
+
+			if (empty($cart))
+			{
+				$cart = [];
+			}
+
+			//Get product
+			$product = ! empty($cart[$key]) ? $cart[$key] : [];
+
+			//Change size
+			$product['quantity'] = $quantity;
+
+			//If product have discount
+			if (!empty($product['active_discount']))
+			{
+				$product['subtotal']        = floatval($product['discount_price']) * intval($quantity);
+			}
+
+			//Unset old product with that id
+			if ( ! empty($cart[$key]))
+			{
+				unset($cart[$key]);
+			}
+
+			//Add product to cart
+			$cart[$key] = $product;
+
+			$total = 0;
+			if ( ! empty($cart) && is_array($cart))
+			{
+				foreach ($cart as $item)
+				{
+					if(!empty($item['subtotal'])) {
+						$total = $total + floatval($item['subtotal']);
+					}
+				}
+			}
+
+			//Set cart at session
+			session()->put('cart', $cart);
+			session()->put('count_items', count($cart));
+			session()->put('total', $total);
+			session()->migrate();
+
+			return response()->json(['success' => TRUE]);
+		}
+		else
+		{
+			return response()->json(['success' => FALSE]);
+		}
+	}
+
+	public function changeDeliveryType() {
+		if (
+			! empty(($delivery_type = Input::get('delivery_type')))
+		)
+		{
+			session()->put('delivery_type', $delivery_type);
 			session()->migrate();
 
 			return response()->json(['success' => TRUE]);
@@ -216,12 +307,13 @@ class Cart extends BaseControllerClient
 		$success = FALSE;
 		if ( ! empty(($key = Input::get('key'))))
 		{
-			$cart = session()->pull('cart');
-			$total = session()->pull('count_items');
+			$cart  = session()->get('cart');
+			$total = session()->get('total');
 
 			if ( ! empty($cart[$key]))
 			{
-				if(!empty($cart[$key]['subtotal'])) {
+				if ( ! empty($cart[$key]['subtotal']))
+				{
 					$total = $total - $cart[$key]['subtotal'];
 				}
 
@@ -229,7 +321,14 @@ class Cart extends BaseControllerClient
 				$success = TRUE;
 			}
 
-			session()->put(['cart' => $cart, 'count_items' => count($cart), 'total' => $total]);
+			if(floatval($total) < 0) {
+				$total = 0;
+				$cart = [];
+			}
+
+			session()->put('cart', $cart);
+			session()->put('count_items', count($cart));
+			session()->put('total', $total);
 			session()->migrate();
 		}
 

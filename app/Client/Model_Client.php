@@ -234,4 +234,42 @@ class Model_Client extends Model
 		return $response;
 	}
 
+	/**
+	 * @param bool $id
+	 * @param bool $email
+	 * @param bool $phone
+	 *a
+	 * @return mixed
+	 */
+	public static function getOrders($id = FALSE, $email = FALSE, $phone = FALSE)
+	{
+		$for_list = TRUE;
+
+		$order = DB::table('orders');
+
+		if ($for_list === TRUE)
+		{
+			$order = $order->select(['id', 'name', 'last_name', 'email', 'address', 'phone', 'status', 'created_at', 'updated_at']);
+		}
+
+		if ($id != FALSE && intval($id) > 0)
+		{
+			$order = $order->where('user_id', '=', $id);
+		}
+
+		if ($email != FALSE && !empty($email))
+		{
+			$order = $order->orWhere('email', '=', $email);
+		}
+
+		if ($phone != FALSE && !empty($phone))
+		{
+			$order = $order->orWhere('phone', '=', $phone);
+		}
+
+		$order = $order->orderBy('created_at', 'DESC')->get();
+
+		return $order;
+	}
+
 }

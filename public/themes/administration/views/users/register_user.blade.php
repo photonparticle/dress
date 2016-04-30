@@ -72,7 +72,7 @@
                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                    },
                    success: function (response) {
-                       if(typeof response == typeof {} && response['status'] && response['message']) {
+                       if(typeof response == typeof {} && response['status']) {
                            showNotification(response['status'], response['message']);
                        } else {
                            showNotification('error', translate('request_not_completed'), translate('contact_support'));

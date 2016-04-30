@@ -19,7 +19,7 @@
                             {{$order['city'] or ''}}<br>
                             <hr />
                             <strong>{{trans('orders.state')}}</strong><br />
-                            {{$states[$order['state']] or ''}}
+                            {{trans('orders.'.$order['state'] . '')}}
                         </div>
                     </div>
                 </div>
