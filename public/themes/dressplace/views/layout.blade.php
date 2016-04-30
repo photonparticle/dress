@@ -50,6 +50,7 @@
     <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/style.css') }}">
     <!-- responsive css -->
     <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ Theme::asset('dressplace::css/custom.css') }}">
     <!-- modernizr css -->
     <script src="{{ Theme::asset('dressplace::js/vendor/modernizr-2.8.3.min.js') }}"></script>
 
