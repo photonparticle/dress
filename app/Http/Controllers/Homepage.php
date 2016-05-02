@@ -101,79 +101,6 @@ class Homepage extends BaseControllerClient
 		// Get products data
 		$response['products'] = Model_Main::getProducts($products, ['title', 'images', 'sizes']);
 
-		//Loop trough products data
-		if ( ! empty($response['products']) && is_array($response['products']))
-		{
-			foreach ($response['products'] as $id => $product)
-			{
-				if ( ! empty($product['discount_price']))
-				{
-					//Calculate is discount active
-					$now = time();
-
-					if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
-					{
-						$allow_start = TRUE;
-					}
-					else
-					{
-						$allow_start = FALSE;
-					}
-
-					if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
-					{
-						$allow_end = TRUE;
-					}
-					else
-					{
-						$allow_end = FALSE;
-					}
-
-					if ($allow_start === TRUE && $allow_end === TRUE)
-					{
-						$response['products'][$id]['active_discount'] = TRUE;
-					}
-
-					if ( ! empty($response['products'][$id]['active_discount']))
-					{
-						$response['products'][$id]['discount'] = intval(
-							(floatval($response['products'][$id]['price']) -
-								floatval($response['products'][$id]['discount_price'])) / floatval($response['products'][$id]['price']) * 100
-						);
-					}
-				}
-
-				//Sizes
-				if ( ! empty ($response['products'][$id]['sizes']) && is_array(($response['products'][$id]['sizes'] = json_decode($response['products'][$id]['sizes'], TRUE))))
-				{
-					foreach ($response['products'][$id]['sizes'] as $key => $size)
-					{
-						if (empty($size['name']) || empty($size['quantity']))
-						{
-							if (isset($response['products'][$id]['sizes'][$key]))
-							{
-								unset($response['products'][$id]['sizes'][$key]);
-							}
-						}
-					}
-				}
-
-				if(!empty($response['products'][$id]['sizes']) && is_array($response['products'][$id]['sizes'])) {
-					$sizes = [];
-					foreach($response['products'][$id]['sizes'] as $key => $size) {
-						if(!empty($size['quantity']))
-						{
-							$sizes[] = $key;
-						}
-					}
-
-					if(!empty($sizes) && is_array($sizes)) {
-						$response['products'][$id]['available_sizes'] = implode(', ', $sizes);
-					}
-				}
-			}
-		}
-
 		// Send products to response
 		$response['products'] = self::prepareProductsForResponse($response['products']);
 		unset($products);
@@ -210,6 +137,67 @@ class Homepage extends BaseControllerClient
 		}
 
 		return Theme::view('homepage.homepage', $response);
+	}
+
+	public function search($needable, $tag = FALSE)
+	{
+		if ($needable == 'tag')
+		{
+			$response['needable'] = $tag;
+
+			$response['tag'] = TRUE;
+			//Get products
+			$response['products_to_render'] = Model_Client::searchProductByTag($tag);
+		}
+		else
+		{
+			$response['needable'] = $needable;
+
+			//Get products
+			$response['products_to_render'] = Model_Client::searchProduct($needable);
+		}
+
+		if ( ! empty($response['products_to_render']) && is_array($response['products_to_render']))
+		{
+			// Get products data
+			$response['products'] = Model_Main::getProducts($response['products_to_render'], ['title', 'images', 'sizes']);
+
+			// Send products to response
+			$response['products'] = self::prepareProductsForResponse($response['products']);
+		}
+
+		$response['thumbs_path']       = Config::get('system_settings.product_public_path');
+		$response['icon_size']         = Config::get('images.sm_icon_size');
+		$response['render_for_search'] = TRUE;
+
+		return Theme::view('search.search', $response);
+	}
+
+	public function searchAjax(Request $request)
+	{
+		if ($request->ajax())
+		{
+			if ( ! empty($_GET))
+			{
+				$needable = Input::get('search');
+				//Get products
+				$response['products_to_render'] = Model_Client::searchProduct($needable);
+			}
+
+			if ( ! empty($response['products_to_render']) && is_array($response['products_to_render']))
+			{
+				// Get products data
+				$response['products'] = Model_Main::getProducts($response['products_to_render'], ['title']);
+
+				// Send products to response
+				$response['products'] = self::prepareProductsForResponse($response['products']);
+			}
+			$response['blade_standalone'] = TRUE;
+
+			return Theme::view('search.search_ajax', $response);
+		} else {
+			return Redirect::to('/')->send();
+		}
 	}
 
 	public function login(Request $request)
@@ -430,8 +418,8 @@ class Homepage extends BaseControllerClient
 				$user_data['phone']      = ( ! empty(Input::get('phone'))) ? Input::get('phone') : '';
 				$user_data['address']    = ( ! empty(Input::get('address'))) ? Input::get('address') : '';
 				$user_data['city']       = ( ! empty(Input::get('city'))) ? Input::get('city') : '';
-				$user_data['state']       = ( ! empty(Input::get('state'))) ? Input::get('state') : '';
-				$user_data['post_code']       = ( ! empty(Input::get('postcode'))) ? Input::get('postcode') : '';
+				$user_data['state']      = ( ! empty(Input::get('state'))) ? Input::get('state') : '';
+				$user_data['post_code']  = ( ! empty(Input::get('postcode'))) ? Input::get('postcode') : '';
 //				$user_data['country']    = ( ! empty(Input::get('country'))) ? Input::get('country') : '';
 
 				if (Model_Users::updateUserInfo($id, $user_data) === TRUE)
@@ -524,7 +512,8 @@ class Homepage extends BaseControllerClient
 		}
 	}
 
-	public static function contact() {
+	public static function contact()
+	{
 		$customCSS = [
 		];
 		$customJS  = [
@@ -536,6 +525,12 @@ class Homepage extends BaseControllerClient
 		];
 
 		return Theme::view('homepage.contact', $response);
+	}
+
+	public static function doContact()
+	{
+		header('Location: /contact');
+		exit;
 	}
 
 	public function notFound()
@@ -566,6 +561,7 @@ class Homepage extends BaseControllerClient
 		{
 			foreach ($products as $id => $product)
 			{
+				//Images
 				if ( ! empty($product['images']) && is_array($image = json_decode($product['images'], TRUE)))
 				{
 					reset($image);
@@ -579,6 +575,75 @@ class Homepage extends BaseControllerClient
 					if ( ! is_float($product['discount_price']))
 					{
 						$products[$id]['discount_price'] = intval($product['discount_price']);
+					}
+				}
+
+				if ( ! empty($product['discount_price']))
+				{
+					//Calculate is discount active
+					$now = time();
+
+					if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
+					{
+						$allow_start = TRUE;
+					}
+					else
+					{
+						$allow_start = FALSE;
+					}
+
+					if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
+					{
+						$allow_end = TRUE;
+					}
+					else
+					{
+						$allow_end = FALSE;
+					}
+
+					if ($allow_start === TRUE && $allow_end === TRUE)
+					{
+						$products[$id]['active_discount'] = TRUE;
+					}
+
+					if ( ! empty($products[$id]['active_discount']))
+					{
+						$products[$id]['discount'] = intval(
+							(floatval($products[$id]['price']) -
+								floatval($products[$id]['discount_price'])) / floatval($products[$id]['price']) * 100
+						);
+					}
+				}
+
+				//Sizes
+				if ( ! empty ($products[$id]['sizes']) && is_array(($products[$id]['sizes'] = json_decode($products[$id]['sizes'], TRUE))))
+				{
+					foreach ($products[$id]['sizes'] as $key => $size)
+					{
+						if (empty($size['name']) || empty($size['quantity']))
+						{
+							if (isset($products[$id]['sizes'][$key]))
+							{
+								unset($products[$id]['sizes'][$key]);
+							}
+						}
+					}
+				}
+
+				if ( ! empty($products[$id]['sizes']) && is_array($products[$id]['sizes']))
+				{
+					$sizes = [];
+					foreach ($products[$id]['sizes'] as $key => $size)
+					{
+						if ( ! empty($size['quantity']))
+						{
+							$sizes[] = $key;
+						}
+					}
+
+					if ( ! empty($sizes) && is_array($sizes))
+					{
+						$products[$id]['available_sizes'] = implode(', ', $sizes);
 					}
 				}
 			}

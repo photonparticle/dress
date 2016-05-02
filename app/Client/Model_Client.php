@@ -320,4 +320,88 @@ class Model_Client extends Model
 		}
 	}
 
+	/**
+	 * @param $needable
+	 *
+	 * @return array
+	 */
+	public static function searchProduct($needable)
+	{
+		$id_results = DB::table('products')
+						->select(['id'])
+						->where('id', $needable)
+						->where('active', '=', '1')
+						->orderBy('available', 'DESC')
+						->orderBy('created_at', 'DESC')
+						->orderBy('position', 'ASC')
+						->get();
+
+		$title_results = DB::table('products_data')
+						   ->select('product_id')
+						   ->where('object', '=', 'title')
+						   ->where('string', 'like', '%'.$needable.'%')
+						   ->get();
+
+		$response = [];
+
+		if ( ! empty($id_results) && is_array($id_results))
+		{
+			foreach ($id_results as $val)
+			{
+				$response[$val['id']] = $val['id'];
+			}
+		}
+		if ( ! empty($title_results) && is_array($title_results))
+		{
+			foreach ($title_results as $val)
+			{
+				$response[$val['product_id']] = $val['product_id'];
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * @param $needable
+	 *
+	 * @return array
+	 */
+	public static function searchProductByTag($needable)
+	{
+		$tags     = [];
+		$response = [];
+
+		$tag_id = DB::table('tags')
+					->select('id')
+					->where('title', $needable)
+					->get();
+
+		if ( ! empty($tag_id) && is_array($tag_id))
+		{
+			foreach ($tag_id as $tag)
+			{
+				$tags[] = $tag['id'];
+			}
+		}
+
+		if ( ! empty($tags) && is_array($tags))
+		{
+			$id_results = DB::table('product_to_tag')
+							->select(['product_id'])
+							->whereIn('tag_id', $tags)
+							->get();
+		}
+
+		if ( ! empty($id_results) && is_array($id_results))
+		{
+			foreach ($id_results as $result)
+			{
+				$response[] = $result['product_id'];
+			}
+		}
+
+		return $response;
+	}
+
 }

@@ -42,8 +42,8 @@
                 </div>
                 <div class="col-lg-6 col-md-5 col-sm-5 col-xs-12">
                     <div class="header-search margin-top-10">
-                        <input type="text" placeholder="{{trans('client.search')}}"/>
-                        <button><i class="fa fa-search"></i></button>
+                        <input id="header_search" type="text" placeholder="{{trans('client.search')}}"/>
+                        <button id="search"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 pad-left">

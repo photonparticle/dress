@@ -76,6 +76,9 @@ Route::post('/register', 'Homepage@doRegister');
 Route::get('/my-profile', 'Homepage@account');
 Route::post('/my-profile/{id}/{action}', 'Homepage@updateAccount');
 Route::get('/my-orders', 'Homepage@orders');
+Route::get('/search/ajax', 'Homepage@searchAjax');
+Route::get('/search/{needable}', 'Homepage@search');
+Route::get('/search/{needable}/{tag}', 'Homepage@search');
 
 Route::get('/cart', 'Cart@cart');
 Route::get('/cart/added/{id}', 'Cart@added');

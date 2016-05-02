@@ -4,7 +4,7 @@
         <?php $product_id = ! empty($product_id) ? intval($product_id) : FALSE; ?>
         @if(!empty($product_id) && !empty($products[$product_id]) && !empty($products[$product_id]['image']) && !empty($products[$product_id]['slug']) && !empty($products[$product_id]['title']))
             <?php $shown_products++; ?>
-            <div class="col-xs-12 @if(empty($products_large)) col-sm-4 col-md-4 col-lg-4 @endif padding-5">
+            <div class="col-xs-12 @if(empty($products_large)) @if(empty($render_for_search))col-sm-4 col-md-4 col-lg-4 @else col-sm-3 col-md-3 col-lg-3 @endif @endif padding-5">
                 <div class="single-product">
                     <div class="product-img">
                         <a href="/{{$products[$product_id]['slug']}}">

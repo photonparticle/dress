@@ -131,6 +131,7 @@
 <script src="{{ Theme::asset('dressplace::js/jquery.flexslider-min.js') }}" type="text/javascript"></script>
 <script src="{{ Theme::asset('dressplace::js/jquery.colorbox.js') }}" type="text/javascript"></script>
 <script src="{{ Theme::asset('dressplace::js/jquery.elevateZoom-3.0.8.min.js') }}" type="text/javascript"></script>
+{{--<script src="{{ Theme::asset('dressplace::js/liveSearch.js') }}" type="text/javascript"></script>--}}
 
 <!-- main js -->
 <script type="text/javascript" src="{{ Theme::asset('dressplace::js/main.js') }}"></script>
