@@ -36,12 +36,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <div class="logo">
+                    <div class="logo margin-top-10">
                         <a href="/"><img src="/images/logo.png" alt="{{$sys['title'] or ''}}"/></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-5 col-sm-5 col-xs-12">
-                    <div class="header-search">
+                    <div class="header-search margin-top-10">
                         <input type="text" placeholder="{{trans('client.search')}}"/>
                         <button><i class="fa fa-search"></i></button>
                     </div>
@@ -49,43 +49,17 @@
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 pad-left">
                     <div class="total-cart">
                         <div class="cart-toggler">
-                            <a href="#">
-                                <span class="cart-title">My cart:</span>
-                                <span class="cart-quantity">2 items</span>
+                            <a href="/cart">
+                                <div class="icon">
+                                    <div class="count"><span>{{$cart_items}}</span></div>
+                                </div>
+                                <div class="texts">
+                                    <span class="cart_title">{{trans('client.cart')}}</span>
+                                    <span class="cart_data">{{trans('client.products')}} - <span>{{$cart_total}}</span> {{trans('client.currency')}}</span>
+                                </div>
                             </a>
-                            <a class="checkout" href="#">Checkout</a>
                         </div>
-                        <ul>
-                            <li>
-                                <div class="cart-img">
-                                    <a href="#"><img src="/img/cart/total-cart.jpg" alt=""/></a>
-                                    <span>1</span>
-                                </div>
-                                <div class="cart-info">
-                                    <h4><a href="#">Vestibulum suscipit</a></h4>
-                                    <span>£165.00 <span>x 1</span></span>
-                                </div>
-                                <div class="del-icon">
-                                    <i class="fa fa-times-circle"></i>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="cart-img">
-                                    <a href="#"><img src="/img/cart/total-cart.jpg" alt=""/></a>
-                                    <span>1</span>
-                                </div>
-                                <div class="cart-info">
-                                    <h4><a href="#">Vestibulum suscipit</a></h4>
-                                    <span>£165.00 <span>x 1</span></span>
-                                </div>
-                                <div class="del-icon">
-                                    <i class="fa fa-times-circle"></i>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="subtotal-text">Subtotal:</div>
-                                <div class="subtotal-price">£300.00</div>
-                            </li>
+                        <ul class="cart-items-drop">
                         </ul>
                     </div>
                 </div>

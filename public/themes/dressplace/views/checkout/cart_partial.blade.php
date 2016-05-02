@@ -256,6 +256,7 @@
             @endif
 
             <div class="col-xs-12 no-padding values">
+                <div class="table-responsive">
                 <table class="table pull-right">
                     <tr>
                         <td>
@@ -293,6 +294,7 @@
                         </td>
                     </tr>
                 </table>
+                </div>
                 <div class="clearfix"></div>
             </div>
             <div class="clearfix"></div>

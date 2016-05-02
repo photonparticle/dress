@@ -150,16 +150,6 @@ class Cart extends BaseControllerClient
 
 	public function added($cart_id)
 	{
-		$customCSS = [
-
-		];
-		$customJS  = [
-		];
-
-		$response                     = [
-			'blade_custom_css' => $customCSS,
-			'blade_custom_js'  => $customJS,
-		];
 		$response['blade_standalone'] = TRUE;
 		$response['ajax']             = TRUE;
 		$response['cart']             = session()->get('cart');
@@ -200,6 +190,88 @@ class Cart extends BaseControllerClient
 		}
 
 		return Theme::view('partials.cart_added', $response);
+	}
+
+	public function drop() {
+		$response['blade_standalone'] = TRUE;
+		$response['ajax']             = TRUE;
+		$response['cart']             = session()->get('cart');
+		$response['total']            = session()->get('total');
+		$response['delivery_type']    = session()->get('delivery_type');
+		$response['cart_items']       = count($response['cart']);
+
+		if ( ! empty($response['cart']))
+		{
+			$products_to_cart = [];
+
+			//Get product id's
+			if ( ! empty($response['cart']) && is_array($response['cart']))
+			{
+				foreach ($response['cart'] as $key => $item)
+				{
+					$products_to_cart[] = $item['product_id'];
+				}
+			}
+
+
+			// Get products data
+			$response['products'] = Model_Main::getProducts($products_to_cart, ['title', 'images']);
+
+			//Loop trough products data
+			if ( ! empty($response['products']) && is_array($response['products']))
+			{
+				foreach ($response['products'] as $id => $product)
+				{
+					if ( ! empty($product['discount_price']))
+					{
+						//Calculate is discount active
+						$now = time();
+
+						if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
+						{
+							$allow_start = TRUE;
+						}
+						else
+						{
+							$allow_start = FALSE;
+						}
+
+						if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
+						{
+							$allow_end = TRUE;
+						}
+						else
+						{
+							$allow_end = FALSE;
+						}
+
+						if ($allow_start === TRUE && $allow_end === TRUE)
+						{
+							$response['products'][$id]['active_discount'] = TRUE;
+						}
+
+						if ( ! empty($response['products'][$id]['active_discount']))
+						{
+							$response['products'][$id]['discount'] = intval(
+								(floatval($response['products'][$id]['price']) -
+									floatval($response['products'][$id]['discount_price'])) / floatval($response['products'][$id]['price']) * 100
+							);
+						}
+					}
+				}
+			}
+
+			// Send products to response
+			$response['products'] = self::prepareProductsForResponse($response['products']);
+
+			$response['thumbs_path']  = Config::get('system_settings.product_public_path');
+			$response['icon_size']    = Config::get('images.sm_icon_size');
+
+		} else {
+			$response['no_product'] = TRUE;
+		}
+//dd($response);
+		return Theme::view('partials.cart_items_drop', $response);
 	}
 
 	public function add()
@@ -271,7 +343,7 @@ class Cart extends BaseControllerClient
 			session()->put('total', $total);
 			session()->migrate();
 
-			return response()->json(['success' => TRUE]);
+			return response()->json(['success' => TRUE, 'cart_items' => count($cart), 'cart_total' => $total]);
 		}
 		else
 		{

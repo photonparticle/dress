@@ -60,7 +60,7 @@
                                  data-endelementdelay="0.1"
                                  data-endspeed="500"
                                  style="z-index: 7;">
-                                <a class="btn btn-default btn-icon"
+                                <a class="btn btn-default btn-icon btn-slider"
                                    {{--background: {{!empty($slider['slides'][$image]['buttonColor']) ? $slider['slides'][$image]['buttonColor'] : '#fff'}}--}}
                                    style="font-size:15px; text-align:left !important; padding: 12px 22px;font-weight:bold; color:#333; text-transform:uppercase; line-height:24px;"
                                    href="{{$slider['slides'][$image]['buttonURL']}}"

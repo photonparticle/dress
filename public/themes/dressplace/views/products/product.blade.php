@@ -356,8 +356,10 @@
     <!-- single-product-area end -->
     <div class="clearfix"></div>
 
-    {{--CALLBACK ACTIONS--}}
-    @include('dressplace::partials.render_callback_actions')
+    @if(empty($frame))
+        {{--CALLBACK ACTIONS--}}
+        @include('dressplace::partials.render_callback_actions')
+    @endif
 
     @if(empty($frame))
         <div class="container">

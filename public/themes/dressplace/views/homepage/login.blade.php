@@ -53,7 +53,6 @@
                                 id="do_login"
                                 class="btn btn-primary pull-left"
                         >
-                            <i class="fa fa-key"></i>
                             {{trans('client.login')}}
                         </button>
                         <a

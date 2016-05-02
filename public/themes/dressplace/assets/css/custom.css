@@ -474,6 +474,7 @@ footer.sticky {
 /* FIXED HEADER*/
 @media only screen and (min-width: 768px) {
 	.header-fixed {
+		width: 100%;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -690,4 +691,76 @@ footer.sticky {
 	text-align: center;
 	font-size: 1.1em;
 	font-weight: bold;
+}
+
+/* CART HEADER */
+.total-cart {
+	height: 59px;
+}
+.cart-toggler .cart_title {
+	text-transform: uppercase;
+	display: block;
+	font-weight: 800;
+}
+
+.cart-toggler .cart_data {
+	display: block;
+}
+
+.cart-toggler .icon {
+	width: 63px;
+	height: 59px;
+	display: block;
+	background: transparent url('../img/cart-icon.png') no-repeat 0 0;
+	float: left;
+	position: relative;
+}
+
+.cart-toggler .texts {
+	float: left;
+	padding: 5px 0 0 5px;
+}
+
+.cart-toggler .icon .count {
+	display: inline-block;
+	width: 35px;
+	height: 35px;
+	border: 2px solid #fff;
+	line-height: 32px;
+	text-align: center;
+	font-size: 14px;
+	color: #fff;
+	background-color: #418dda;
+	border-radius: 50%;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	overflow: hidden;
+}
+
+.cart-items-drop a.btn {
+	width: 100%;
+	display: block;
+}
+
+.cart-items-drop .cart-info .subtotal-price {
+	float: left;
+	margin-left: 5px;
+}
+
+.cart-items-drop .cart-info .more-info {
+	display: block;
+	font-size: 13px;
+}
+
+/* SLIDER */
+.btn.btn-slider {
+	background-color: #fff;
+	color: #333;
+}
+.btn.btn-slider:hover,
+.btn.btn-slider:active,
+.btn.btn-slider:focus {
+	background-color: #418dda;
+	color: #fff;
 }
