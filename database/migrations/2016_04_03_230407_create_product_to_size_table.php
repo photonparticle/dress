@@ -16,6 +16,7 @@ class CreateProductToSizeTable extends Migration
             $table->increments('id');
             $table->integer('product_id');
             $table->string('size');
+            $table->integer('quantity');
         });
     }
 

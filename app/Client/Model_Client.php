@@ -186,15 +186,18 @@ class Model_Client extends Model
 		return $response;
 	}
 
-	public static function getProductsWithSize($size_name) {
+	public static function getProductsWithSize($size_name)
+	{
 		$products = DB::table('product_to_size')
 					  ->select('product_id')
 					  ->where('size', '=', $size_name)
 					  ->get();
 		$response = [];
 
-		if(!empty($products) && is_array($products)) {
-			foreach($products as $data) {
+		if ( ! empty($products) && is_array($products))
+		{
+			foreach ($products as $data)
+			{
 				$response[] = $data['product_id'];
 			}
 		}
@@ -202,15 +205,18 @@ class Model_Client extends Model
 		return $response;
 	}
 
-	public static function getProductsWithMaterial($material_id) {
+	public static function getProductsWithMaterial($material_id)
+	{
 		$products = DB::table('product_to_material')
 					  ->select('product_id')
 					  ->where('material_id', '=', $material_id)
 					  ->get();
 		$response = [];
 
-		if(!empty($products) && is_array($products)) {
-			foreach($products as $data) {
+		if ( ! empty($products) && is_array($products))
+		{
+			foreach ($products as $data)
+			{
 				$response[] = $data['product_id'];
 			}
 		}
@@ -218,15 +224,38 @@ class Model_Client extends Model
 		return $response;
 	}
 
-	public static function getProductsWithColor($color_id) {
+	public static function getProductsWithPrice($min, $max)
+	{
+		$products = DB::table('products')
+					  ->select('id')
+					  ->where('price', '>=', $min)
+					  ->where('price', '<=', $max)
+					  ->get();
+		$response = [];
+
+		if ( ! empty($products) && is_array($products))
+		{
+			foreach ($products as $data)
+			{
+				$response[] = $data['id'];
+			}
+		}
+
+		return $response;
+	}
+
+	public static function getProductsWithColor($color_id)
+	{
 		$products = DB::table('product_to_color')
 					  ->select('product_id')
 					  ->where('color_id', '=', $color_id)
 					  ->get();
 		$response = [];
 
-		if(!empty($products) && is_array($products)) {
-			foreach($products as $data) {
+		if ( ! empty($products) && is_array($products))
+		{
+			foreach ($products as $data)
+			{
 				$response[] = $data['product_id'];
 			}
 		}
@@ -239,6 +268,7 @@ class Model_Client extends Model
 	 * @param bool $email
 	 * @param bool $phone
 	 *a
+	 *
 	 * @return mixed
 	 */
 	public static function getOrders($id = FALSE, $email = FALSE, $phone = FALSE)
@@ -257,12 +287,12 @@ class Model_Client extends Model
 			$order = $order->where('user_id', '=', $id);
 		}
 
-		if ($email != FALSE && !empty($email))
+		if ($email != FALSE && ! empty($email))
 		{
 			$order = $order->orWhere('email', '=', $email);
 		}
 
-		if ($phone != FALSE && !empty($phone))
+		if ($phone != FALSE && ! empty($phone))
 		{
 			$order = $order->orWhere('phone', '=', $phone);
 		}
@@ -270,6 +300,24 @@ class Model_Client extends Model
 		$order = $order->orderBy('created_at', 'DESC')->get();
 
 		return $order;
+	}
+
+	public static function getUpcomingProduct()
+	{
+		$result = DB::table('upcoming_product')
+					->select(['title', 'product_id', 'date'])
+					->where('id', 1)
+					->where('active', 1)
+					->get();
+
+		if ( ! empty($result[0]))
+		{
+			return $result[0];
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 }

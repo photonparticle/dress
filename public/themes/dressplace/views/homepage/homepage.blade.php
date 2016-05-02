@@ -16,9 +16,13 @@
     {{--CAROUSELS--}}
     @if(!empty($carousels) && is_array($carousels))
         @foreach($carousels as $carousel)
+
             @if(!empty($carousel['products']))
-                {{--@include('dressplace::
-                partials.render_carousel')--}}
+                <div class="container">
+                    <div class="row">
+                        @include('dressplace::partials.render_carousel', $products)
+                    </div>
+                </div>
             @endif
         @endforeach
     @endif

@@ -28,7 +28,7 @@
         
         <div class="clearfix"></div>
 
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 margin-top-20 hidden">
             <label for="quantity" class="control-label col-xs-12 default no-padding">
                 {{trans('products.quantity')}}
             </label>

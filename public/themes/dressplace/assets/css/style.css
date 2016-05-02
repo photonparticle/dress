@@ -43,7 +43,7 @@
 /*----------------------------------------*/
 /*  1.  Theme default CSS
 /*----------------------------------------*/
-html, body {
+html {
 	height: 100%;
 }
 .floatleft {
@@ -106,7 +106,7 @@ ul {
 	clear: both
 }
 body {
-	font-family: 'Lato', sans-serif;
+	font-family: 'Lato', 'Open Sans', Verdana, sans-serif;
 	color: #222;
 }
 *::-moz-selection {
@@ -241,6 +241,7 @@ a#scrollUp:hover {
 3. header-bottom-area
 -------------------------- */
 .header-bottom-area {
+	background-color: #fff;
 	padding: 30px 0;
 }
 .header-search {
@@ -597,8 +598,9 @@ a#scrollUp:hover {
 }
 .section-title {
 	line-height: normal;
-	margin-bottom: 30px;
+	margin: 30px 0;
 }
+.section-title h1,
 .section-title h2 {
 	display: inline-block;
 	font-size: 25px;
@@ -608,6 +610,7 @@ a#scrollUp:hover {
 	position: relative;
 	text-transform: uppercase;
 }
+.section-title h1::before, .section-title h1::after,
 .section-title h2::before, .section-title h2::after {
 	border-top: 4px double #666;
 	content: "";
@@ -616,6 +619,7 @@ a#scrollUp:hover {
 	top: 9px;
 	width: 120px;
 }
+.section-title h1::after,
 .section-title h2::after {
 	left: inherit;
 	right: -136px;
@@ -646,6 +650,16 @@ a#scrollUp:hover {
 	opacity: .6
 }
 .product-img a img {
+}
+.product-img div.oos_overlay {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: transparent url('../img/out_of_stock.png') no-repeat center center;
+	opacity: 0.5;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 img.primary-img {
 }
@@ -695,6 +709,20 @@ img.secondary-img {
 	text-transform: uppercase;
 }
 .pro-button-bottom {
+	padding: 10px 0;
+	width: 100%;
+	background-color: rgba(255, 255, 255, 0.7);
+}
+.pro-button-bottom p {
+	margin: 0 0 5px 0;
+}
+.pro-button-bottom .sizes,
+.pro-button-bottom .catalogue_number {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 1.1em;
+	letter-spacing: 0;
+	word-spacing: 1px;
 }
 .pro-button-bottom a {
 	background: #222 none repeat scroll 0 0;
@@ -710,7 +738,7 @@ img.secondary-img {
 	background: #418dda
 }
 span.sale {
-	background: #000 none repeat scroll 0 0;
+	background: #f04646 none repeat scroll 0 0;
 	color: #fff;
 	font-weight: 700;
 	left: 0;
@@ -718,7 +746,7 @@ span.sale {
 	position: absolute;
 	text-transform: uppercase;
 	top: 0;
-	z-index: 99;
+	z-index: 9;
 }
 .product-info {
 	overflow: hidden;
@@ -733,16 +761,31 @@ span.sale {
 	float: left;
 	font-size: 20px;
 	font-weight: 700;
+	line-height: 20px;
 }
-.pro-price span.normal {
+em.normal,
+span.normal {
 	color: #418dda;
 }
-.pro-price span.old {
+em.old,
+span.old {
 	color: #666;
 	font-size: 15px;
 	font-weight: 400;
 	margin-left: 6px;
 	text-decoration: line-through;
+}
+em.discount,
+span.discount {
+	color: #666;
+	font-size: 15px;
+	margin-right: 6px;
+	float: right;
+	line-height: 20px;
+}
+em.discount.no-float,
+span.discount.no-float {
+	float: none;
 }
 .pro-rating {
 	float: right;
@@ -1471,19 +1514,31 @@ span.count {
 .price_filter .ui-slider-range {
 	background: #418dda none repeat scroll 0 0;
 }
-.price_slider_amount > input[type="text"] {
+.price_slider_amount > .ammounts-holder {
+	float: right;
+	height: 50px;
+	line-height: 25px;
+	margin-left: 5px;
+	text-align: center;
+	width: 130px;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+.price_slider_amount > .ammounts-holder input {
 	border-color: #cccccc #ddd #cccccc #cccccc;
 	border-image: none;
 	border-style: solid;
 	border-width: 1px;
-	float: right;
-	font-weight: bold;
-	height: 40px;
-	letter-spacing: 3px;
-	margin-left: 28px;
+	height: 50px;
+	width: 55px;
+	line-height: 50px;
+	display: inline;
 	text-align: center;
-	width: 130px;
+	font-weight: bold;
+	letter-spacing: 3px;
+	font-size: 1.1em;
 }
+input[type="submit"].filter,
 .price_slider_amount > input[type="submit"] {
 	background: #252525 none repeat scroll 0 0;
 	border-color: #cccccc #cccccc #cccccc -moz-use-text-color;
@@ -1493,12 +1548,17 @@ span.count {
 	color: #fff;
 	float: left;
 	font-weight: bold;
-	height: 40px;
+	height: 50px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
 	transition: all 400ms ease-out 0s;
-	width: 85px;
+	width: 115px;
 }
+input[type="submit"].filter {
+	width: 100%;
+	margin-bottom: 25px;
+}
+input[type="submit"].filter:hover,
 .price_slider_amount > input[type="submit"]:hover {
 	background: #418dda none repeat scroll 0 0;
 }
@@ -1509,7 +1569,7 @@ span.count {
 }
 .widget {
 	float: left;
-	margin: 0 0 25px;
+	margin: 0 0 5px 0;
 	padding: 0 0 25px;
 	width: 100%;
 }
@@ -1583,7 +1643,7 @@ ul.sidebar-menu li a:hover {
 	display: block;
 }
 .widget-recent ul li .post-sidebar-img a:hover {
-	border: 2px solid #ec4445;
+	border: 2px solid #418dda;
 	padding-left: 0;
 }
 .widget-recent ul li .post-sidebar-img a img {
@@ -1990,9 +2050,13 @@ ul.pro-details-tab li a {
 	border-top: 1px solid #e8e8e9;
 	margin-top: 50px;
 }
+.shop-pagination h5 {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 25px 0 15px 0;
+}
 .pagination {
-	margin: 20px 0 0;
-
+	margin: 0;
 }
 .pagination ul li {
 	display: inline-block;
@@ -2024,7 +2088,7 @@ ul.pro-details-tab li a {
 }
 .pagination ul li a:hover {
 	border: 1px solid #418dda;
-	color: #ec4445;
+	color: #418dda;
 }
 /*=========================== 
 20. cart page
@@ -2102,7 +2166,7 @@ ul.pro-details-tab li a {
 	font-weight: 700;
 }
 .table-content table td.product-remove i:hover {
-	color: #EC4445
+	color: #418dda
 }
 .table-content table td.product-quantity {
 	width: 180px;
@@ -2114,7 +2178,7 @@ ul.pro-details-tab li a {
 	width: 130px;
 }
 .table-content table td.product-name a:hover, .buttons-cart a:hover {
-	color: #EC4445
+	color: #418dda
 }
 .buttons-cart {
 	margin-bottom: 30px;

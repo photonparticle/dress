@@ -7,6 +7,10 @@
 
             @include('dressplace::checkout.cart_partial')
 
+
+            {{--CALLBACK ACTIONS--}}
+            @include('dressplace::partials.render_callback_actions')
+
             @if(!isset($ajax))
         </div>
     @endif

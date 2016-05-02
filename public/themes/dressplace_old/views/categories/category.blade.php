@@ -51,7 +51,7 @@
                             @endif
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 filter no-padding-right">
-                            @if(!empty($sizes) && is_array($sizes))
+                            @if(!empty($materials) && is_array($materials))
                                 <label for="filter_materials">{{trans('client.material')}}</label>
                                 <select id="filter_materials" name="material" class="form-control">
                                     <option value=""> - {{trans('client.choose_material')}} -</option>

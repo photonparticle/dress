@@ -45,12 +45,13 @@ class Client extends BaseControllerClient
 
 			/* PRODUCTS */
 
-			$response           = self::loadProduct($object['object']);
-			$response['slug']   = $slug;
+			$response         = self::loadProduct($object['object']);
+			$response['slug'] = $slug;
 
-			if(!empty($_GET['frame']) && $_GET['frame'] == TRUE) {
+			if ( ! empty($_GET['frame']) && $_GET['frame'] == TRUE)
+			{
 				$response['blade_standalone'] = TRUE;
-				$response['frame'] = TRUE;
+				$response['frame']            = TRUE;
 			}
 
 			return Theme::view('products.product', $response);
@@ -96,6 +97,7 @@ class Client extends BaseControllerClient
 		{
 			foreach ($products as $id => $product)
 			{
+				//Images
 				if ( ! empty($product['images']) && is_array($image = json_decode($product['images'], TRUE)))
 				{
 					reset($image);
@@ -109,6 +111,75 @@ class Client extends BaseControllerClient
 					if ( ! is_float($product['discount_price']))
 					{
 						$products[$id]['discount_price'] = intval($product['discount_price']);
+					}
+				}
+
+				if ( ! empty($product['discount_price']))
+				{
+					//Calculate is discount active
+					$now = time();
+
+					if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
+					{
+						$allow_start = TRUE;
+					}
+					else
+					{
+						$allow_start = FALSE;
+					}
+
+					if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
+					{
+						$allow_end = TRUE;
+					}
+					else
+					{
+						$allow_end = FALSE;
+					}
+
+					if ($allow_start === TRUE && $allow_end === TRUE)
+					{
+						$products[$id]['active_discount'] = TRUE;
+					}
+
+					if ( ! empty($products[$id]['active_discount']))
+					{
+						$products[$id]['discount'] = intval(
+							(floatval($products[$id]['price']) -
+								floatval($products[$id]['discount_price'])) / floatval($products[$id]['price']) * 100
+						);
+					}
+				}
+
+				//Sizes
+				if ( ! empty ($products[$id]['sizes']) && is_array(($products[$id]['sizes'] = json_decode($products[$id]['sizes'], TRUE))))
+				{
+					foreach ($products[$id]['sizes'] as $key => $size)
+					{
+						if (empty($size['name']) || empty($size['quantity']))
+						{
+							if (isset($products[$id]['sizes'][$key]))
+							{
+								unset($products[$id]['sizes'][$key]);
+							}
+						}
+					}
+				}
+
+				if ( ! empty($products[$id]['sizes']) && is_array($products[$id]['sizes']))
+				{
+					$sizes = [];
+					foreach ($products[$id]['sizes'] as $key => $size)
+					{
+						if ( ! empty($size['quantity']))
+						{
+							$sizes[] = $key;
+						}
+					}
+
+					if ( ! empty($sizes) && is_array($sizes))
+					{
+						$products[$id]['available_sizes'] = implode(', ', $sizes);
 					}
 				}
 			}
@@ -171,13 +242,16 @@ class Client extends BaseControllerClient
 		$response['breadcrumbs']    = self::generateCategoryBreadcrumbs($category[$id]);
 
 		//SEO
-		if(!empty($category['title'])) {
+		if ( ! empty($category['title']))
+		{
 			View::share('page_title', $category['title']);
 		}
-		if(!empty($category['meta_description'])) {
+		if ( ! empty($category['meta_description']))
+		{
 			View::share('page_meta_description', $category['meta_description']);
 		}
-		if(!empty($category['meta_keywords'])) {
+		if ( ! empty($category['meta_keywords']))
+		{
 			View::share('page_meta_keywords', $category['meta_keywords']);
 		}
 
@@ -185,10 +259,6 @@ class Client extends BaseControllerClient
 		if ( ! empty(Input::get('order_by')))
 		{
 			$order_by = Input::get('order_by');
-		}
-		elseif ( ! empty(session('order_by')))
-		{
-			$order_by = session('order_by');
 		}
 		else
 		{
@@ -201,17 +271,28 @@ class Client extends BaseControllerClient
 			$response['order_by'] = $order_by;
 			session(['order_by' => $order_by]);
 		}
+		else
+		{
+			if ( ! empty(session('order_by')))
+			{
+				$order_by             = session('order_by');
+				$response['order_by'] = $order_by;
+			}
+		}
 
 		//Get products
 		$response['products'] = Model_Main::getProductsToCategoryPage($id, $page, $this->system['quantity'], $order_by);
 		$products_to_category = Model_Main::getProductsToCategoryId($id);
+		$total_products       = count($products_to_category);
 
 		//Filters
 
 		//Get submitted filters
-		$filter_size     = (Input::get('size')) ? Input::get('size') : '';
-		$filter_material = (Input::get('material')) ? Input::get('material') : '';
-		$filter_color    = (Input::get('color')) ? Input::get('color') : '';
+		$filter_size      = (Input::get('size')) ? Input::get('size') : '';
+		$filter_material  = (Input::get('material')) ? Input::get('material') : '';
+		$filter_color     = (Input::get('color')) ? Input::get('color') : '';
+		$filter_price_min = (Input::get('price_min')) ? Input::get('price_min') : '';
+		$filter_price_max = (Input::get('price_max')) ? Input::get('price_max') : '';
 
 		//If there are no submitted filters - try find them in SESSION
 		if (empty($_POST))
@@ -230,41 +311,60 @@ class Client extends BaseControllerClient
 			{
 				$filter_color = session('filter_color');
 			}
+
+			if ( ! empty(session('price_min')))
+			{
+				$filter_price_min = session('price_min');
+			}
+
+			if ( ! empty(session('price_max')))
+			{
+				$filter_price_max = session('price_max');
+			}
 		}
 
 		//Store filters inside session
 		session(['filter_size' => $filter_size]);
 		session(['filter_material' => $filter_material]);
 		session(['filter_color' => $filter_color]);
+		session(['price_min' => $filter_price_min]);
+		session(['price_max' => $filter_price_max]);
 
 		if ( ! empty($filter_size))
 		{
-			$products_with_size          = Model_Client::getProductsWithSize($filter_size);
-			$products_without_size       = array_diff($response['products'], $products_with_size);
-			$response['products']        = array_diff($response['products'], $products_without_size);
-			$total_products_without_size = array_diff($products_to_category, $products_with_size);
-			$products_to_category        = array_diff($response['products'], $total_products_without_size);
-			$response['filter']['size']  = $filter_size;
+			$products_with_size         = Model_Client::getProductsWithSize($filter_size);
+			$products_without_size      = array_diff($response['products'], $products_with_size);
+			$response['products']       = array_diff($response['products'], $products_without_size);
+			$total_products             = count($response['products']) - count($products_without_size);
+			$response['filter']['size'] = $filter_size;
 		}
 
 		if ( ! empty($filter_material))
 		{
-			$products_with_material          = Model_Client::getProductsWithMaterial($filter_material);
-			$products_without_material       = array_diff($response['products'], $products_with_material);
-			$response['products']            = array_diff($response['products'], $products_without_material);
-			$total_products_without_material = array_diff($products_to_category, $products_with_material);
-			$products_to_category            = array_diff($response['products'], $total_products_without_material);
-			$response['filter']['material']  = $filter_material;
+			$products_with_material         = Model_Client::getProductsWithMaterial($filter_material);
+			$products_without_material      = array_diff($response['products'], $products_with_material);
+			$response['products']           = array_diff($response['products'], $products_without_material);
+			$total_products                 = count($response['products']) - count($products_without_material);
+			$response['filter']['material'] = $filter_material;
 		}
 
 		if ( ! empty($filter_color))
 		{
-			$products_with_color          = Model_Client::getProductsWithColor($filter_color);
-			$products_without_color       = array_diff($response['products'], $products_with_color);
-			$response['products']         = array_diff($response['products'], $products_without_color);
-			$total_products_without_color = array_diff($products_to_category, $products_with_color);
-			$products_to_category         = array_diff($response['products'], $total_products_without_color);
-			$response['filter']['color']  = $filter_color;
+			$products_with_color         = Model_Client::getProductsWithColor($filter_color);
+			$products_without_color      = array_diff($response['products'], $products_with_color);
+			$response['products']        = array_diff($response['products'], $products_without_color);
+			$total_products              = count(array_diff($response['products'], $products_without_color));
+			$response['filter']['color'] = $filter_color;
+		}
+
+		if ( ! empty($filter_price_min) && ! empty($filter_price_max) && (intval($filter_price_min) > 1 || intval($filter_price_max) < 100))
+		{
+			$products_in_price               = Model_Client::getProductsWithPrice($filter_price_min, $filter_price_max);
+			$products_outside_price          = array_diff($response['products'], $products_in_price);
+			$response['products']            = array_diff($response['products'], $products_outside_price);
+			$total_products                  = count($response['products']) - count($products_outside_price);
+			$response['filter']['price_min'] = $filter_price_min;
+			$response['filter']['price_max'] = $filter_price_max;
 		}
 
 		//Products to render
@@ -285,51 +385,23 @@ class Client extends BaseControllerClient
 			}
 		}
 
-		// Get products data
-		$response['products'] = Model_Main::getProducts($response['products'], ['title', 'images']);
-
-		//Loop trough products data
-		if ( ! empty($response['products']) && is_array($response['products']))
+		//Get upcoming product
+		$response['upcoming'] = Model_Client::getUpcomingProduct();
+		if ( ! empty($response['upcoming']['product_id']))
 		{
-			foreach ($response['products'] as $id => $product)
+			if ( ! array_search($response['upcoming']['product_id'], $response['products']))
 			{
-				if ( ! empty($product['discount_price']))
-				{
-					//Calculate is discount active
-					$now = time();
+				$response['products'][] = $response['upcoming']['product_id'];
+			}
 
-					if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
-					{
-						$allow_start = TRUE;
-					}
-					else
-					{
-						$allow_start = FALSE;
-					}
-
-					if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
-					{
-						$allow_end = TRUE;
-					}
-					else
-					{
-						$allow_end = FALSE;
-					}
-
-					if ($allow_start === TRUE && $allow_end === TRUE)
-					{
-						$response['products'][$id]['active_discount'] = TRUE;
-					}
-
-					if(!empty($response['products'][$id]['active_discount'])) {
-						$response['products'][$id]['discount'] = intval(
-							(floatval($response['products'][$id]['price']) -
-								floatval($response['products'][$id]['discount_price']))/floatval($response['products'][$id]['price']) * 100
-						);
-					}
-				}
+			if ( ! empty($response['upcoming']['date']))
+			{
+				$response['upcoming']['date'] = date('Y/m/d', strtotime($response['upcoming']['date']));
 			}
 		}
+
+		// Get products data
+		$response['products'] = Model_Main::getProducts($response['products'], ['title', 'images', 'sizes', 'description']);
 
 		// Send products to response
 		$response['products'] = self::prepareProductsForResponse($response['products']);
@@ -365,7 +437,7 @@ class Client extends BaseControllerClient
 		}
 
 		//Calculate total pages
-		$response['total_pages'] = intval(count($products_to_category) / $this->system['quantity']) + 1;
+		$response['total_pages'] = intval($total_products / $this->system['quantity']) + 1;
 
 		return $response;
 
@@ -409,8 +481,8 @@ class Client extends BaseControllerClient
 
 	private function loadProduct($id)
 	{
-		$response                    = [];
-		$product                     = Model_Main::getProducts($id);
+		$response = [];
+		$product  = Model_Main::getProducts($id);
 
 		//Breadcrumbs
 		$response['all_categories'] = $this->categories['all'];
@@ -424,13 +496,16 @@ class Client extends BaseControllerClient
 		{
 			$response['product'] = $product[$id];
 
-			if(!empty($response['product']['title'])) {
+			if ( ! empty($response['product']['title']))
+			{
 				View::share('page_title', $response['product']['title']);
 			}
-			if(!empty($response['product']['meta_description'])) {
+			if ( ! empty($response['product']['meta_description']))
+			{
 				View::share('page_meta_description', $response['product']['meta_description']);
 			}
-			if(!empty($response['product']['meta_keywords'])) {
+			if ( ! empty($response['product']['meta_keywords']))
+			{
 				View::share('page_meta_keywords', $response['product']['meta_keywords']);
 			}
 
@@ -479,10 +554,11 @@ class Client extends BaseControllerClient
 		}
 
 		//Product discount percentage
-		if(!empty($response['product']['active_discount'])) {
+		if ( ! empty($response['product']['active_discount']))
+		{
 			$response['product']['discount'] = intval(
 				(floatval($response['product']['price']) -
-				floatval($response['product']['discount_price']))/floatval($response['product']['price']) * 100
+					floatval($response['product']['discount_price'])) / floatval($response['product']['price']) * 100
 			);
 		}
 
@@ -509,17 +585,7 @@ class Client extends BaseControllerClient
 		}
 
 		//Tags
-		$tags = Model_Main::getTags($id);
-
-		if ( ! empty($tags) && is_array($tags))
-		{
-			foreach ($tags as $key => $tag)
-			{
-				$response['product']['tags'][] = $tag['title'];
-			}
-
-			$response['product']['tags'] = implode(',', $response['product']['tags']);
-		}
+		$response['product']['tags'] = Model_Main::getTags($id);
 
 		//Manufacturer
 		$response['product']['manufacturer'] = Model_Main::getManufacturer($id);
@@ -539,7 +605,7 @@ class Client extends BaseControllerClient
 		}
 
 		//Related products
-		if ( ! empty($response['product']['related_products']))
+		if ( ! empty($response['product']['related_products']) && is_array(json_decode($response['product']['related_products'], TRUE)))
 		{
 			$response['carousel']['products'] = json_decode($response['product']['related_products'], TRUE);
 		}
@@ -551,88 +617,52 @@ class Client extends BaseControllerClient
 			}
 		}
 
-		if ( ! empty($response['carousel']['products']) && is_array($response['carousel']['products']))
+		if ( ! empty($response['carousel']['products']))
 		{
-			$response['icon_size']   = Config::get('images.sm_icon_size');
-			$response['thumbs_path'] = Config::get('system_settings.product_public_path');
+			$response['products'] = $response['carousel']['products'];
+		}
 
-			$response['carousel']['title'] = trans('client.similar_products');
+		//Get upcoming product
+		$response['upcoming'] = Model_Client::getUpcomingProduct();
+		if ( ! empty($response['upcoming']['product_id']))
+		{
+			$response['products'][] = $response['upcoming']['product_id'];
 
-			// Get products data
-			$response['products'] = Model_Main::getProducts($response['carousel']['products'], ['title', 'images']);
-
-			if ( ! empty($response['products']) && is_array($response['products']))
+			if ( ! empty($response['upcoming']['date']))
 			{
-				foreach ($response['carousel']['products'] as $product_id)
-				{
-					if (empty($response['products'][$product_id]))
-					{
-						unset($response['carousel']['products'][array_search($product_id, $response['carousel']['products'])]);
-					}
-				}
+				$response['upcoming']['date'] = date('Y/m/d', strtotime($response['upcoming']['date']));
 			}
-			else
-			{
-				unset($response['carousel']['products']);
-			}
+		}
+		$recent = Model_Main::getNewestProducts(3, $id);
 
-			//Loop trough products data
-			if ( ! empty($response['products']) && is_array($response['products']))
-			{
-				foreach ($response['products'] as $id => $product)
-				{
-					if ( ! empty($product['discount_price']))
-					{
-						//Calculate is discount active
-						$now = time();
+		if ( ! empty($recent))
+		{
+			$response['recent'] = $recent;
+			array_merge($response['products'], $recent);
+		}
 
-						if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
-						{
-							$allow_start = TRUE;
-						}
-						else
-						{
-							$allow_start = FALSE;
-						}
+		$response['icon_size']   = Config::get('images.sm_icon_size');
+		$response['thumbs_path'] = Config::get('system_settings.product_public_path');
 
-						if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
-						{
-							$allow_end = TRUE;
-						}
-						else
-						{
-							$allow_end = FALSE;
-						}
+		$response['carousel']['title'] = trans('client.similar_products');
 
-						if ($allow_start === TRUE && $allow_end === TRUE)
-						{
-							$response['products'][$id]['active_discount'] = TRUE;
-						}
-					}
+		// Get products data
+		$response['products'] = Model_Main::getProducts($response['products'], ['title', 'images', 'sizes', 'description']);
 
-					if(!empty($response['products'][$id]['active_discount'])) {
-						$response['products'][$id]['discount'] = intval(
-							(floatval($response['products'][$id]['price']) -
-								floatval($response['products'][$id]['discount_price']))/floatval($response['products'][$id]['price']) * 100
-						);
-					}
-				}
-			}
+		// Send products to response
+		$response['products'] = self::prepareProductsForResponse($response['products']);
 
-			// Send products to response
-			$response['products'] = self::prepareProductsForResponse($response['products']);
-
-			//Check dimensions table
-			if ( ! empty($response['product']['dimensions_table']))
-			{
-				$response['product']['dimensions_table'] = trim($response['product']['dimensions_table']);
-			}
+		//Check dimensions table
+		if ( ! empty($response['product']['dimensions_table']))
+		{
+			$response['product']['dimensions_table'] = trim($response['product']['dimensions_table']);
 		}
 
 		return $response;
 	}
 
-	private function loadPage($id) {
+	private function loadPage($id)
+	{
 		$response = Model_Pages::getPage($id);
 
 		if ( ! empty($response[0]))
@@ -641,13 +671,16 @@ class Client extends BaseControllerClient
 		}
 
 		//SEO
-		if(!empty($response['title'])) {
+		if ( ! empty($response['title']))
+		{
 			View::share('page_title', $response['title']);
 		}
-		if(!empty($response['meta_description'])) {
+		if ( ! empty($response['meta_description']))
+		{
 			View::share('page_meta_description', $response['meta_description']);
 		}
-		if(!empty($response['meta_keywords'])) {
+		if ( ! empty($response['meta_keywords']))
+		{
 			View::share('page_meta_keywords', $response['meta_keywords']);
 		}
 

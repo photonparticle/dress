@@ -1,54 +1,113 @@
+@if(empty($cart_checkout))
+    <div class="container">
+        <div class="col-xs-12">
+            <div class="section-title text-center">
+                <h1 class="no-margin">
+                    {{trans('client.cart')}}
+                </h1>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+@endif
+
 @if(!empty($cart) && is_array($cart))
     <div class="cart-container @if(isset($cart_preview)) no-padding @endif"
          data-delivery-free-delivery="{{$sys['delivery_free_delivery'] or 999999}}"
          data-delivery-to-address="{{$sys['delivery_to_address'] or 0}}"
          data-delivery-to-office="{{$sys['delivery_to_office'] or 0}}"
     >
+
+
+        @if(!empty($cart_checkout))
+            <div class="totals col-xs-12">
+                <div class="col-xs-12 no-padding text-right">
+                    <h3 class="text-center">
+                        {{trans('client.delivery_type')}}
+                    </h3>
+
+                    <div class="clearfix"></div>
+
+                    <div class="col-xs-12 margin-top-10 no-padding">
+                        <div class="to_office delivery_type @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_office') delivery_type_active active @endif"
+                             title="{{trans('client.to_office_tip')}}"
+                             data-toggle="tooltip"
+                             data-placement="left"
+                             data-type="to_office"
+                        >
+                            <img src="{{Theme::asset('img/econt_icon.png')}}" alt="Econt Express"/>
+                            <p>
+                                {{trans('client.to_office_long')}}
+                            </p>
+                        </div>
+                        <div class="to_address delivery_type @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_address') delivery_type_active active @endif"
+                             title="{{trans('client.to_address_tip')}}"
+                             data-toggle="tooltip"
+                             data-placement="left"
+                             data-type="to_address"
+                        >
+                            <img src="{{Theme::asset('img/home_icon.png')}}" alt="To home address"/>
+                            <p>
+                                {{trans('client.to_address_long')}}
+                            </p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <h3 class="text-center">
+                {{trans('client.products_in_cart')}}
+            </h3>
+            <div class="clearfix"></div>
+        @else
+
+        @endif
+
+
         <div class="bs-example4" data-example-id="simple-responsive-table">
             <div class="table-responsive">
                 <table class="table table-striped table-heading text-center cart-holder @if(isset($ajax)) ajax @endif">
                     <tr>
                         <th></th>
-                        <th>{{trans('client.product')}}</th>
+                        <th class="cart-item-desc">{{trans('client.product')}}</th>
                         @if(!isset($cart_preview))
-                            <th>{{trans('client.quantity')}}</th>
+                            <th class="text-center">{{trans('client.quantity')}}</th>
                         @endif
-                        <th>{{trans('client.subtotal')}}</th>
+                        <th class="text-center">{{trans('client.subtotal')}}</th>
                         @if(!isset($cart_preview))
-                            <th>{{trans('client.actions')}}</th>
+                            <th class="text-center">{{trans('client.actions')}}</th>
                         @endif
                     </tr>
                     @foreach($cart as $key => $item)
                         <tr class="cart-header">
 
                             {{--IMAGE--}}
-                            <td>
+                            <td style="max-width: 150px">
                                 <a href="/{{$products[$item['product_id']]['slug'] or ''}}"
                                    title="{{trans('client.view_product_tip')}}"
                                    data-toggle="tooltip"
                                    data-placement="right"
                                    data-product-id="{{$item['product_id']}}"
-                                   class="quick_buy_trigger">
+                                >
                                     <img
-                                            @if(!isset($ajax))
-                                            src=""
-                                            data-src="{{$thumbs_path . $item['product_id'] . '/' . $icon_size . '/' .  $products[$item['product_id']]['image']}}"
-                                            @else
                                             src="{{$thumbs_path . $item['product_id'] . '/' . $icon_size . '/' .  $products[$item['product_id']]['image']}}"
-                                            @endif
                                             alt="{{$products[$item['product_id']]['image']}}"
                                             class="img-responsive lazy"
                                     />
                                 </a>
                             </td>
-                            <td>
+                            <td class="text-left cart-item-desc">
                                 {{--TITLE--}}
-                                <h3><a href="/{{$products[$item['product_id']]['slug'] or ''}}"
-                                       title="{{trans('client.view_product_tip')}}"
-                                       data-toggle="tooltip"
-                                       data-placement="bottom"
-                                       data-product-id="{{$item['product_id']}}"
-                                       class="quick_buy_trigger"
+                                <h3 class="no-margin"><a href="/{{$products[$item['product_id']]['slug'] or ''}}"
+                                                         title="{{trans('client.view_product_tip')}}"
+                                                         data-toggle="tooltip"
+                                                         data-placement="bottom"
+                                                         data-product-id="{{$item['product_id']}}"
                                     >{{$products[$item['product_id']]['title'] or ''}}</a>
                                 </h3>
 
@@ -59,17 +118,17 @@
                                                                 !empty($item['discount']) &&
                                                                 !empty($item['discount_price']) &&
                                                                 !empty($item['active_discount']))
-                                        <em class="item_old_price">{{$item['price'] or ''}} {{trans('client.currency')}}</em>
-                                        <em class="item_price">{{$item['discount_price'] or ''}} {{trans('client.currency')}}</em>
+                                        <em class="normal item_price">{{$item['discount_price'] or ''}} {{trans('client.currency')}}</em>
+                                        <em class="old item_old_price">{{$item['price'] or ''}} {{trans('client.currency')}}</em>
                                     @else
-                                        <em class="item_price">{{$item['price'] or ''}} {{trans('client.currency')}}</em>
+                                        <em class="normal item_price">{{$item['price'] or ''}} {{trans('client.currency')}}</em>
                                     @endif
 
                                     @if(
                                     !empty($item['discount']) &&
                                     !empty($item['discount_price']) &&
                                     !empty($item['active_discount']))
-                                        <em class="item_discount"
+                                        <em class="discount no-float item_discount"
                                             @if(
                                             !empty($item['discount']) &&
                                             !empty($item['discount_price']) &&
@@ -84,7 +143,7 @@
 
                                 {{--SIZE--}}
                                 <h4 class="margin-top-10">{{trans('client.size')}}</h4>
-                                <p class="size">
+                                <p class="size no-margin">
                                     {{$item['size'] or ''}}
                                 </p>
                                 <div class="clearfix"></div>
@@ -92,7 +151,7 @@
                                 {{--QUANTITY--}}
                                 @if(isset($cart_preview))
                                     <h4 class="margin-top-10">{{trans('client.quantity')}}</h4>
-                                    <p class="quantity" style="float: none">
+                                    <p class="quantity no-margin" style="float: none">
                                         {{$item['quantity'] or 1}}
                                     </p>
                                     <div class="clearfix"></div>
@@ -151,67 +210,85 @@
                                         <i class="fa fa-remove"></i>
                                     </button>
                                 </td>
+                            @endif
                         </tr>
-                        @endif
                     @endforeach
 
                 </table>
             </div>
         </div>
 
+        {{--IF CART PAGE --}}
         <div class="totals col-xs-12">
-            <div class="col-xs-12 no-padding">
-                <h3 class="block">{{trans('client.delivery_type')}}</h3>
-                <div class="clearfix"></div>
-                <div class="col-xs-12 margin-top-10 no-padding">
-                    <button type="button"
-                            value="to_office"
-                            title="{{trans('client.to_office_tip')}}"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            class="delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_office') delivery_type_active active @endif"
-                    >{{trans('client.to_office')}}</button>
-                    <button type="button"
-                            value="to_address"
-                            title="{{trans('client.to_address_tip')}}"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            class="delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_address') delivery_type_active active @endif"
-                    >{{trans('client.to_address')}}</button>
+
+            @if(empty($cart_checkout))
+                <div class="col-xs-12 no-padding text-right">
+                    <h3 class="block">{{trans('client.delivery_type')}}</h3>
+                    <div class="clearfix"></div>
+                    <div class="col-xs-12 margin-top-10 no-padding">
+                        <div class="to_office delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_office') delivery_type_active active @endif"
+                             title="{{trans('client.to_office_tip')}}"
+                             data-toggle="tooltip"
+                             data-placement="top"
+                             data-type="to_office"
+                        >
+                            <img src="{{Theme::asset('img/econt_icon.png')}}" alt="Econt Express"/>
+                            <p>
+                                {{trans('client.to_office_long')}}
+                            </p>
+                        </div>
+                        <div class="to_address delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_address') delivery_type_active active @endif"
+                             title="{{trans('client.to_address_tip')}}"
+                             data-toggle="tooltip"
+                             data-placement="top"
+                             data-type="to_address"
+                        >
+                            <img src="{{Theme::asset('img/home_icon.png')}}" alt="To home address"/>
+                            <p>
+                                {{trans('client.to_address_long')}}
+                            </p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="clearfix"></div>
-            </div>
-            <div class="clearfix"></div>
+            @endif
 
             <div class="col-xs-12 no-padding values">
-                <table>
+                <table class="table pull-right">
                     <tr>
                         <td>
-                            <h3 class="margin-top-10">{{trans('client.subtotal')}}</h3>
+                            <h4 class="margin-top-10">{{trans('client.subtotal')}}</h4>
                         </td>
                         <td>
-                            <span class="subtotal">{{$total}}</span> <span>{{trans('client.currency')}}</span>
+                            <h4 class="margin-top-10">
+                                <span class="subtotal">{{$total}}</span> <span>{{trans('client.currency')}}</span>
+                            </h4>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <h3 class="margin-top-10">{{trans('client.delivery_price')}}</h3>
+                            <h4 class="margin-top-10">{{trans('client.delivery_price')}}</h4>
                         </td>
                         <td>
                             <div class="delivery_price">
-                                <span class="delivery_price">0</span> <span>{{trans('client.currency')}}</span>
+                                <h4 class="margin-top-10">
+                                    <span class="delivery_price">0</span> <span>{{trans('client.currency')}}</span>
+                                </h4>
                             </div>
                             <span class="delivery_price_free">{{trans('client.free')}}<br/>{{trans('client.delivery')}}</span>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <h3 class="margin-top-10">{{trans('client.total')}}</h3>
+                            <h4 class="margin-top-10">{{trans('client.total')}}</h4>
                         </td>
                         <td>
                             @if(!empty($total))
-                                <span class="total">{{$total}}</span> <span>{{trans('client.currency')}}</span>
+                                <h4 class="margin-top-10">
+                                    <span class="total">{{$total}}</span> <span>{{trans('client.currency')}}</span>
+                                </h4>
                             @endif
                         </td>
                     </tr>
@@ -228,22 +305,12 @@
                             data-toggle="tooltip"
                             data-placement="top"
                     >
-                        <i class="fa fa-cart-arrow-down"></i>
                         {{trans('client.create_order')}}
                     </button>
-                    @if(isset($ajax))
-                        <button
-                                type="button"
-                                class="btn btn-default pull-right"
-                                data-dismiss="modal"
-                        >
-                            <i class="fa fa-shopping-cart"></i>
-                            {{trans('client.continue_shopping')}}
-                        </button>
-                    @endif
                 </div>
             @endif
         </div>
+
         <div class="clearfix"></div>
     </div>
 @else

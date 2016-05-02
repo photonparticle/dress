@@ -23,6 +23,35 @@ use View;
 class Homepage extends BaseControllerClient
 {
 	private $active_module = 'homepage';
+	private $states = [
+		'blagoevgrad',
+		'burgas',
+		'varna',
+		'veliko_tyrnovo',
+		'vidin',
+		'vraca',
+		'gabrovo',
+		'dobrich',
+		'kyrdjali',
+		'kiustendil',
+		'lovech',
+		'montana',
+		'pazardjik',
+		'pernik',
+		'pleven',
+		'plovdiv',
+		'razgrad',
+		'ruse',
+		'silistra',
+		'sliven',
+		'smolyan',
+		'sofia',
+		'stara_zagora',
+		'tyrgovishte',
+		'haskovo',
+		'shumen',
+		'yambol',
+	];
 
 	public function __construct(Request $request)
 	{
@@ -63,14 +92,14 @@ class Homepage extends BaseControllerClient
 			{
 				if ( ! empty($carousel['products']))
 				{
-					$response['carousels'][$key]['products'] = explode(', ', $carousel['products']);
+					$response['carousels'][$key]['products'] = is_array(json_decode(',', $carousel['products'], TRUE)) ? json_decode(',', $carousel['products'], TRUE) : explode(',', $carousel['products']);
 					$products                                = array_merge($products, $response['carousels'][$key]['products']);
 				}
 			}
 		}
 
 		// Get products data
-		$response['products'] = Model_Main::getProducts($products, ['title', 'images']);
+		$response['products'] = Model_Main::getProducts($products, ['title', 'images', 'sizes']);
 
 		//Loop trough products data
 		if ( ! empty($response['products']) && is_array($response['products']))
@@ -111,6 +140,35 @@ class Homepage extends BaseControllerClient
 							(floatval($response['products'][$id]['price']) -
 								floatval($response['products'][$id]['discount_price'])) / floatval($response['products'][$id]['price']) * 100
 						);
+					}
+				}
+
+				//Sizes
+				if ( ! empty ($response['products'][$id]['sizes']) && is_array(($response['products'][$id]['sizes'] = json_decode($response['products'][$id]['sizes'], TRUE))))
+				{
+					foreach ($response['products'][$id]['sizes'] as $key => $size)
+					{
+						if (empty($size['name']) || empty($size['quantity']))
+						{
+							if (isset($response['products'][$id]['sizes'][$key]))
+							{
+								unset($response['products'][$id]['sizes'][$key]);
+							}
+						}
+					}
+				}
+
+				if(!empty($response['products'][$id]['sizes']) && is_array($response['products'][$id]['sizes'])) {
+					$sizes = [];
+					foreach($response['products'][$id]['sizes'] as $key => $size) {
+						if(!empty($size['quantity']))
+						{
+							$sizes[] = $key;
+						}
+					}
+
+					if(!empty($sizes) && is_array($sizes)) {
+						$response['products'][$id]['available_sizes'] = implode(', ', $sizes);
 					}
 				}
 			}
@@ -344,6 +402,11 @@ class Homepage extends BaseControllerClient
 				$response['ajax']             = TRUE;
 			}
 
+			foreach ($this->states as $state)
+			{
+				$response['states'][$state] = trans('orders.'.$state);
+			}
+
 			return Theme::view('homepage.my_profile', $response);
 		}
 		else
@@ -367,7 +430,9 @@ class Homepage extends BaseControllerClient
 				$user_data['phone']      = ( ! empty(Input::get('phone'))) ? Input::get('phone') : '';
 				$user_data['address']    = ( ! empty(Input::get('address'))) ? Input::get('address') : '';
 				$user_data['city']       = ( ! empty(Input::get('city'))) ? Input::get('city') : '';
-				$user_data['country']    = ( ! empty(Input::get('country'))) ? Input::get('country') : '';
+				$user_data['state']       = ( ! empty(Input::get('state'))) ? Input::get('state') : '';
+				$user_data['post_code']       = ( ! empty(Input::get('postcode'))) ? Input::get('postcode') : '';
+//				$user_data['country']    = ( ! empty(Input::get('country'))) ? Input::get('country') : '';
 
 				if (Model_Users::updateUserInfo($id, $user_data) === TRUE)
 				{
@@ -429,11 +494,11 @@ class Homepage extends BaseControllerClient
 		if ( ! $this->user == FALSE)
 		{
 			$customCSS = [
-				'addons/datatables/dataTables.bootstrap',
+				'datatables/dataTables.bootstrap',
 			];
 			$customJS  = [
-				'addons/datatables/jquery.dataTables.min',
-				'addons/datatables/dataTables.bootstrap',
+				'datatables/jquery.dataTables.min',
+				'datatables/dataTables.bootstrap',
 			];
 
 			$response = [

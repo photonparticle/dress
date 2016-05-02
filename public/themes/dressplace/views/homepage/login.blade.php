@@ -1,25 +1,39 @@
 @extends('dressplace::layout')
 
 @section('content')
+
+    @if(!isset($ajax))
+        <div class="container">
+            @endif
+            <div class="col-xs-12">
+                <div class="section-title text-center">
+                    <h1 class="no-margin">
+                        {{trans('client.login')}}
+                    </h1>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            @if(!isset($ajax))
+        </div>
+    @endif
+
     @if(!isset($ajax))
         <div class="container col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
             @endif
-
-            <h1 class="text-center">{{trans('client.login')}}</h1>
 
             <form id="login_form" method="POST" action="/login">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input name="email" type="email" class="form-control" id="email" placeholder="Email">
+                            <input name="email" type="email" class="form-control cForm" id="email" placeholder="Email">
                         </div>
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group">
                             <label for="password">{{trans('client.password')}}</label>
-                            <input name="password" type="password" class="form-control" id="password" placeholder="{{trans('client.password')}}">
+                            <input name="password" type="password" class="form-control cForm" id="password" placeholder="{{trans('client.password')}}">
                         </div>
                     </div>
 
@@ -46,7 +60,6 @@
                                 class="btn btn-default pull-right"
                                 href="/register"
                         >
-                            <i class="fa fa-key"></i>
                             {{trans('client.register')}}
                         </a>
                     </div>

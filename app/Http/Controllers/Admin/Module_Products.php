@@ -217,8 +217,20 @@ class Module_Products extends BaseController
 				{
 					foreach (Input::get('sizes') as $size_name => $size)
 					{
-						$available_sizes[] = $size_name;
+						if ($size['quantity'] > 0)
+						{
+							$available_sizes[] = $size_name;
+						}
 					}
+				}
+
+				if ( ! empty(Input::get('quantity')))
+				{
+					$available = 1;
+				}
+				else
+				{
+					$available = 0;
 				}
 
 				$data = [
@@ -226,6 +238,7 @@ class Module_Products extends BaseController
 					'description'      => Input::get('description'),
 					'main_category'    => Input::get('main_category'),
 					'quantity'         => Input::get('quantity'),
+					'available'        => $available,
 					'position'         => Input::get('position'),
 					'active'           => Input::get('active'),
 					'original_price'   => Input::get('original_price'),
@@ -660,8 +673,20 @@ class Module_Products extends BaseController
 				{
 					foreach (Input::get('sizes') as $size_name => $size)
 					{
-						$available_sizes[] = $size_name;
+						if ($size['quantity'] > 0)
+						{
+							$available_sizes[] = $size_name;
+						}
 					}
+				}
+
+				if ( ! empty(Input::get('quantity')))
+				{
+					$available = 1;
+				}
+				else
+				{
+					$available = 0;
 				}
 
 				if ($error === FALSE)
@@ -671,6 +696,7 @@ class Module_Products extends BaseController
 						'description'      => Input::get('description'),
 						'main_category'    => Input::get('main_category'),
 						'quantity'         => Input::get('quantity'),
+						'available'        => $available,
 						'position'         => Input::get('position'),
 						'active'           => Input::get('active'),
 						'original_price'   => Input::get('original_price'),

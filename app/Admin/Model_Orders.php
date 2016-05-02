@@ -50,11 +50,13 @@ class Model_Orders extends Model
 			$order = $order->select($objects);
 		}
 
-		if($start_date != FALSE && strtotime($start_date) !== FALSE) {
+		if ($start_date != FALSE && strtotime($start_date) !== FALSE)
+		{
 			$order = $order->where('created_at', '>=', $start_date);
 		}
 
-		if($end_date != FALSE && strtotime($end_date) !== FALSE) {
+		if ($end_date != FALSE && strtotime($end_date) !== FALSE)
+		{
 			$order = $order->where('created_at', '<=', $end_date);
 		}
 
@@ -265,16 +267,28 @@ class Model_Orders extends Model
 	{
 		if ( ! empty($product_id) && ! empty($sizes) && isset($total))
 		{
+			if (empty($total))
+			{
+				$available = 0;
+			}
+			else
+			{
+				$available = 1;
+			}
+
 			$quantity = DB::table('products')
 						  ->where('id', '=', $product_id)
-						  ->update(['quantity' => $total]);
+						  ->update([
+									   'quantity'  => $total,
+									   'available' => $available,
+								   ]);
 
 			$sizes = DB::table('products_data')
 					   ->where('product_id', '=', $product_id)
 					   ->where('object', '=', 'sizes')
 					   ->update(['json' => $sizes]);
 
-			if ($sizes)
+			if ($quantity && $sizes)
 			{
 				return TRUE;
 			}
@@ -319,22 +333,28 @@ class Model_Orders extends Model
 		return $count;
 	}
 
-	public static function getOrigPrices($ids) {
-		if(!empty($ids) && is_array($ids)) {
-			$results = DB::table('products')
-				->select(['id', 'original_price'])
-				->whereIn('id', $ids)
-				->get();
+	public static function getOrigPrices($ids)
+	{
+		if ( ! empty($ids) && is_array($ids))
+		{
+			$results  = DB::table('products')
+						  ->select(['id', 'original_price'])
+						  ->whereIn('id', $ids)
+						  ->get();
 			$response = [];
 
-			if(!empty($results) && is_array($results)) {
-				foreach ($results as $result) {
+			if ( ! empty($results) && is_array($results))
+			{
+				foreach ($results as $result)
+				{
 					$response[$result['id']] = $result['original_price'];
 				}
 			}
 
 			return $response;
-		} else {
+		}
+		else
+		{
 			return FALSE;
 		}
 	}

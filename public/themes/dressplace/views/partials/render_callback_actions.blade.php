@@ -1,4 +1,4 @@
-<div class="container banner-actions">
+<div class="container banner-actions hidden-xs">
     <div class="row">
         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
             <div class="box free-delivery">

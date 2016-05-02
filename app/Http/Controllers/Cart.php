@@ -39,17 +39,18 @@ class Cart extends BaseControllerClient
 		$customJS  = [
 		];
 
-		$response          = [
+		$response                  = [
 			'blade_custom_css' => $customCSS,
 			'blade_custom_js'  => $customJS,
 		];
-		$response['cart']  = session()->get('cart');
-		$response['total'] = session()->get('total');
+		$response['cart']          = session()->get('cart');
+		$response['total']         = session()->get('total');
 		$response['delivery_type'] = session()->get('delivery_type');
 
-		if($request->ajax()) {
+		if ($request->ajax())
+		{
 			$response['blade_standalone'] = TRUE;
-			$response['ajax'] = TRUE;
+			$response['ajax']             = TRUE;
 		}
 
 		$products_to_cart = [];
@@ -147,6 +148,60 @@ class Cart extends BaseControllerClient
 		return Theme::view('checkout.cart', $response);
 	}
 
+	public function added($cart_id)
+	{
+		$customCSS = [
+
+		];
+		$customJS  = [
+		];
+
+		$response                     = [
+			'blade_custom_css' => $customCSS,
+			'blade_custom_js'  => $customJS,
+		];
+		$response['blade_standalone'] = TRUE;
+		$response['ajax']             = TRUE;
+		$response['cart']             = session()->get('cart');
+		$response['total']            = session()->get('total');
+		$response['delivery_type']    = session()->get('delivery_type');
+		$response['cart_items']       = count($response['cart']);
+
+		//Calculate delivery cost and total
+		if($response['delivery_type'] == 'to_address') {
+			$response['delivery_cost'] = $this->system['delivery_to_address'];
+		} elseif($response['delivery_type'] == 'to_office') {
+			$response['delivery_cost'] = $this->system['delivery_to_office'];
+		} else {
+			$response['delivery_cost'] = $this->system['delivery_to_office'];
+		}
+
+		$response['cart_total'] = floatval($response['total']) + floatval($response['delivery_cost']);
+
+		if ( ! empty($response['cart'][$cart_id]))
+		{
+			$product_id             = $response['cart'][$cart_id]['product_id'];
+			$response['product']    = Model_Main::getProducts($product_id, ['title', 'images']);
+			$response['cart_id']    = $cart_id;
+			$response['product_id'] = $product_id;
+
+		$response['thumbs_path'] = Config::get('system_settings.product_public_path');
+		$response['icon_size']   = Config::get('images.sm_icon_size');
+
+		//Get only first image
+		if ( ! empty($response['product'][$product_id]['images']) && is_array($image = json_decode($response['product'][$product_id]['images'], TRUE)))
+		{
+			reset($image);
+			$response['product'][$product_id]['image'] = key($image);
+			unset($response['product'][$product_id]['images']);
+		}
+		} else {
+			$response['no_product'] = TRUE;
+		}
+
+		return Theme::view('partials.cart_added', $response);
+	}
+
 	public function add()
 	{
 		//If have product to add
@@ -203,7 +258,8 @@ class Cart extends BaseControllerClient
 			{
 				foreach ($cart as $item)
 				{
-					if(!empty($item['subtotal'])) {
+					if ( ! empty($item['subtotal']))
+					{
 						$total = $total + floatval($item['subtotal']);
 					}
 				}
@@ -247,9 +303,9 @@ class Cart extends BaseControllerClient
 			$product['quantity'] = $quantity;
 
 			//If product have discount
-			if (!empty($product['active_discount']))
+			if ( ! empty($product['active_discount']))
 			{
-				$product['subtotal']        = floatval($product['discount_price']) * intval($quantity);
+				$product['subtotal'] = floatval($product['discount_price']) * intval($quantity);
 			}
 
 			//Unset old product with that id
@@ -266,7 +322,8 @@ class Cart extends BaseControllerClient
 			{
 				foreach ($cart as $item)
 				{
-					if(!empty($item['subtotal'])) {
+					if ( ! empty($item['subtotal']))
+					{
 						$total = $total + floatval($item['subtotal']);
 					}
 				}
@@ -286,9 +343,10 @@ class Cart extends BaseControllerClient
 		}
 	}
 
-	public function changeDeliveryType() {
+	public function changeDeliveryType()
+	{
 		if (
-			! empty(($delivery_type = Input::get('delivery_type')))
+		! empty(($delivery_type = Input::get('delivery_type')))
 		)
 		{
 			session()->put('delivery_type', $delivery_type);
@@ -321,9 +379,10 @@ class Cart extends BaseControllerClient
 				$success = TRUE;
 			}
 
-			if(floatval($total) < 0) {
+			if (floatval($total) < 0)
+			{
 				$total = 0;
-				$cart = [];
+				$cart  = [];
 			}
 
 			session()->put('cart', $cart);

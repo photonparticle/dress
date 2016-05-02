@@ -152,7 +152,7 @@ class Model_Users extends Model
 			{
 				unset($update_data[$key]);
 
-				if ($data != '' && ! empty($data))
+				if (isset($data))
 				{
 					DB::table('users_info')->insert(
 						['user_id' => $user_id, 'object' => $key, 'value' => $data, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]

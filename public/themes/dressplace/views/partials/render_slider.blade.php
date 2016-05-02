@@ -11,7 +11,7 @@
                             @if(!empty($slider['slides'][$image]['title']))
                                     <!-- Slide Caption -->
                             <div class="tp-caption skewfromrightshort skewtorightshort tp-resizeme"
-                                 data-x="center" data-hoffset="0"
+                                 data-x="{{$slider['slides'][$image]['place'] or 'center'}}" data-hoffset="0"
                                  data-y="center" data-voffset="-100"
                                  data-speed="500"
                                  data-start="500"
@@ -30,7 +30,7 @@
                             @if(!empty($slider['slides'][$image]['text']))
                                     <!-- Slide Text -->
                             <div class="tp-caption skewfromrightshort skewtorightshort tp-resizeme splitted"
-                                 data-x="center" data-hoffset="0"
+                                 data-x="{{!empty($slider['slides'][$image]['place']) ? $slider['slides'][$image]['place']  : 'center'}}" data-hoffset="0"
                                  data-y="center" data-voffset="-30"
                                  data-speed="500"
                                  data-start="1300"
@@ -48,7 +48,7 @@
                             @if(!empty($slider['slides'][$image]['buttonText']) && !empty($slider['slides'][$image]['buttonURL']))
                                     <!-- Slide Action Button -->
                             <div class="tp-caption tp-fade fadeout tp-resizeme"
-                                 data-x="center" data-hoffset="0"
+                                 data-x="{{!empty($slider['slides'][$image]['place']) ? $slider['slides'][$image]['place']  : 'center'}}" data-hoffset="0"
                                  data-y="center" data-voffset="45"
                                  data-customin="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0;scaleY:0;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
                                  data-speed="500"

@@ -100,7 +100,7 @@ class Checkout extends BaseControllerClient
 		if ( ! empty(($order_data = $order_data[0])) && is_array($order_data))
 		{
 			$response['cart']  = ! empty($order_data['cart']) ? json_decode($order_data['cart'], TRUE) : [];
-			$response['total'] = ! empty($response['cart']['total']) ? $response['cart']['total'] : 0;
+			$response['total'] = ! empty($order_data['total']) ? $order_data['total'] : 0;
 			if (isset($order_data['total']))
 			{
 				unset($order_data['total']);
@@ -121,12 +121,22 @@ class Checkout extends BaseControllerClient
 			$response['states'][$state] = trans('orders.'.$state);
 		}
 
-		$response['delivery_type'] = $order_data['delivery_type'];
-
-		if ( ! empty($response['delivery_type']))
-		{
-
+		//Calculate delivery and total
+		if(!empty($order_data['delivery_type']) && $response['total'] < $this->system['delivery_free_delivery']) {
+			if($order_data['delivery_type'] == 'to_address') {
+				$response['delivery_cost'] = $this->system['delivery_to_address'];
+			} elseif($order_data['delivery_type'] == 'to_office') {
+				$response['delivery_cost'] = $this->system['delivery_to_office'];
+			}
+			$response['order_total'] = $response['total'] + $response['delivery_cost'];
+		} else {
+			$response['delivery_cost'] = 0;
+			$response['order_total'] = $response['total'];
 		}
+
+		$response['order_id'] = $order_data['id'];
+		$response['date_created'] = date('H:i - m.d.Y', strtotime($order_data['created_at']));
+		$response['delivery_type'] = $order_data['delivery_type'];
 
 		$products_to_cart = [];
 
@@ -140,78 +150,7 @@ class Checkout extends BaseControllerClient
 		}
 
 		// Get products data
-		$response['products'] = Model_Main::getProducts($products_to_cart, ['title', 'images', 'sizes']);
-
-		//Loop trough products data
-		if ( ! empty($response['products']) && is_array($response['products']))
-		{
-			foreach ($response['products'] as $id => $product)
-			{
-				if ( ! empty($product['discount_price']))
-				{
-					//Calculate is discount active
-					$now = time();
-
-					if ($product['discount_start'] == '0000.00.00 00:00:00' || strtotime($product['discount_start']) <= $now)
-					{
-						$allow_start = TRUE;
-					}
-					else
-					{
-						$allow_start = FALSE;
-					}
-
-					if ($product['discount_end'] == '0000.00.00 00:00:00' || strtotime($product['discount_end']) <= $now)
-					{
-						$allow_end = TRUE;
-					}
-					else
-					{
-						$allow_end = FALSE;
-					}
-
-					if ($allow_start === TRUE && $allow_end === TRUE)
-					{
-						$response['products'][$id]['active_discount'] = TRUE;
-					}
-
-					if ( ! empty($response['products'][$id]['active_discount']))
-					{
-						$response['products'][$id]['discount'] = intval(
-							(floatval($response['products'][$id]['price']) -
-								floatval($response['products'][$id]['discount_price'])) / floatval($response['products'][$id]['price']) * 100
-						);
-					}
-				}
-
-				if ( ! empty ($response['products'][$id]['sizes']) && is_array(($response['products'][$id]['sizes'] = json_decode($response['products'][$id]['sizes'], TRUE))))
-				{
-					foreach ($response['products'][$id]['sizes'] as $key => $size)
-					{
-						if (empty($size['name']) || empty($size['quantity']))
-						{
-							if (isset($response['products'][$id]['sizes'][$key]))
-							{
-								unset($response['products'][$id]['sizes'][$key]);
-							}
-						}
-
-						//Set quantity to cart items
-						if ( ! empty($response['cart'][$id.'-'.$key]) && is_array($response['cart'][$id.'-'.$key]))
-						{
-							if ( ! empty($size['quantity']) && is_numeric($size['quantity']))
-							{
-								$response['cart'][$id.'-'.$key]['available_quantity'] = intval($size['quantity']);
-							}
-							else
-							{
-								$response['cart'][$id.'-'.$key]['available_quantity'] = 0;
-							}
-						}
-					}
-				}
-			}
-		}
+		$response['products'] = Model_Main::getProducts($products_to_cart, ['title', 'images']);
 
 		// Send products to response
 		$response['products'] = self::prepareProductsForResponse($response['products']);
@@ -354,7 +293,8 @@ class Checkout extends BaseControllerClient
 		$response['status']  = 'error';
 		$response['message'] = trans('orders.not_saved');
 
-		$cart = session()->get('cart');
+		$cart  = session()->get('cart');
+		$total = session()->get('total');
 
 		if ( ! empty($_POST) && ! empty($cart))
 		{
@@ -385,6 +325,19 @@ class Checkout extends BaseControllerClient
 				$response['message'] = trans('orders.name_required');
 				$error               = TRUE;
 			}
+			if (empty(trim(Input::get('email'))))
+			{
+				$response['message'] = trans('orders.email_required');
+				$error               = TRUE;
+			}
+			else
+			{
+				if ( ! filter_var(trim(Input::get('email')), FILTER_VALIDATE_EMAIL))
+				{
+					$response['message'] = trans('orders.invalid_email');
+					$error               = TRUE;
+				}
+			}
 			if (empty(trim(Input::get('delivery_type'))))
 			{
 				$response['message'] = trans('orders.delivery_type_required');
@@ -393,16 +346,6 @@ class Checkout extends BaseControllerClient
 
 			if ($error === FALSE)
 			{
-				$total = floatval(0);
-				if ( ! empty($cart) && is_array($cart))
-				{
-					foreach ($cart as $key => $item)
-					{
-						$total = floatval($total + floatval($item['subtotal']));
-					}
-				}
-				$cart['total'] = $total;
-
 				$data = [
 					'name'          => trim(Input::get('name')),
 					'last_name'     => trim(Input::get('last_name')),
@@ -415,11 +358,10 @@ class Checkout extends BaseControllerClient
 					'comment'       => trim(Input::get('comment')),
 					'status'        => 'pending',
 					'delivery_type' => Input::get('delivery_type'),
+					'total'         => $total,
 					'created_at'    => date('Y-m-d H:i:s'),
 					'cart'          => json_encode($cart),
 				];
-
-				unset($cart['total']);
 
 				if (($id = Model_Orders::insertOrder($data)) > 0)
 				{

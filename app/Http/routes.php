@@ -78,6 +78,7 @@ Route::post('/my-profile/{id}/{action}', 'Homepage@updateAccount');
 Route::get('/my-orders', 'Homepage@orders');
 
 Route::get('/cart', 'Cart@cart');
+Route::get('/cart/added/{id}', 'Cart@added');
 Route::post('/cart/add', 'Cart@add');
 Route::post('/cart/update', 'Cart@update');
 Route::post('/cart/delivery_type', 'Cart@changeDeliveryType');

@@ -8,7 +8,7 @@
 		dottedOverlay:"none",
 		delay:9000,
 		startwidth:1920,
-		startheight:800,
+		startheight:400,
 		hideThumbs:200,
 
 		thumbWidth:100,

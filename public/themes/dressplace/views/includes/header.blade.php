@@ -1,15 +1,15 @@
 <header>
     <!-- header-top-area start -->
-    <div class="header-top-area bg-color hidden-xs">
+    <div class="header-top-area bg-color">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-4">
                     <div class="welcome">
                         @if(!empty($sys['phone']))
-                            <span class="phone">{{$sys['phone'] or ''}}</span> <span class="hidden-sm">/</span>
+                            <span class="phone">{{$sys['phone'] or ''}}</span> <span>/</span>
                         @endif
                         @if(!empty($sys['email']))
-                            <span class="email hidden-sm">{{$sys['email'] or ''}}</span>
+                            <span class="email">{{$sys['email'] or ''}}</span>
                         @endif
                     </div>
                 </div>

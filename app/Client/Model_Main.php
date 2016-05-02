@@ -77,6 +77,7 @@ class Model_Main extends Model
 	public static function getCategory($category_id = FALSE, $objects = [])
 	{
 		$categories     = DB::table('categories')
+							->orderBy('position', 'ASC')
 							->orderBy('id', 'asc');
 		$response       = [];
 		$categories_ids = [];
@@ -90,7 +91,7 @@ class Model_Main extends Model
 			$categories = $categories->where('id', '=', $category_id);
 		}
 
-		$categories = $categories->where('active', '=', 1)
+		$categories = $categories->where('active', 1)
 								 ->where('menu_visibility', '=', 1)
 								 ->get();
 
@@ -169,15 +170,23 @@ class Model_Main extends Model
 	 *
 	 * @return array
 	 */
-	private static function getNewestProducts($limit = 20)
+	public static function getNewestProducts($limit = 20, $skip_product = FALSE)
 	{
 		$response = [];
 		$products = DB::table('products')
 					  ->select('id')
 					  ->orderBy('created_at', 'desc')
 					  ->orderBy('position', 'desc')
-					  ->where('active', '=', 1)
-					  ->skip(0)->take($limit)->get();
+					  ->where('available', '=', 1)
+					  ->where('active', '=', 1);
+
+		if ( ! empty($skip_product) && is_numeric($skip_product))
+		{
+			$products = $products->where('id', '!=', $skip_product);
+		}
+
+		$products = $products
+			->skip(0)->take($limit)->get();
 
 		if ( ! empty($products) && is_array($products))
 		{
@@ -198,13 +207,14 @@ class Model_Main extends Model
 	 *
 	 * @return array
 	 */
-	private static function getDiscountedProducts($limit = 20)
+	public static function getDiscountedProducts($limit = 20)
 	{
 		$response = [];
 		$products = DB::table('products')
 					  ->select('id')
 					  ->where('discount_price', '>', 0)
 					  ->where('active', '=', 1)
+					  ->where('available', '=', 1)
 					  ->orderBy('created_at', 'desc')
 					  ->orderBy('position', 'desc')
 					  ->skip(0)->take($limit)->get();
@@ -257,7 +267,8 @@ class Model_Main extends Model
 			$products = $products->skip($skip)->take($limit);
 		}
 
-		$products = $products->where('active', '=', '1');
+		$products = $products->where('active', '=', '1')
+							 ->orderBy('available', 'DESC');
 
 		if ($order_by == 'discounted')
 		{
@@ -272,9 +283,16 @@ class Model_Main extends Model
 			$products = $products->orderBy('price', 'DESC');
 		}
 
-		$products = $products->orderBy('created_at', 'DESC')
-							 ->orderBy('position', 'ASC')
-							 ->get();
+		if (empty($order_by))
+		{
+			$products = $products->orderBy('created_at', 'DESC')
+								 ->orderBy('position', 'ASC')
+								 ->get();
+		}
+		else
+		{
+			$products = $products->get();
+		}
 
 		if ( ! empty($products) && is_array($products))
 		{
@@ -576,15 +594,18 @@ class Model_Main extends Model
 	{
 		if ( ! empty($product_id))
 		{
-			$response = DB::table('product_to_tag')
+			$tags = DB::table('product_to_tag')
+						  ->select(['tags.title'])
 						  ->join('tags', 'product_to_tag.tag_id', '=', 'tags.id')
-						  ->select('product_to_tag.product_id', 'product_to_tag.tag_id', 'tags.title')
 						  ->where('product_to_tag.product_id', '=', $product_id)
 						  ->orderBy('product_to_tag.id', 'ASC')
 						  ->get();
 
-			if ($response)
+			if (!empty($tags) && is_array($tags))
 			{
+				foreach($tags as $key => $value) {
+					$response[] = $value['title'];
+				}
 				return $response;
 			}
 			else
@@ -709,15 +730,17 @@ class Model_Main extends Model
 	public static function getSimilarProducts($category_id)
 	{
 		$results = DB::table('product_to_category')
-				 ->select('product_id')
-				 ->where('product_to_category.category_id', '=', $category_id)
-				 ->orderBy('id', 'DESC')
-				 ->skip(0)->take(16)->get();
+					 ->select('product_id')
+					 ->where('category_id', '=', $category_id)
+					 ->orderBy('id', 'DESC')
+					 ->skip(0)->take(8)->get();
 
 		$products = [];
 
-		if(!empty($results) && is_array($results)) {
-			foreach($results as $result) {
+		if ( ! empty($results) && is_array($results))
+		{
+			foreach ($results as $result)
+			{
 				$products[] = $result['product_id'];
 			}
 		}
@@ -725,13 +748,14 @@ class Model_Main extends Model
 		return $products;
 	}
 
-	public static function getFooterPages() {
+	public static function getFooterPages()
+	{
 		return DB::table('pages')
-				->select(['pages.title', 'seo_url.slug'])
-				->join('seo_url', 'seo_url.object', '=', 'pages.id')
-				->where('pages.show_footer', '=', 1)
-				->where('pages.active', '=', 1)
-				->where('seo_url.type', '=', 'page')
-			->get();
+				 ->select(['pages.title', 'seo_url.slug'])
+				 ->join('seo_url', 'seo_url.object', '=', 'pages.id')
+				 ->where('pages.show_footer', '=', 1)
+				 ->where('pages.active', '=', 1)
+				 ->where('seo_url.type', '=', 'page')
+				 ->get();
 	}
 }

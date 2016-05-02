@@ -72,6 +72,8 @@ return [
 	'phone_required'           => 'Въведете телефон',
 	'address_required'         => 'Въведете адрес',
 	'city_required'            => 'Въведете град',
+	'email_required'           => 'Email адреса е задължителен',
+	'invalid_email'            => 'Въвели сте невалиден email адрес',
 	'saved'                    => 'Поръчката беше запазена',
 	'not_saved'                => 'Поръчката не беше запазена',
 	'product_saved'            => 'Продуктът беше добавен',

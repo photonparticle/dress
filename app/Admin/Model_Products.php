@@ -125,6 +125,7 @@ class Model_Products extends Model
 							->insertGetId([
 											  'active'         => $data['active'],
 											  'quantity'       => $data['quantity'],
+											  'available'      => $data['available'],
 											  'main_category'  => $data['main_category'],
 											  'original_price' => $data['original_price'],
 											  'price'          => $data['price'],
@@ -193,6 +194,7 @@ class Model_Products extends Model
 			  ->update([
 						   'active'         => $data['active'],
 						   'quantity'       => $data['quantity'],
+						   'available'      => $data['available'],
 						   'main_category'  => $data['main_category'],
 						   'original_price' => $data['original_price'],
 						   'price'          => $data['price'],
@@ -241,7 +243,7 @@ class Model_Products extends Model
 					'type'  => 'string',
 				];
 			}
-			if ( ! empty($data['description']))
+			if (isset($data['description']))
 			{
 				$objects['description'] = [
 					'value' => $data['description'],
@@ -249,7 +251,7 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( ! empty($data['sizes']) && is_array($data['sizes']))
+			if (isset($data['sizes']) && is_array($data['sizes']))
 			{
 				$objects['sizes'] = [
 					'value' => json_encode($data['sizes']),
@@ -257,10 +259,15 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( ! empty($data['related_products']) && is_array($data['related_products']))
+			if ( isset($data['related_products']))
 			{
 				$objects['related_products'] = [
 					'value' => json_encode($data['related_products']),
+					'type'  => 'json',
+				];
+			} elseif(empty($data['related_products'])) {
+				$objects['related_products'] = [
+					'value' => '',
 					'type'  => 'json',
 				];
 			}
@@ -273,7 +280,7 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( ! empty($data['meta_description']))
+			if ( isset($data['meta_description']))
 			{
 				$objects['meta_description'] = [
 					'value' => $data['meta_description'],
@@ -281,7 +288,7 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( ! empty($data['meta_keywords']))
+			if ( isset($data['meta_keywords']))
 			{
 				$objects['meta_keywords'] = [
 					'value' => $data['meta_keywords'],
@@ -289,14 +296,14 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( ! empty($data['images']))
+			if ( isset($data['images']))
 			{
 				$objects['images'] = [
 					'value' => json_encode($data['images']),
 					'type'  => 'json',
 				];
 			}
-			if ( ! empty($data['dimensions_table']))
+			if ( isset($data['dimensions_table']))
 			{
 				$objects['dimensions_table'] = [
 					'value' => $data['dimensions_table'],

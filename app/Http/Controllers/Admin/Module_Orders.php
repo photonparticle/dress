@@ -336,9 +336,12 @@ class Module_Orders extends BaseController
 
 						if(intval($quantity) > 0) {
 							$product['quantity'] = intval($product['quantity']) - intval($quantity);
+						} else {
+							$product['quantity'] = 0;
 						}
 
 						Model_Orders::discountProduct($product['id'], $sizes, $product['quantity']);
+						Model_Products::saveProductToSize($product['id'], $sizes);
 
 						$response['status']  = 'success';
 						$response['message'] = trans('orders.product_saved');

@@ -140,7 +140,7 @@ class Module_Carousels extends BaseController
 
 				if ( ! empty($_POST['products']) && is_array($_POST['products']))
 				{
-					$data['products'] = json_encode($_POST['products']);
+					$data['products'] = implode(',', $_POST['products']);
 				}
 				else
 				{
@@ -212,7 +212,7 @@ class Module_Carousels extends BaseController
 
 		if ( ! empty($response['carousel']['products']) && $response['carousel']['slider_type'] == 'others')
 		{
-			$response['carousel']['products'] = json_decode($response['carousel']['products'], TRUE);
+			$response['carousel']['products'] = is_array(json_decode(',', $response['carousel']['products'], TRUE)) ? json_decode(',', $response['carousel']['products'], TRUE) : explode(',', $response['carousel']['products']);
 		}
 
 		if ( ! empty($response['carousel']['active_from']) && $response['carousel']['active_from'] == '0000-00-00 00:00:00')
