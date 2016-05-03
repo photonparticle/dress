@@ -15,8 +15,8 @@
 	 product-curosel active
 	 ------------------------------ */
 	$(".product-curosel").owlCarousel({
-		                                  autoPlay: false,
-		                                  slideSpeed: 2000,
+		                                  autoPlay: true,
+		                                  slideSpeed: 500,
 		                                  pagination: false,
 		                                  navigation: true,
 		                                  items: 4,
@@ -221,7 +221,7 @@
 	 ---------------------------- */
 	$.scrollUp({
 		           scrollText: '<i class="fa fa-angle-up"></i>',
-		           scrollSpeed: 900,
+		           scrollSpeed: 1000,
 		           animation: 'fade'
 	           });
 

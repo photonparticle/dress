@@ -289,7 +289,7 @@ class Client extends BaseControllerClient
 
 		//Get submitted filters
 		$filter_size      = (Input::get('size')) ? Input::get('size') : '';
-		$filter_material  = (Input::get('material')) ? Input::get('material') : '';
+//		$filter_material  = (Input::get('material')) ? Input::get('material') : '';
 		$filter_color     = (Input::get('color')) ? Input::get('color') : '';
 		$filter_price_min = (Input::get('price_min')) ? Input::get('price_min') : '';
 		$filter_price_max = (Input::get('price_max')) ? Input::get('price_max') : '';
@@ -302,10 +302,10 @@ class Client extends BaseControllerClient
 				$filter_size = session('filter_size');
 			}
 
-			if ( ! empty(session('filter_material')))
-			{
-				$filter_material = session('filter_material');
-			}
+//			if ( ! empty(session('filter_material')))
+//			{
+//				$filter_material = session('filter_material');
+//			}
 
 			if ( ! empty(session('filter_color')))
 			{
@@ -325,7 +325,7 @@ class Client extends BaseControllerClient
 
 		//Store filters inside session
 		session(['filter_size' => $filter_size]);
-		session(['filter_material' => $filter_material]);
+//		session(['filter_material' => $filter_material]);
 		session(['filter_color' => $filter_color]);
 		session(['price_min' => $filter_price_min]);
 		session(['price_max' => $filter_price_max]);
@@ -339,14 +339,14 @@ class Client extends BaseControllerClient
 			$response['filter']['size'] = $filter_size;
 		}
 
-		if ( ! empty($filter_material))
-		{
-			$products_with_material         = Model_Client::getProductsWithMaterial($filter_material);
-			$products_without_material      = array_diff($response['products'], $products_with_material);
-			$response['products']           = array_diff($response['products'], $products_without_material);
-			$total_products                 = count($response['products']) - count($products_without_material);
-			$response['filter']['material'] = $filter_material;
-		}
+//		if ( ! empty($filter_material))
+//		{
+//			$products_with_material         = Model_Client::getProductsWithMaterial($filter_material);
+//			$products_without_material      = array_diff($response['products'], $products_with_material);
+//			$response['products']           = array_diff($response['products'], $products_without_material);
+//			$total_products                 = count($response['products']) - count($products_without_material);
+//			$response['filter']['material'] = $filter_material;
+//		}
 
 		if ( ! empty($filter_color))
 		{
@@ -419,7 +419,7 @@ class Client extends BaseControllerClient
 		$response['colors'] = Model_Client::getColors();
 
 		// Get Materials
-		$response['materials'] = Model_Client::getMaterials();
+//		$response['materials'] = Model_Client::getMaterials();
 
 		// Define other needable variables
 		$response['thumbs_path']  = Config::get('system_settings.product_public_path');

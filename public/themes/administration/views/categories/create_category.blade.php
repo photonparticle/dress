@@ -145,7 +145,7 @@
                                                     {{trans('categories.active')}}
                                                 </label>
                                                 <div class="col-xs-12 no-padding">
-                                                    <input id="active" name="active" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('categories.activated')}}&nbsp;" data-off-text="&nbsp;{{trans('categories.not_activated')}}&nbsp;">
+                                                    <input id="active" name="active" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('categories.activated')}}&nbsp;" data-off-text="&nbsp;{{trans('categories.not_activated')}}&nbsp;" checked>
                                                 </div>
                                             </div>
 

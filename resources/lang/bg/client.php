@@ -1,8 +1,8 @@
 <?php
 return [
 	'navigation'                    => 'Меню',
-	'quick_buy_tip'                 => 'БЪРЗО ПАЗАРУВАНЕ',
-	'quick_buy_tip_lw'              => 'Бързо пазаруване',
+	'quick_buy_tip'                 => 'БЪРЗ ПРЕГЛЕД',
+	'quick_buy_tip_lw'              => 'Бърз преглед',
 	'view_product_tip'              => 'ВИЖ ПРОДУКТА',
 	'sizes'                         => 'Размери',
 	'size'                          => 'Размер',
@@ -146,6 +146,7 @@ return [
 	'search_for'                    => 'Търсене за',
 	'search_by_tag'                 => 'Търсене по таг',
 	'no_results'                    => 'Няма резултати',
+	'cart_empty'                    => 'Кошницата е празна',
 
 	//	@TODO to be moved into database
 	'currency'                      => 'лв.',

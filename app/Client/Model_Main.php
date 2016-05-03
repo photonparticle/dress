@@ -77,8 +77,7 @@ class Model_Main extends Model
 	public static function getCategory($category_id = FALSE, $objects = [])
 	{
 		$categories     = DB::table('categories')
-							->orderBy('position', 'ASC')
-							->orderBy('id', 'asc');
+							->orderBy('position', 'ASC');
 		$response       = [];
 		$categories_ids = [];
 

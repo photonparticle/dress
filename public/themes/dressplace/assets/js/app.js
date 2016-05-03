@@ -364,7 +364,7 @@ function validateAddToCart(product_holder) {
 			$(this).removeClass('active').addClass('disabled').blur();
 		} else {
 			product_holder.find(form_sizes_btn).addClass('disabled').removeClass('active');
-			$(this).removeClass('disabled').addClass('active');
+			$(this).removeClass('disabled').addClass('active').blur();
 		}
 
 		//If no size
@@ -418,6 +418,9 @@ function validateAddToCart(product_holder) {
 
 		//Visual
 		product_holder.find(form_price_item).html(price);
+
+		//Recent quantity
+		product_holder.find(form_q_val).html(1);
 
 		if (active_discount == 'true' || active_discount == 1 && parseFloat(discounted_price) > 0) {
 			product_holder.find(form_price_item).html(discounted_price);

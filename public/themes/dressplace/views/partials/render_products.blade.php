@@ -16,6 +16,7 @@
                         </a>
 
                         @if(
+                        empty($products_large) &&
                         !empty($products[$product_id]['discount']) &&
                         !empty($products[$product_id]['discount_price']) &&
                         !empty($products[$product_id]['active_discount']))

@@ -117,25 +117,25 @@
                         <!-- filter-by end -->
                         @endif
 
-                        @if(!empty($materials) && is_array($materials))
-                                <!-- filter-by start -->
-                        <aside class="widget filter-by">
-                            <h3 class="sidebar-title">
-                                <label for="filter_materials">
-                                    {{trans('client.material')}}
-                                </label>
-                            </h3>
+                        {{--@if(!empty($materials) && is_array($materials))--}}
+                                {{--<!-- filter-by start -->--}}
+                        {{--<aside class="widget filter-by">--}}
+                            {{--<h3 class="sidebar-title">--}}
+                                {{--<label for="filter_materials">--}}
+                                    {{--{{trans('client.material')}}--}}
+                                {{--</label>--}}
+                            {{--</h3>--}}
 
-                            <select id="filter_materials" name="filter_materials" class="form-control cForm">
-                                <option value=""> - {{trans('client.choose_material')}} -</option>
-                                @foreach($materials as $key => $name)
-                                    <option value="{{$key}}" @if(!empty($filter['material']) && $filter['material'] == $key) selected @endif>{{$name}}</option>
-                                @endforeach
-                            </select>
+                            {{--<select id="filter_materials" name="filter_materials" class="form-control cForm">--}}
+                                {{--<option value=""> - {{trans('client.choose_material')}} -</option>--}}
+                                {{--@foreach($materials as $key => $name)--}}
+                                    {{--<option value="{{$key}}" @if(!empty($filter['material']) && $filter['material'] == $key) selected @endif>{{$name}}</option>--}}
+                                {{--@endforeach--}}
+                            {{--</select>--}}
 
-                        </aside>
-                        <!-- filter-by end -->
-                        @endif
+                        {{--</aside>--}}
+                        {{--<!-- filter-by end -->--}}
+                        {{--@endif--}}
 
                         @if(!empty($colors) && is_array($colors))
                                 <!-- filter-by start -->

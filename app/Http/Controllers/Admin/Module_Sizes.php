@@ -145,6 +145,12 @@ class Module_Sizes extends BaseController
 	{
 		$response['pageTitle'] = trans('sizes.edit_group');
 
+		$customJS = [
+			'global/plugins/bootbox/bootbox.min',
+		];
+
+		$response['blade_custom_js']  = $customJS;
+
 		//Sizes load
 		$response['sizes'] = Model_Sizes::getSizes(FALSE, $id);
 		$response['group'] = $id;

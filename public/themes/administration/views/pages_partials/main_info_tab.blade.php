@@ -31,7 +31,7 @@
                 {{trans('pages.active')}}
             </label>
             <div class="col-xs-12 no-padding">
-                <input id="active" name="active" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('pages.activated')}}&nbsp;" data-off-text="&nbsp;{{trans('pages.not_activated')}}&nbsp;" @if(isset($page['active']) && $page['active'] == '1') checked @endif>
+                <input id="active" name="active" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('pages.activated')}}&nbsp;" data-off-text="&nbsp;{{trans('pages.not_activated')}}&nbsp;" @if(!isset($page['active']) or (isset($page['active']) && $page['active'] == '1')) checked @endif>
             </div>
         </div>
 
@@ -40,7 +40,7 @@
                 {{trans('pages.show_footer')}}
             </label>
             <div class="col-xs-12 no-padding">
-                <input id="show_footer" name="show_footer" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('pages.visible')}}&nbsp;" data-off-text="&nbsp;{{trans('pages.hidden')}}&nbsp;" @if(isset($page['show_footer']) && $page['show_footer'] == '1') checked @endif>
+                <input id="show_footer" name="show_footer" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('pages.visible')}}&nbsp;" data-off-text="&nbsp;{{trans('pages.hidden')}}&nbsp;" @if(!isset($page['show_footer']) or (isset($page['show_footer']) && $page['show_footer'] == '1')) checked @endif>
             </div>
         </div>
 

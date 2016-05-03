@@ -27,7 +27,7 @@
                 {{trans('products.active')}}
             </label>
             <div class="col-xs-12 no-padding">
-                <input id="active" name="active" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('products.activated')}}&nbsp;" data-off-text="&nbsp;{{trans('products.not_activated')}}&nbsp;" @if(isset($product['active']) && $product['active'] == '1') checked @endif>
+                <input id="active" name="active" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('products.activated')}}&nbsp;" data-off-text="&nbsp;{{trans('products.not_activated')}}&nbsp;" @if(!isset($product['active']) or (isset($product['active']) && $product['active'] == '1')) checked @endif>
             </div>
         </div>
 

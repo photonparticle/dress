@@ -51,11 +51,11 @@
                         <div class="cart-toggler">
                             <a href="/cart">
                                 <div class="icon">
-                                    <div class="count"><span>{{$cart_items}}</span></div>
+                                    <div class="count"><span>{{$cart_items or 0}}</span></div>
                                 </div>
                                 <div class="texts">
                                     <span class="cart_title">{{trans('client.cart')}}</span>
-                                    <span class="cart_data">{{trans('client.products')}} - <span>{{$cart_total}}</span> {{trans('client.currency')}}</span>
+                                    <span class="cart_data">{{trans('client.products')}} - <span>{{$cart_total or 0}}</span> {{trans('client.currency')}}</span>
                                 </div>
                             </a>
                         </div>

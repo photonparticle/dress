@@ -5,13 +5,18 @@
     @if(!empty($frame) && $frame === TRUE)
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="{{trans('client.close')}}"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <h4 class="modal-title">{{trans('client.quick_buy_tip_lw')}}</h4>
+            <h4 class="modal-title">
+                <div class="section-title no-margin text-center">
+                    <h1 class="no-margin">
+                        <a href="/{{$product['slug']}}">
+                            {{$product['title'] or ''}}
+                        </a>
+                    </h1>
+                </div>
+            </h4>
         </div>
-    @endif
-
-    @if(empty($frame))
+    @else
         <div class="container">
-            @endif
             <div class="col-xs-12">
                 <div class="section-title text-center">
                     <h1 class="no-margin">
@@ -22,7 +27,6 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            @if(empty($frame))
         </div>
     @endif
 
@@ -79,7 +83,7 @@
                             <div class="clearfix"></div>
                         @endif
 
-                        <div class="@if(!empty($frame) && $frame === TRUE) col-xs-12 @else col-lg-9 col-md-9 @endif">
+                        <div class="@if(!empty($frame) && $frame === TRUE) col-xs-12 margin-top-10 @else col-lg-9 col-md-9 @endif">
                             <div class="row">
                                 <div class="col-md-5 col-sm-5 col-xs-12">
                                     <div class="single-pro-tab-content">
