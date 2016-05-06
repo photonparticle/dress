@@ -75,6 +75,7 @@
                     <div class="main-menu">
                         <nav>
                             <ul>
+                                {{--Categories--}}
                                 @if(!empty($main_categories) && is_array($main_categories))
                                     @foreach($main_categories as $key => $main_category)
                                         <li>
@@ -92,6 +93,17 @@
                                                     @endforeach
                                                 </ul>
                                             @endif
+                                        </li>
+                                    @endforeach
+                                @endif
+
+                                {{--Pages--}}
+                                @if(!empty($navigation_pages) && is_array($navigation_pages))
+                                    @foreach($navigation_pages as $page)
+                                        <li>
+                                            <a href="{{$page['slug']}}">
+                                                {{$page['title']}}
+                                            </a>
                                         </li>
                                     @endforeach
                                 @endif

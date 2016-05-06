@@ -1,12 +1,11 @@
-@extends('administration::layout')
-
-@section('footer')
-<footer>
-
-
-	<hr>
-	<div class="container">
-		<p>&copy; KeenThemes 2015.</p>
-	</div>
-</footer>
-@endsection
+<!-- BEGIN FOOTER -->
+<div class="page-footer">
+    <div class="page-footer-inner">
+        {{date('Y')}} &copy; DressPlace
+    </div>
+    <div class="scroll-to-top">
+        <i class="icon-arrow-up"></i>
+    </div>
+</div>
+<!-- END FOOTER -->
+</div>

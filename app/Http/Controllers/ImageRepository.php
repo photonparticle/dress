@@ -41,7 +41,14 @@ class ImageRepository
 			$originalName           = $photo->getClientOriginalName();
 			$originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - 4);
 
-			$filename         = iconv("UTF-8","WINDOWS-1251", html_entity_decode(htmlentities(basename($originalNameWithoutExt), ENT_QUOTES, 'UTF-8')));
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+			{
+				$filename = iconv("UTF-8", "WINDOWS-1251", html_entity_decode(htmlentities(basename($originalNameWithoutExt), ENT_QUOTES, 'UTF-8')));
+			}
+			else
+			{
+				$filename = html_entity_decode(htmlentities(basename($originalNameWithoutExt), ENT_QUOTES, 'UTF-8'));
+			}
 
 			$filenameExt = $filename.'.jpg';
 
@@ -56,10 +63,11 @@ class ImageRepository
 			{
 
 				//Store to database
-				if(!empty($form_data['target'])) {
+				if ( ! empty($form_data['target']))
+				{
 					$image = [
-						'img' => $filenameExt,
-						'position' => 0
+						'img'      => $filenameExt,
+						'position' => 0,
 					];
 					Model_Products::storeImages($image, $form_data['target']);
 				}
@@ -71,8 +79,10 @@ class ImageRepository
 									  ], 500);
 
 			}
-		} elseif(!empty($this->module) && $this->module == 'tables') {
-			$filename         = basename($this->temp_name);
+		}
+		elseif ( ! empty($this->module) && $this->module == 'tables')
+		{
+			$filename    = basename($this->temp_name);
 			$filenameExt = $filename.'.png';
 
 			$uploadSuccess1 = $this->table_img($photo, $filenameExt);
@@ -88,11 +98,13 @@ class ImageRepository
 									  ], 500);
 
 			}
-		} elseif(!empty($this->module) && $this->module == 'sliders') {
+		}
+		elseif ( ! empty($this->module) && $this->module == 'sliders')
+		{
 			$originalName           = $photo->getClientOriginalName();
 			$originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - 4);
 
-			$filename         = basename($originalNameWithoutExt);
+			$filename = basename($originalNameWithoutExt);
 
 			$filenameExt = $filename.'.jpg';
 
@@ -147,7 +159,7 @@ class ImageRepository
 		$manager = new ImageManager();
 		$dir     = Config::get('system_settings.product_upload_path');
 
-		if ( ! is_dir($dir.$this->temp_name. DIRECTORY_SEPARATOR))
+		if ( ! is_dir($dir.$this->temp_name.DIRECTORY_SEPARATOR))
 		{
 			mkdir($dir.$this->temp_name.DIRECTORY_SEPARATOR);
 		}
@@ -226,7 +238,6 @@ class ImageRepository
 		return $image;
 	}
 
-
 	/**
 	 * Table Image
 	 */
@@ -262,7 +273,7 @@ class ImageRepository
 		$manager = new ImageManager();
 		$dir     = Config::get('system_settings.sliders_upload_path');
 
-		if ( ! is_dir($dir.$this->temp_name. DIRECTORY_SEPARATOR))
+		if ( ! is_dir($dir.$this->temp_name.DIRECTORY_SEPARATOR))
 		{
 			mkdir($dir.$this->temp_name.DIRECTORY_SEPARATOR);
 		}

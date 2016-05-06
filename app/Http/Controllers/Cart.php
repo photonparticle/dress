@@ -266,12 +266,11 @@ class Cart extends BaseControllerClient
 
 			$response['thumbs_path']  = Config::get('system_settings.product_public_path');
 			$response['icon_size']    = Config::get('images.sm_icon_size');
+			return Theme::view('partials.cart_items_drop', $response);
 
 		} else {
-			$response['no_product'] = TRUE;
+			return response()->json(['empty' => true]);
 		}
-//dd($response);
-		return Theme::view('partials.cart_items_drop', $response);
 	}
 
 	public function add()

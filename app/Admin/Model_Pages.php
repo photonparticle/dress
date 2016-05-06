@@ -62,15 +62,18 @@ class Model_Pages extends Model
 
 			$page_id = DB::table('pages')
 						 ->insertGetId([
-										   'title'            => $data['title'],
-										   'content'          => $data['content'],
-										   'active'           => $data['active'],
-										   'show_footer'      => $data['show_footer'],
-										   'page_title'       => $data['page_title'],
-										   'meta_description' => $data['meta_description'],
-										   'meta_keywords'    => $data['meta_keywords'],
-										   'created_at'       => date('Y-m-d H:i:s'),
-										   'updated_at'       => date('Y-m-d H:i:s'),
+										   'title'               => $data['title'],
+										   'content'             => $data['content'],
+										   'active'              => $data['active'],
+										   'show_footer'         => $data['show_footer'],
+										   'show_navigation'     => $data['show_navigation'],
+										   'footer_position'     => $data['footer_position'],
+										   'navigation_position' => $data['navigation_position'],
+										   'page_title'          => $data['page_title'],
+										   'meta_description'    => $data['meta_description'],
+										   'meta_keywords'       => $data['meta_keywords'],
+										   'created_at'          => date('Y-m-d H:i:s'),
+										   'updated_at'          => date('Y-m-d H:i:s'),
 									   ]);
 
 			return $page_id;
@@ -105,14 +108,17 @@ class Model_Pages extends Model
 			DB::table('pages')
 			  ->where('id', '=', $page_id)
 			  ->update([
-						   'title'            => $data['title'],
-						   'content'          => $data['content'],
-						   'active'           => $data['active'],
-						   'show_footer'      => $data['show_footer'],
-						   'page_title'       => $data['page_title'],
-						   'meta_description' => $data['meta_description'],
-						   'meta_keywords'    => $data['meta_keywords'],
-						   'updated_at'       => date('Y-m-d H:i:s'),
+						   'title'               => $data['title'],
+						   'content'             => $data['content'],
+						   'active'              => $data['active'],
+						   'show_footer'         => $data['show_footer'],
+						   'show_navigation'     => $data['show_navigation'],
+						   'footer_position'     => $data['footer_position'],
+						   'navigation_position' => $data['navigation_position'],
+						   'page_title'          => $data['page_title'],
+						   'meta_description'    => $data['meta_description'],
+						   'meta_keywords'       => $data['meta_keywords'],
+						   'updated_at'          => date('Y-m-d H:i:s'),
 					   ]);
 
 			return TRUE;

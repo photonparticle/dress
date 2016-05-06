@@ -77,100 +77,18 @@ class Module_System_Settings extends BaseController
 				'delivery_to_office'     => trim(Input::get('delivery_to_office')),
 				'delivery_to_address'    => trim(Input::get('delivery_to_address')),
 				'delivery_free_delivery' => trim(Input::get('delivery_free_delivery')),
+				'social_blog'            => trim(Input::get('social_blog')),
+				'social_facebook'        => trim(Input::get('social_facebook')),
+				'social_twitter'         => trim(Input::get('social_twitter')),
+				'social_google_plus'     => trim(Input::get('social_google_plus')),
+				'social_youtube'         => trim(Input::get('social_youtube')),
+				'social_pinterest'       => trim(Input::get('social_pinterest')),
 			];
 
 			if (Model_System_Settings::saveSettings($data) != FALSE)
 			{
 				$response['status']  = 'success';
 				$response['message'] = trans('system_settings.saved');
-			}
-		}
-
-		return response()->json($response);
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function getShow($id = FALSE)
-	{
-		$response['blade_standalone'] = TRUE;
-
-		//Color load
-		if ($id !== FALSE)
-		{
-			$response['color'] = Model_Colors::getColors($id);
-		}
-
-		return Theme::view('colors.color_partial', $response);
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
-	 * @param  int $action
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function postUpdate(Request $request)
-	{
-		$response['status']  = 'error';
-		$response['message'] = trans('colors.not_saved');
-
-		if ( ! empty($_POST))
-		{
-			$error = FALSE;
-			if (empty(Input::get('title')))
-			{
-				$error               = TRUE;
-				$response['message'] = trans('colors.title_required');
-			}
-
-			if ($error == FALSE)
-			{
-				$data = [
-					'title'      => Input::get('title'),
-					'position'   => Input::get('position'),
-					'updated_at' => time(),
-				];
-
-				$result = Model_Colors::updateColor(Input::get('id'), $data);
-
-				if ($result === TRUE)
-				{
-					$response['status']  = 'success';
-					$response['message'] = trans('colors.saved');
-				}
-			}
-		}
-
-		return response()->json($response);
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int $id
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function postDestroy($id = FALSE)
-	{
-		$response['status']  = 'error';
-		$response['message'] = trans('colors.not_removed');
-
-		if ( ! empty($id) && intval($id) > 0)
-		{
-			if (Model_Colors::removeColor($id) === TRUE)
-			{
-				$response['status']  = 'success';
-				$response['message'] = trans('colors.removed');
 			}
 		}
 

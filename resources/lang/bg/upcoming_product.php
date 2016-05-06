@@ -10,5 +10,6 @@ return [
 	'date' => 'Крайна дата',
 	'active' => 'Активност',
 	'activated' => 'Активен',
-	'not_activated' => 'Неактивен'
+	'not_activated' => 'Неактивен',
+	'product_required' => 'Задължително трябва да изберете продукт'
 ];

@@ -11,6 +11,24 @@ body {
 	-ms-animation: fadeIn 1000ms ease-in-out 500ms both;
 	animation: fadeIn 1000ms ease-in-out 500ms both;
 }
+
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.1);
+	background-color: #555;
+}
+
 .padding-10 {
 	padding: 10px;
 }
@@ -761,6 +779,14 @@ footer.sticky {
 	font-size: 13px;
 }
 
+.cart-items-drop h4 {
+	color: #418dda;
+	font-weight: bold;
+	font-size: 1.5em;
+	margin: 0.5em 0;
+	text-align: center;
+}
+
 /* SLIDER */
 .btn.btn-slider {
 	background-color: #fff;
@@ -771,4 +797,13 @@ footer.sticky {
 .btn.btn-slider:focus {
 	background-color: #418dda;
 	color: #fff;
+}
+
+/* CUSTOM ANIMATIONS */
+.tab-pane.active {
+	-webkit-animation: fadeIn 750ms ease-in-out 250ms both;
+	-moz-animation: fadeIn 750ms ease-in-out 250ms both;
+	-o-animation: fadeIn 750ms ease-in-out 250ms both;
+	-ms-animation: fadeIn 750ms ease-in-out 250ms both;
+	animation: fadeIn 750ms ease-in-out 250ms both;
 }

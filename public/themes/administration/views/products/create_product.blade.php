@@ -208,7 +208,7 @@
                                'images_dir': '{{ $images_dir }}',
                                'tags': $('#tags').val(),
                                'manufacturer': $('#manufacturer').val(),
-                               'colors': $('#manufacturer').val(),
+                               'colors': $('#colors').val(),
                                'material': $('#material').val(),
                                'dimensions_table': $('#dimensions_table').code(),
                            },

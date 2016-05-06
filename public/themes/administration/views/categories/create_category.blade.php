@@ -136,7 +136,7 @@
                                                     {{trans('categories.visibility')}}
                                                 </label>
                                                 <div class="col-xs-12 no-padding">
-                                                    <input id="visible" name="visible" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('categories.visible')}}&nbsp;" data-off-text="&nbsp;{{trans('categories.invisible')}}&nbsp;">
+                                                    <input id="visible" name="visible" type="checkbox" class="make-switch" data-on-text="&nbsp;{{trans('categories.visible')}}&nbsp;" data-off-text="&nbsp;{{trans('categories.invisible')}}&nbsp;" checked>
                                                 </div>
                                             </div>
 

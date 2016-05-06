@@ -221,6 +221,7 @@
 	 ---------------------------- */
 	$.scrollUp({
 		           scrollText: '<i class="fa fa-angle-up"></i>',
+					scrollTitle: 'Върни ме най-горе',
 		           scrollSpeed: 1000,
 		           animation: 'fade'
 	           });

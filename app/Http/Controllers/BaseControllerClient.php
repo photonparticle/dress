@@ -67,6 +67,7 @@ class BaseControllerClient extends Controller
 		$this->systemInit();
 
 		//Load navigation
+		$this->getNavPages();
 		$this->getCategories();
 	}
 
@@ -189,5 +190,9 @@ class BaseControllerClient extends Controller
 	private function getFooterPages()
 	{
 		View::share('footer_pages', Model_Main::getFooterPages());
+	}
+	
+	private function getNavPages() {
+		View::share('navigation_pages', Model_Main::getNavPages());
 	}
 }

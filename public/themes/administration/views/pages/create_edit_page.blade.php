@@ -77,10 +77,16 @@
             //Init WYSIWYG
             $('#content').summernote({height: 300});
 
+            //Init spinner
+            $('#footer_position').spinner({value: 0, min: 0, max: 100, step: 1.0});
+            $('#navigation_position').spinner({value: 0, min: 0, max: 100, step: 1.0});
+
             $('body').on('click', '.save_page', function () {
                 var
                         title = $('#title').val(),
                         content = $('#content').code(),
+                        footer_position = $('#input_footer_position').val(),
+                        navigation_position = $('#input_navigation_position').val(),
                         page_title = $('#page_title').val(),
                         meta_description = $('#meta_description').val(),
                         meta_keywords = $('#meta_keywords').val();
@@ -112,6 +118,11 @@
                 } else {
                     var show_footer = 0;
                 }
+                if ($('#show_navigation').is(':checked')) {
+                    var show_navigation = 1;
+                } else {
+                    var show_navigation = 0;
+                }
 
                 $.ajax({
                            type: 'post',
@@ -121,6 +132,9 @@
                                'content': content,
                                'active': active,
                                'show_footer': show_footer,
+                               'show_navigation': show_navigation,
+                               'navigation_position': navigation_position,
+                               'footer_position': footer_position,
                                'friendly_url': $slug.val(),
                                'page_title': page_title,
                                'meta_description': meta_description,

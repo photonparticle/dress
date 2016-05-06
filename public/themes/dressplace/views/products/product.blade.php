@@ -209,7 +209,7 @@
                                                         <div class="add"
                                                              title=""
                                                              data-toggle="tooltip"
-                                                             data-placement="left"
+                                                             data-placement="right"
                                                         ><i class="fa fa-plus"></i></div>
                                                     </div>
                                                 </div>

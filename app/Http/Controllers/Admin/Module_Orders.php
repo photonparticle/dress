@@ -69,10 +69,12 @@ class Module_Orders extends BaseController
 	{
 		$response['pageTitle'] = trans('orders.orders_list');
 
-		$response['orders'] = Model_Orders::getOrders(FALSE, true);
+		$response['orders'] = Model_Orders::getOrders(FALSE, TRUE);
 
-		if(!empty($response['orders']) && is_array($response['orders'])) {
-			foreach($response['orders'] as $key => $order) {
+		if ( ! empty($response['orders']) && is_array($response['orders']))
+		{
+			foreach ($response['orders'] as $key => $order)
+			{
 				switch ($order['status'])
 				{
 					case 'pending':
@@ -326,17 +328,22 @@ class Module_Orders extends BaseController
 							$product['sizes'] = json_decode($product['sizes'], TRUE);
 						}
 
-						foreach($product['sizes'] as $size_name => $product_size) {
-							if($product_size['name'] == $size && intval($quantity) > 0) {
+						foreach ($product['sizes'] as $size_name => $product_size)
+						{
+							if ($product_size['name'] == $size && intval($quantity) > 0)
+							{
 								$product['sizes'][$size_name]['quantity'] = $product_size['quantity'] - $quantity;
 							}
 						}
 
 						$sizes = json_encode($product['sizes']);
 
-						if(intval($quantity) > 0) {
+						if (intval($quantity) > 0)
+						{
 							$product['quantity'] = intval($product['quantity']) - intval($quantity);
-						} else {
+						}
+						else
+						{
 							$product['quantity'] = 0;
 						}
 
@@ -376,7 +383,7 @@ class Module_Orders extends BaseController
 			if (($product = Model_Products::getProducts($id, ['sizes'])))
 			{
 				$response['blade_standalone'] = TRUE;
-				$response['total_quantity'] = 0;
+				$response['total_quantity']   = 0;
 
 				if ( ! empty($product[$id]) && is_array($product[$id]))
 				{
@@ -387,8 +394,10 @@ class Module_Orders extends BaseController
 				if ( ! empty($product['sizes']) && is_array(($sizes = json_decode($product['sizes'], TRUE))))
 				{
 					$response['sizes'] = $sizes;
-					foreach($sizes as $key => $size) {
-						if(!empty($size['quantity'])) {
+					foreach ($sizes as $key => $size)
+					{
+						if ( ! empty($size['quantity']))
+						{
 							$response['total_quantity'] = $response['total_quantity'] + intval($size['quantity']);
 						}
 					}
@@ -452,9 +461,20 @@ class Module_Orders extends BaseController
 
 									reset($product['images']);
 									$product['images'] = key($product['images']);
-									if (file_exists(iconv("UTF-8", "WINDOWS-1251", $upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images'])))
+
+									if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 									{
-										$products_images[$product['id']] = $product['images'];
+										if (file_exists(iconv("UTF-8", "WINDOWS-1251", $upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images'])))
+										{
+											$products_images[$product['id']] = $product['images'];
+										}
+									}
+									else
+									{
+										if (file_exists($upload_path.$product['id'].DIRECTORY_SEPARATOR.$response['icon_size'].DIRECTORY_SEPARATOR.$product['images']))
+										{
+											$products_images[$product['id']] = $product['images'];
+										}
 									}
 								}
 							}
@@ -482,7 +502,9 @@ class Module_Orders extends BaseController
 
 			return Theme::View('orders.products_list_partial', $response);
 
-		} elseif(is_numeric($id) && $request == FALSE) {
+		}
+		elseif (is_numeric($id) && $request == FALSE)
+		{
 			$response['method'] = 'locked';
 
 			$order = Model_Orders::getOrders($id, FALSE);
@@ -644,7 +666,6 @@ class Module_Orders extends BaseController
 
 	/**
 	 * Remove the specified resource from storage.
-	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public
@@ -652,21 +673,24 @@ class Module_Orders extends BaseController
 	{
 		$response = [];
 
-		if ( ! empty($_POST) && !empty($_POST['method']))
+		if ( ! empty($_POST) && ! empty($_POST['method']))
 		{
 			//Remove product
-			if($_POST['method'] == 'product' && !empty($_POST['record_id']) && is_numeric($_POST['record_id'])) {
+			if ($_POST['method'] == 'product' && ! empty($_POST['record_id']) && is_numeric($_POST['record_id']))
+			{
 				$response['status']  = 'error';
 				$response['message'] = trans('orders.product_not_removed');
 
-				if(Model_Orders::removeOrderProducts(Input::get('record_id')) === TRUE) {
+				if (Model_Orders::removeOrderProducts(Input::get('record_id')) === TRUE)
+				{
 					$response['status']  = 'success';
 					$response['message'] = trans('orders.product_removed');
 				}
 			}
 
 			//Remove order
-			if($_POST['method'] == 'order' && !empty($_POST['order_id'])) {
+			if ($_POST['method'] == 'order' && ! empty($_POST['order_id']))
+			{
 				if (Model_Orders::removeOrder($_POST['order_id']) === TRUE)
 				{
 					$response['status']  = 'success';

@@ -29,6 +29,9 @@
                                     <li>
                                         <a href="#delivery" data-toggle="tab">{{trans('system_settings.delivery')}}</a>
                                     </li>
+                                    <li>
+                                        <a href="#social" data-toggle="tab">{{trans('system_settings.social')}}</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="portlet-body">
@@ -42,6 +45,9 @@
 
                                     {{--Delivery tab--}}
                                     @include('system_settings.system_delivery_tab')
+
+                                    {{--Social tab--}}
+                                    @include('system_settings.system_social_tab')
 
                                 </div>
 
@@ -86,7 +92,13 @@
                                'meta_keywords': $('#meta_keywords').val(),
                                'delivery_to_office': $('#input_to_off').val(),
                                'delivery_to_address': $('#input_to_addr').val(),
-                               'delivery_free_delivery': $('#input_free_delivery').val()
+                               'delivery_free_delivery': $('#input_free_delivery').val(),
+                               'social_blog': $('#social_blog').val(),
+                               'social_facebook': $('#social_facebook').val(),
+                               'social_twitter': $('#social_twitter').val(),
+                               'social_google_plus': $('#social_google_plus').val(),
+                               'social_youtube': $('#social_youtube').val(),
+                               'social_pinterest': $('#social_pinterest').val()
                            },
                            success: function (response) {
                                if (typeof response == typeof {} && response['status'] && response['message']) {

@@ -147,6 +147,7 @@ return [
 	'search_by_tag'                 => 'Търсене по таг',
 	'no_results'                    => 'Няма резултати',
 	'cart_empty'                    => 'Кошницата е празна',
+	'scroll_top'                    => 'Върни ме най-горе',
 
 	//	@TODO to be moved into database
 	'currency'                      => 'лв.',

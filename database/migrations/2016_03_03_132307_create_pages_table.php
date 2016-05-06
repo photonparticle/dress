@@ -20,6 +20,10 @@ class CreatePagesTable extends Migration
 			$table->string('meta_description');
 			$table->string('meta_keywords');
 			$table->tinyInteger('active');
+			$table->tinyInteger('show_footer');
+			$table->tinyInteger('show_navigation');
+			$table->integer('footer_position');
+			$table->integer('navigation_position');
 			$table->timestamps();
 		});
 	}

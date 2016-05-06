@@ -57,7 +57,7 @@
 <body class="page-md page-boxed page-sidebar-closed-hide-logo page-header-fixed page-container-bg-solid">
 @if(!isset($blade_clean_render))
     @if(!isset($blade_hide_header))
-    @include('administration.includes.header')
+    @include('administration::includes.header')
     @endif
     <div class="clearfix"></div>
 
@@ -66,7 +66,7 @@
         <div class="page-container">
 
             @if(!isset($blade_hide_sidebar))
-                @include('administration.includes.sidebar')
+                @include('administration::includes.sidebar')
             @endif
 
             <!-- BEGIN CONTENT -->
@@ -76,13 +76,13 @@
                 </div>
 
                 @if(!isset($blade_hide_quicksidebar))
-{{--                    @include('administration.includes.quicksidebar');--}}
+{{--                    @include('administration::includes.quicksidebar');--}}
                 @endif
             <!-- END CONTENT -->
             </div>
 
     @if(!isset($blade_hide_footer))
-    @include('administration.includes.footer')
+    @include('administration::includes.footer')
     @endif
 @else
     @yield('content')
@@ -160,6 +160,30 @@
             window.location.hash = this.hash;
             $('html,body').scrollTop(scrollmem);
         });
+    });
+
+    $('a.btn.green-haze').on('click', function (e) {
+        var btn = $('.btn');
+        if(btn.hasClass('disabled')) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        } else {
+            btn.addClass('disabled');
+        }
+
+        setTimeout(function () {
+            btn.removeClass('disabled');
+        }, 5000);
+
+    });
+
+    $( document ).ajaxStart(function() {
+        $('button').prop('disabled', true);
+
+        setTimeout(function() {
+            $('button').prop('disabled', false);
+        }, 5000);
     });
 </script>
             

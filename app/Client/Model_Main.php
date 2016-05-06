@@ -594,17 +594,19 @@ class Model_Main extends Model
 		if ( ! empty($product_id))
 		{
 			$tags = DB::table('product_to_tag')
-						  ->select(['tags.title'])
-						  ->join('tags', 'product_to_tag.tag_id', '=', 'tags.id')
-						  ->where('product_to_tag.product_id', '=', $product_id)
-						  ->orderBy('product_to_tag.id', 'ASC')
-						  ->get();
+					  ->select(['tags.title'])
+					  ->join('tags', 'product_to_tag.tag_id', '=', 'tags.id')
+					  ->where('product_to_tag.product_id', '=', $product_id)
+					  ->orderBy('product_to_tag.id', 'ASC')
+					  ->get();
 
-			if (!empty($tags) && is_array($tags))
+			if ( ! empty($tags) && is_array($tags))
 			{
-				foreach($tags as $key => $value) {
+				foreach ($tags as $key => $value)
+				{
 					$response[] = $value['title'];
 				}
+
 				return $response;
 			}
 			else
@@ -755,6 +757,19 @@ class Model_Main extends Model
 				 ->where('pages.show_footer', '=', 1)
 				 ->where('pages.active', '=', 1)
 				 ->where('seo_url.type', '=', 'page')
+				 ->orderBy('pages.footer_position', 'ASC')
+				 ->get();
+	}
+
+	public static function getNavPages()
+	{
+		return DB::table('pages')
+				 ->select(['pages.title', 'seo_url.slug'])
+				 ->join('seo_url', 'seo_url.object', '=', 'pages.id')
+				 ->where('pages.show_navigation', '=', 1)
+				 ->where('pages.active', '=', 1)
+				 ->where('seo_url.type', '=', 'page')
+				 ->orderBy('pages.navigation_position', 'ASC')
 				 ->get();
 	}
 }

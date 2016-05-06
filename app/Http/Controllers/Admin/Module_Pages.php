@@ -75,6 +75,7 @@ class Module_Pages extends BaseController
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
 			'global/plugins/jquery-slugify/speakingurl',
 			'global/plugins/jquery-slugify/slugify.min',
+			'global/plugins/fuelux/js/spinner.min',
 		];
 
 		return Theme::view('pages.create_edit_page', $response);
@@ -102,13 +103,16 @@ class Module_Pages extends BaseController
 			if ($error === FALSE)
 			{
 				$data = [
-					'title'            => trim(Input::get('title')),
-					'content'          => Input::get('content'),
-					'page_title'       => Input::get('page_title'),
-					'meta_description' => Input::get('meta_description'),
-					'meta_keywords'    => Input::get('meta_keywords'),
-					'active'           => Input::get('active'),
-					'show_footer'      => Input::get('show_footer'),
+					'title'               => trim(Input::get('title')),
+					'content'             => Input::get('content'),
+					'page_title'          => Input::get('page_title'),
+					'meta_description'    => Input::get('meta_description'),
+					'meta_keywords'       => Input::get('meta_keywords'),
+					'active'              => Input::get('active'),
+					'show_footer'         => Input::get('show_footer'),
+					'show_navigation'     => Input::get('show_navigation'),
+					'footer_position'     => Input::get('footer_position'),
+					'navigation_position' => Input::get('navigation_position'),
 				];
 
 				if (empty(Input::get('id')))
@@ -216,6 +220,7 @@ class Module_Pages extends BaseController
 			'global/plugins/bootstrap-switch/js/bootstrap-switch.min',
 			'global/plugins/jquery-slugify/speakingurl',
 			'global/plugins/jquery-slugify/slugify.min',
+			'global/plugins/fuelux/js/spinner.min',
 		];
 
 		$response['page'] = Model_Pages::getPage($id);

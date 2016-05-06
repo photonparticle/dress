@@ -102,7 +102,20 @@ class Model_Colors extends Model
 
 				$query = $query->delete();
 
-				if ($query)
+				$query2 = DB::table('product_to_color');
+
+				if (is_array($id))
+				{
+					$query2 = $query2->whereIn('color_id', $id);
+				}
+				else
+				{
+					$query2 = $query2->where('color_id', $id);
+				}
+
+				$query2 = $query2->delete();
+
+				if ($query && $query2)
 				{
 					return TRUE;
 				}

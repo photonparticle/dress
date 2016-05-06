@@ -79,6 +79,12 @@ class Model_System_Settings extends Model
 			'delivery_to_office'     => 'string',
 			'delivery_to_address'    => 'string',
 			'delivery_free_delivery' => 'string',
+			'social_blog'            => 'string',
+			'social_facebook'        => 'string',
+			'social_twitter'         => 'string',
+			'social_google_plus'     => 'string',
+			'social_youtube'         => 'string',
+			'social_pinterest'       => 'string',
 		];
 
 		if ( ! empty($data))
