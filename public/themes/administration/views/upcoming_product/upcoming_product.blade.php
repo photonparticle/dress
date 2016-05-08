@@ -40,7 +40,7 @@
                                         <option value="">{{trans('upcoming_product.select_product')}}</option>
                                         @if(isset($products) && is_array($products))
                                             @foreach($products as $key => $product)
-                                                <option value="{{$product['id'] or ''}}" @if(isset($product_id) && $product_id == $product['id']) selected="selected" @endif>{{$product['id'] or ''}} - {{$product['title']}}</option>
+                                                <option value="{{$product['id'] or ''}}" @if(isset($product_id) && isset($product['id']) && $product_id == $product['id']) selected="selected" @endif>{{$product['id'] or ''}} - {{$product['title']}}</option>
                                             @endforeach
                                         @endif
                                     </select>

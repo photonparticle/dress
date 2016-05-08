@@ -8,7 +8,7 @@
                 <span>{{$item['quantity']}}</span>
             </div>
             <div class="cart-info">
-                <h4 class="no-margin">
+                <h4 class="no-margin text-left">
                     <a href="/{{$products[$item['product_id']]['slug']}}">
                         {{$products[$item['product_id']]['title']}}
                     </a>

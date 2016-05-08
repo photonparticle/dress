@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Admin\Model_Categories;
 use App\Admin\Model_Carousels;
+use App\Admin\Model_Pages;
 use App\Admin\Model_Products;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -78,6 +79,8 @@ class Module_Carousels extends BaseController
 		];
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+
+		$response['pages'] = Model_Pages::getPage(FALSE, ['id', 'title']);
 
 		$response['products'] = Model_Products::getProducts(FALSE, ['title']);
 
@@ -196,6 +199,7 @@ class Module_Carousels extends BaseController
 		];
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
+		$response['pages'] = Model_Pages::getPage(FALSE, ['id', 'title']);
 		$response['products']   = Model_Products::getProducts(FALSE, ['title']);
 		$response['carousel']   = Model_Carousels::getCarousels($id, FALSE);
 

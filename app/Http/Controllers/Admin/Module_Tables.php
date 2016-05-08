@@ -180,6 +180,7 @@ class Module_Tables extends BaseController
 		];
 		$response['images_dir'] = Config::get('system_settings.tables_upload_path');
 		$response['public_images_dir'] = Config::get('system_settings.tables_public_path');
+		$response['image_name'] = uniqid('table_');
 
 		if(!empty($id)) {
 			$result = Model_Tables::getTables($id, FALSE);

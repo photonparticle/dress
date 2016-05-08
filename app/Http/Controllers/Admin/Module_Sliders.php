@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Admin\Model_Categories;
+use App\Admin\Model_Pages;
 use App\Admin\Model_Sliders;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -87,6 +88,7 @@ class Module_Sliders extends BaseController
 		$response['images_dir']        = Config::get('system_settings.sliders_upload_path');
 		$response['public_images_dir'] = Config::get('system_settings.sliders_public_path');
 		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
+		$response['pages']             = Model_Pages::getPage(FALSE, ['id', 'title']);
 
 		return Theme::view('sliders.create_edit_slider', $response);
 	}
@@ -126,7 +128,6 @@ class Module_Sliders extends BaseController
 						$response['message'] = trans('sliders.slides_saved');
 					}
 				}
-
 			}
 			else
 			{
@@ -276,6 +277,7 @@ class Module_Sliders extends BaseController
 		$response['images_dir']        = Config::get('system_settings.sliders_upload_path');
 		$response['public_images_dir'] = Config::get('system_settings.sliders_public_path');
 		$response['categories']        = Model_Categories::getCategory(FALSE, ['title']);
+		$response['pages']             = Model_Pages::getPage(FALSE, ['id', 'title']);
 		$response['slider']            = Model_Sliders::getSliders($id, FALSE, ['id', 'title', 'dir', 'active_from', 'active_to', 'position', 'type', 'target']);
 
 		if ( ! empty($response['slider']) && ! empty($response['slider'][0]))

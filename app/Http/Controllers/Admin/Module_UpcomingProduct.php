@@ -68,7 +68,7 @@ class Module_UpcomingProduct extends BaseController
 			'global/plugins/jquery-multi-select/js/jquery.multi-select',
 		];
 
-		$response['products']           = Model_Products::getProducts(FALSE, ['title']);
+		$response['products']           = Model_Products::getProducts(FALSE, ['title'], FALSE, 0, 0, TRUE);
 
 		return Theme::view('upcoming_product.upcoming_product', $response);
 	}

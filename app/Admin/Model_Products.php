@@ -25,7 +25,7 @@ class Model_Products extends Model
 	 *
 	 * @return array
 	 */
-	public static function getProducts($product_id = FALSE, $objects = [], $for_list = FALSE, $skip = 0, $limit = 0)
+	public static function getProducts($product_id = FALSE, $objects = [], $for_list = FALSE, $skip = 0, $limit = 0, $active_only = FALSE, $available_only = FALSE)
 	{
 		$products = DB::table('products')
 					  ->orderBy('id', 'DESC');
@@ -51,7 +51,17 @@ class Model_Products extends Model
 			$products = $products->where('id', '=', $product_id);
 		}
 
+		if(!empty($active_only)) {
+			$products = $products->where('active', '=', 1);
+		}
+
+		if(!empty($available_only)) {
+			$products = $products->where('quantity', '>', 0);
+		}
+
 		$products = $products->get();
+
+		$loaded_product = [];
 
 		if ( ! empty($products) && is_array($products))
 		{
@@ -60,11 +70,12 @@ class Model_Products extends Model
 				if ( ! empty($product) && is_array($product))
 				{
 					$response[$product['id']] = $product;
+					$loaded_product[] = $product['id'];
 				}
 			}
 		}
 
-		if ($objects != 'none' && is_array(($product_objects = self::getProductObjects($product_id, $objects))))
+		if ($objects != 'none' && is_array(($product_objects = self::getProductObjects($loaded_product, $objects))))
 		{
 			foreach ($product_objects as $key => $objects)
 			{

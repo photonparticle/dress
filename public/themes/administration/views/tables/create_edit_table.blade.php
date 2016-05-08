@@ -26,7 +26,7 @@
                                         <i class="fa fa-plus"></i>
                                         {{trans('tables.add_row')}}
                                     </a>
-                                    <a href="#" id="save" class="btn btn-success margin-top-10" title="{{trans('global.save')}}">
+                                    <a href="#" id="save" class="btn green-haze margin-top-10" title="{{trans('global.save')}}">
                                         <i class="fa fa-save"></i>
                                         {{trans('global.save')}}
                                     </a>
@@ -68,11 +68,9 @@
                                 </div>
 
                                 {!! Form::open(['url' => route('upload-post'), 'class' => 'dropzone col-xs-12 col-sm-12 col-md-6 col-lg-6', 'files'=>TRUE, 'id'=>'real-dropzone']) !!}
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-                                @if(!empty($product['id']))<input type="hidden" name="target" value="{{ $product['id'] }}">@endif
                                 <input type="hidden" name="module" value="tables">
-                                <input type="hidden" name="temp_key" value="{{ $table['image'] or $image_name }}">
+                                <input type="hidden" name="temp_key" value="{{ $image_name }}">
 
                                 <div class="fallback">
                                     <input name="file" type="file"/>

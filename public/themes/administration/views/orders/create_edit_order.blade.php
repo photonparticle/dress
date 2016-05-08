@@ -20,7 +20,7 @@
                                     </a>
 
                                     @if(!empty($method) && $method == 'unlocked')
-                                        <a href="javascript:;" class="btn btn-success" id="save_order" title="{{trans('global.save')}}">
+                                        <a href="javascript:;" class="btn green-haze" id="save_order" title="{{trans('global.save')}}">
                                             <i class="fa fa-save"></i>
                                             {{trans('global.save')}}
                                         </a>
