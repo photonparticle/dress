@@ -76,7 +76,7 @@
                                                 <select id="level" name="level" class="form-control select2me input-lg no-padding">
                                                     <option value="0" selected>{{trans('categories.level_0')}}</option>
                                                     <option value="1">{{trans('categories.level_1')}}</option>
-                                                    <option value="2">{{trans('categories.level_2')}}</option>
+                                                    {{--<option value="2">{{trans('categories.level_2')}}</option>--}}
                                                 </select>
                                             </div>
                                             <div class="clearfix"></div>

@@ -41,6 +41,18 @@ class Module_Categories extends BaseController
 
 		$response['categories'] = Model_Categories::getCategory(FALSE, ['title']);
 
+		foreach ($response['categories'] as $key => $category)
+		{
+			if (($category['level']) == 0)
+			{
+				$response['main_categories'][$category['id']] = $category['id'];
+			}
+			elseif ($category['level'] == 1)
+			{
+				$response['second_level_categories'][$category['parent_id']][] = $category['id'];
+			}
+		}
+
 		$customCSS = [
 			'global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap',
 		];
@@ -88,7 +100,8 @@ class Module_Categories extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories']  = Model_Categories::getCategory(FALSE, ['title']);
+		$response['categories']  = Model_Categories::getCategory(FALSE, ['title'], 0);
+
 		$response['size_groups'] = Model_Categories::getSizes();
 
 		$response['pageTitle'] = trans('global.create_category');
@@ -240,7 +253,7 @@ class Module_Categories extends BaseController
 		$response['blade_custom_css'] = $customCSS;
 		$response['blade_custom_js']  = $customJS;
 
-		$response['categories']  = Model_Categories::getCategory(FALSE, ['title']);
+		$response['categories']  = Model_Categories::getCategory(FALSE, ['title'], 0);
 		$response['size_groups'] = Model_Categories::getSizes();
 		$response['pageTitle']   = trans('categories.edit_category');
 

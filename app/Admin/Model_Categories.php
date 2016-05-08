@@ -23,10 +23,10 @@ class Model_Categories extends Model
 	 *
 	 * @return array
 	 */
-	public static function getCategory($category_id = FALSE, $objects = [])
+	public static function getCategory($category_id = FALSE, $objects = [], $level = FALSE)
 	{
 		$categories = DB::table('categories')
-						->orderBy('created_at', 'DESC');
+						->orderBy('position', 'ASC');
 		$response   = [];
 		$categories_ids = [];
 
@@ -37,6 +37,12 @@ class Model_Categories extends Model
 		elseif (is_string($category_id) || is_int($category_id))
 		{
 			$categories = $categories->where('id', '=', $category_id);
+		}
+
+		if(!is_bool($level)) {
+			if($level == 0 || $level == 1 || $level == 2) {
+				$categories = $categories->where('level', $level);
+			}
 		}
 
 		$categories = $categories->get();
