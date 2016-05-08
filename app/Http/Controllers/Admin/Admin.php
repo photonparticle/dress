@@ -65,19 +65,18 @@ class Admin extends BaseController
 				switch ($order['status'])
 				{
 					case 'pending':
-						$response['last_orders'][$key]['status_color'] = 'bg-green-jungle';
+						$response['last_orders'][$key]['status_color'] = 'bg-yellow-lemon';
 						break;
 					case 'confirmed':
-						$response['last_orders'][$key]['status_color'] = 'bg-yellow-casablanca';
-						break;
-					case 'completed':
 						$response['last_orders'][$key]['status_color'] = 'bg-blue-madison';
 						break;
+					case 'completed':
+						$response['last_orders'][$key]['status_color'] = 'bg-green-jungle';
+						break;
 					case 'canceled':
-						$response['last_orders'][$key]['status_color'] = 'bg-red-thunderbird';
+						$response['last_orders'][$key]['status_color'] = 'bg-red-flamingo';
 						break;
 				}
-
 			}
 		}
 
@@ -107,7 +106,6 @@ class Admin extends BaseController
 				{
 					$response['last_users'][$data['user_id']][$data['object']] = $data['value'];
 				}
-
 			}
 		}
 
@@ -123,13 +121,13 @@ class Admin extends BaseController
 		$date_seven_days_ago    = date('Y-m-d 00:00:00', strtotime('-6 days'));
 		$last_seven_days_orders = Model_Orders::getOrders(FALSE, TRUE, FALSE, 0, 0, $date_seven_days_ago, date('Y-m-d H:i:s', time()));
 
-		$count = 1;
-		$response['graph'][date('d.m', time())] = 0.00;
+		$count                                   = 1;
+		$response['graph'][date('d.m', time())]  = 0.00;
 		$response['graph2'][date('d.m', time())] = 0;
 		while ($count < 7)
 		{
-			$date                     = date('d.m', strtotime('-'.$count.' days'));
-			$response['graph'][$date] = 0.00;
+			$date                      = date('d.m', strtotime('-'.$count.' days'));
+			$response['graph'][$date]  = 0.00;
 			$response['graph2'][$date] = 0;
 
 			$count++;
@@ -139,9 +137,9 @@ class Admin extends BaseController
 		{
 			foreach ($last_seven_days_orders as $key => $order)
 			{
-				$date                     = date('d.m', strtotime($order['created_at']));
-				$amount                   = Model_Orders::getTotalSales($order['id']);
-				$response['graph'][$date] = $response['graph'][$date] + $amount;
+				$date                      = date('d.m', strtotime($order['created_at']));
+				$amount                    = Model_Orders::getTotalSales($order['id']);
+				$response['graph'][$date]  = $response['graph'][$date] + $amount;
 				$response['graph2'][$date] = $response['graph2'][$date] + 1;
 			}
 		}

@@ -1,95 +1,96 @@
 @extends('administration::layout')
 
 @section('content')
-        <!-- BEGIN EXAMPLE TABLE PORTLET-->
-<div class="portlet box blue-madison">
-    <div class="portlet-title">
-        <div class="caption">
-            <i class="fa fa-shopping-cart"></i>{{$pageTitle}}
+    <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    <div class="portlet box blue-madison">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-shopping-cart"></i>{{$pageTitle}}
+            </div>
+            <div class="actions">
+                <a href="/admin/orders/create" class="btn btn-success" title="{{trans('orders.create')}}">
+                    <i class="fa fa-plus"></i>
+                    {{trans('orders.create')}}
+                </a>
+            </div>
         </div>
-        <div class="actions">
-            <a href="/admin/orders/create" class="btn btn-success" title="{{trans('orders.create')}}">
-                <i class="fa fa-plus"></i>
-                {{trans('orders.create')}}
-            </a>
-        </div>
-    </div>
-    <div class="portlet-body">
-        @if(!empty($orders) && is_array($orders))
-            <table class="table orders-striped orders-bordered table-hover" id="orders">
-                <thead>
-                <tr>
-                    <th>
-                        ID
-                    </th>
-                    <th>
-                        {{trans('orders.user_names')}}
-                    </th>
-                    <th>
-                        {{trans('orders.phone')}}
-                    </th>
-                    <th>
-                        {{trans('orders.order_status')}}
-                    </th>
-                    <th>
-                        {{trans('orders.created_at')}}
-                    </th>
-                    <th>
-                        {{trans('orders.actions')}}
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($orders as $order)
-                    @if(!empty($order))
-                        <tr>
-                            <td>
-                                {{$order['id']}}
-                            </td>
-                            <td>
-                                {{$order['name']}} {{$order['last_name']}}
-                            </td>
-                            <td>
-                                {{$order['phone']}}
-                            </td>
-                            <td>
-                                <span class="label label-sm text-center {{$order['status_color'] or ''}}">
-                                {{trans('orders.' . $order['status'])}} </span>
-                            </td>
-                            <td>
-                                {{$order['created_at']}}
-                            </td>
+        <div class="portlet-body">
+            @if(!empty($orders) && is_array($orders))
+                <table class="table orders-striped orders-bordered table-hover" id="orders">
+                    <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            {{trans('orders.user_names')}}
+                        </th>
+                        <th>
+                            {{trans('orders.phone')}}
+                        </th>
+                        <th>
+                            {{trans('orders.order_status')}}
+                        </th>
+                        <th>
+                            {{trans('orders.created_at')}}
+                        </th>
+                        <th>
+                            {{trans('orders.actions')}}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($orders as $order)
+                        @if(!empty($order))
+                            <tr>
+                                <td>
+                                    {{$order['id']}}
+                                </td>
+                                <td>
+                                    {{$order['name']}} {{$order['last_name']}}
+                                </td>
+                                <td>
+                                    {{$order['phone']}}
+                                </td>
+                                <td>
+                                <span class="label text-center {{$order['status_color'] or ''}}" style="display: block; max-width: 180px; margin: 0 auto; line-height: 1.5em; font-size: 13px;">
+                                    {{trans('orders.' . $order['status'])}}
+                                </span>
+                                </td>
+                                <td>
+                                    {{$order['created_at']}}
+                                </td>
 
-                            <td class="text-center">
-                                <a href="/admin/orders/show/{{$order['id']}}"
-                                   class="btn btn-icon-only blue"
-                                   title="{{trans('orders.preview_order')}}"
-                                >
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                <a href="/admin/orders/edit/{{$order['id']}}"
-                                   class="btn btn-icon-only green"
-                                   title="{{trans('global.edit')}}"
-                                >
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                <a href="#"
-                                   class="btn btn-icon-only red remove_order"
-                                   title="{{trans('global.remove')}}"
-                                   data-id="{{$order['id']}}"
-                                >
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    @endif
-                @endforeach
-                </tbody>
-            </table>
-        @endif
+                                <td class="text-center">
+                                    <a href="/admin/orders/show/{{$order['id']}}"
+                                       class="btn btn-icon-only blue"
+                                       title="{{trans('orders.preview_order')}}"
+                                    >
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="/admin/orders/edit/{{$order['id']}}"
+                                       class="btn btn-icon-only green"
+                                       title="{{trans('global.edit')}}"
+                                    >
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="#"
+                                       class="btn btn-icon-only red remove_order"
+                                       title="{{trans('global.remove')}}"
+                                       data-id="{{$order['id']}}"
+                                    >
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
     </div>
-</div>
-<!-- END EXAMPLE TABLE PORTLET-->
+    <!-- END EXAMPLE TABLE PORTLET-->
 @endsection
 
 @section('customJS')

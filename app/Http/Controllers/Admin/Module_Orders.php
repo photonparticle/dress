@@ -78,16 +78,16 @@ class Module_Orders extends BaseController
 				switch ($order['status'])
 				{
 					case 'pending':
-						$response['orders'][$key]['status_color'] = 'bg-green-jungle';
+						$response['orders'][$key]['status_color'] = 'bg-yellow-lemon';
 						break;
 					case 'confirmed':
-						$response['orders'][$key]['status_color'] = 'bg-yellow-casablanca';
-						break;
-					case 'completed':
 						$response['orders'][$key]['status_color'] = 'bg-blue-madison';
 						break;
+					case 'completed':
+						$response['orders'][$key]['status_color'] = 'bg-green-jungle';
+						break;
 					case 'canceled':
-						$response['orders'][$key]['status_color'] = 'bg-red-thunderbird';
+						$response['orders'][$key]['status_color'] = 'bg-red-flamingo';
 						break;
 				}
 			}
