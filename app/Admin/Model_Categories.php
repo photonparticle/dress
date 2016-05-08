@@ -25,9 +25,9 @@ class Model_Categories extends Model
 	 */
 	public static function getCategory($category_id = FALSE, $objects = [], $level = FALSE)
 	{
-		$categories = DB::table('categories')
-						->orderBy('position', 'ASC');
-		$response   = [];
+		$categories     = DB::table('categories')
+							->orderBy('position', 'ASC');
+		$response       = [];
 		$categories_ids = [];
 
 		if (is_array($category_id))
@@ -39,8 +39,10 @@ class Model_Categories extends Model
 			$categories = $categories->where('id', '=', $category_id);
 		}
 
-		if(!is_bool($level)) {
-			if($level == 0 || $level == 1 || $level == 2) {
+		if ( ! is_bool($level))
+		{
+			if ($level == 0 || $level == 1 || $level == 2)
+			{
 				$categories = $categories->where('level', $level);
 			}
 		}
@@ -54,7 +56,7 @@ class Model_Categories extends Model
 				if ( ! empty($category) && is_array($category))
 				{
 					$response[$category['id']] = $category;
-					$categories_ids[] = $category['id'];
+					$categories_ids[]          = $category['id'];
 				}
 			}
 		}
@@ -255,8 +257,8 @@ class Model_Categories extends Model
 			if ( ! empty($data['size_group']))
 			{
 				$objects['size_group'] = [
-					'value' => $data['size_group'],
-					'type'  => 'string',
+					'value' => json_encode($data['size_group']),
+					'type'  => 'json',
 				];
 			}
 
@@ -375,6 +377,9 @@ class Model_Categories extends Model
 			{
 				if ( ! empty($value['object']) && ! empty($value['type']) && ! empty($value[$value['type']]))
 				{
+					if($value['type'] == 'json') {
+						$value[$value['type']] = json_decode($value[$value['type']], TRUE);
+					}
 					$response[$value['category_id']][$value['object']] = $value[$value['type']];
 				}
 			}
@@ -486,7 +491,6 @@ class Model_Categories extends Model
 		}
 
 		return $response;
-
 	}
 
 	/**

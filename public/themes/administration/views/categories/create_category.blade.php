@@ -100,8 +100,7 @@
                                                 <label for="size_group" class="control-label col-xs-12 default no-padding">
                                                     {{trans('categories.size_group')}}
                                                 </label>
-                                                <select id="size_group" name="size_group" class="form-control select2me input-lg no-padding">
-                                                    <option value="" selected>{{trans('global.none')}}</option>
+                                                <select id="size_group" name="size_group" class="form-control select2me input-lg no-padding" multiple>
                                                     @if(isset($size_groups) && is_array($size_groups))
                                                         @foreach($size_groups as $key => $group)
                                                             <option value="{{$group}}">{{$group}}</option>
