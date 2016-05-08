@@ -35,7 +35,7 @@ class Module_Products extends BaseController
 		}
 		parent::__construct($request);
 
-		$this->images_path = public_path().'/images/products/';
+		$this->images_path = public_path().DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR;
 	}
 
 	/**
@@ -323,7 +323,6 @@ class Module_Products extends BaseController
 						{
 							Model_Products::setColors($id, Input::get('colors'));
 						}
-
 					} catch (Exception $e)
 					{
 						$response['message'] = $e;
@@ -593,6 +592,8 @@ class Module_Products extends BaseController
 				)
 				{
 					$local_images = array_diff(scandir($this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
+					natcasesort($local_images);
+					$local_images = array_values(array_filter($local_images));
 
 					if ( ! empty($local_images) && is_array($local_images))
 					{
@@ -602,7 +603,10 @@ class Module_Products extends BaseController
 							{
 								$data = iconv("WINDOWS-1251", "UTF-8", $data);
 							}
-							$images_array[$data] = 0;
+							if (empty($images_array[$data]))
+							{
+								$images_array[$data] = $key;
+							}
 						}
 					}
 				}
@@ -612,7 +616,14 @@ class Module_Products extends BaseController
 				{
 					if (isset($images[$remove_image]))
 					{
+						//Remove from array
+						unset($images[$remove_image]);
 
+						//If WIN reconvert to utf8
+						if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+						{
+							$remove_image = iconv("UTF-8", "WINDOWS-1251", $remove_image);
+						}
 						//Remove local files
 						$images_to_remove = [
 							$this->images_path.$id.DIRECTORY_SEPARATOR.Config::get('images.full_size').DIRECTORY_SEPARATOR.$remove_image,
@@ -647,10 +658,6 @@ class Module_Products extends BaseController
 					$images = $images_array;
 				}
 
-				if (isset($images[$remove_image]))
-				{
-					unset($images[$remove_image]);
-				}
 				if ( ! empty($images))
 				{
 					Model_Products::deleteAllImages($id);
