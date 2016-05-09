@@ -81,6 +81,7 @@ class Client extends BaseControllerClient
 		else
 		{
 			/* 404 NOT FOUND */
+			abort(404);
 		}
 	}
 
@@ -237,7 +238,15 @@ class Client extends BaseControllerClient
 
 		//Get category
 		$category                   = Model_Main::getCategory($id);
-		$response['category']       = $category[$id];
+
+		//If category not found - maybe it's disabled but still gotta stay hidden
+		if(empty($category[$id])) {
+			abort(404);
+		} else {
+			$response['category']       = $category[$id];
+		}
+
+
 		$response['all_categories'] = $this->categories['all'];
 		$response['breadcrumbs']    = self::generateCategoryBreadcrumbs($category[$id]);
 
@@ -370,7 +379,7 @@ class Client extends BaseControllerClient
 		//Products to render
 		$response['products_to_render'] = $response['products'];
 		// Get Carousels
-		$response['carousels'] = Model_Main::getCarousels($this->active_module, 'categories');
+		$response['carousels'] = Model_Main::getCarousels($this->active_module, $id);
 
 		//Send carousels to response and add products to fetch queue
 		if ( ! empty($response['carousels']) && is_array($response['carousels']))
@@ -407,7 +416,7 @@ class Client extends BaseControllerClient
 		$response['products'] = self::prepareProductsForResponse($response['products']);
 
 		// Get Sliders
-		$response['sliders'] = Model_Main::getSliders($this->active_module, 'categories');
+		$response['sliders'] = Model_Main::getSliders($this->active_module, $id);
 
 		// Send sliders to response
 		$response['sliders'] = self::prepareSliders($response['sliders']);
@@ -633,7 +642,7 @@ class Client extends BaseControllerClient
 				$response['upcoming']['date'] = date('Y/m/d', strtotime($response['upcoming']['date']));
 			}
 		}
-		$recent = Model_Main::getNewestProducts(3, $id);
+		$recent = Model_Main::getNewestProducts(3, $id, TRUE);
 
 		if ( ! empty($recent))
 		{

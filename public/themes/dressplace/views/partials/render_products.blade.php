@@ -82,7 +82,7 @@
     @endif
 @endforeach
 
-@if($shown_products == 0)
+@if($shown_products == 0 && empty($products_large))
     <div class="section-title text-center">
         <h2>{{trans('client.no_products_to_show')}}</h2>
     </div>

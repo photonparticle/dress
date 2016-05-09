@@ -301,54 +301,57 @@
 
                         </div>
                         @if(empty($frame))
-                                <!-- right-sidebar start -->
-                        <div class="col-lg-3 col-md-3">
+                        <!-- right-sidebar start -->
+                            <div class="col-lg-3 col-md-3">
 
                             @if(!empty($recent) && is_array($recent))
-                                    <!-- recent start -->
-                            <aside class="widget widget-categories">
-                                <h3 class="sidebar-title">{{trans('client.recent')}}</h3>
-                                <div class="widget-curosel">
-                                    <?php $products_to_render = $recent; $products_large = TRUE; ?>
-                                    @include('dressplace::partials.render_products')
-                                </div>
-                            </aside>
-                            <!-- recent end -->
+                                <!-- recent start -->
+                                    <aside class="widget widget-categories">
+                                        <h3 class="sidebar-title">{{trans('client.recent')}}</h3>
+                                        <div class="widget-curosel">
+                                            <?php $products_to_render = $recent; $products_large = TRUE; ?>
+                                            @include('dressplace::partials.render_products')
+                                        </div>
+                                    </aside>
+                                    <!-- recent end -->
                             @endif
 
                             @if(!empty($product['tags']) && is_array($product['tags']))
-                                    <!-- widget-tags start -->
-                            <aside class="widget widget-tags">
-                                <h3 class="sidebar-title">{{trans('client.tags')}}</h3>
-                                <ul>
-                                    @foreach($product['tags'] as $tag)
-                                        <li><a href="/search/tag/{{$tag}}">{{$tag}}</a></li>
-                                    @endforeach
-                                </ul>
-                            </aside>
-                            <!-- widget-tags end -->
+                                <!-- widget-tags start -->
+                                    <aside class="widget widget-tags">
+                                        <h3 class="sidebar-title">{{trans('client.tags')}}</h3>
+                                        <ul>
+                                            @foreach($product['tags'] as $tag)
+                                                <li><a href="/search/tag/{{$tag}}">{{$tag}}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </aside>
+                                    <!-- widget-tags end -->
                             @endif
 
-                                    <!-- widget-recent start -->
-                            <aside class="widget top-product-widget hidden-sm">
-                                <h3 class="sidebar-title">{{$upcoming['title'] or ''}}</h3>
-                                <div class="banner-curosel">
-                                    <div class="banner">
-                                        <a href="{{$products[$upcoming['product_id']]['slug']}}">
-                                            <img
-                                                    src="{{$thumbs_path . $upcoming['product_id'] . '/' . $icon_size . '/' .  $products[$upcoming['product_id']]['image']}}"
-                                                    alt="{{$products[$upcoming['product_id']]['title']}}"
-                                            />
-                                        </a>
-                                        <div class="upcoming-pro">
-                                            <div data-countdown="{{$upcoming['date'] or ''}}"></div>
+                            @if(!empty($products[$upcoming['product_id']]))
+                                <!-- widget-recent start -->
+                                    <aside class="widget top-product-widget hidden-sm">
+                                        <h3 class="sidebar-title">{{$upcoming['title'] or ''}}</h3>
+                                        <div class="banner-curosel">
+                                            <div class="banner">
+                                                <a href="{{$products[$upcoming['product_id']]['slug']}}">
+                                                    <img
+                                                            src="{{$thumbs_path . $upcoming['product_id'] . '/' . $icon_size . '/' .  $products[$upcoming['product_id']]['image']}}"
+                                                            alt="{{$products[$upcoming['product_id']]['title']}}"
+                                                    />
+                                                </a>
+                                                <div class="upcoming-pro">
+                                                    <div data-countdown="{{$upcoming['date'] or ''}}"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </aside>
-                            <!-- widget-recent end -->
-                        </div>
-                        <!-- right-sidebar end -->
+                                    </aside>
+                                    <!-- widget-recent end -->
+                                @endif
+
+                            </div>
+                            <!-- right-sidebar end -->
                         @endif
 
                         @if(empty($frame))

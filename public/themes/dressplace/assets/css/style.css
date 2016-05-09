@@ -1519,6 +1519,7 @@ span.count {
 	height: 21px;
 	margin-top: -2px;
 	width: 21px;
+	cursor: e-resize;
 }
 .price_filter .ui-slider-range {
 	background: #418dda none repeat scroll 0 0;

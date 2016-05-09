@@ -74,7 +74,7 @@ class Model_Main extends Model
 	 *
 	 * @return array
 	 */
-	public static function getCategory($category_id = FALSE, $objects = [])
+	public static function getCategory($category_id = FALSE, $objects = [], $menu_visibility = FALSE)
 	{
 		$categories     = DB::table('categories')
 							->orderBy('position', 'ASC');
@@ -90,8 +90,12 @@ class Model_Main extends Model
 			$categories = $categories->where('id', '=', $category_id);
 		}
 
+		if ( ! empty($menu_visibility))
+		{
+			$categories = $categories->where('menu_visibility', '=', 1);
+		}
+
 		$categories = $categories->where('active', 1)
-								 ->where('menu_visibility', '=', 1)
 								 ->get();
 
 		if ( ! empty($categories) && is_array($categories))
@@ -169,7 +173,7 @@ class Model_Main extends Model
 	 *
 	 * @return array
 	 */
-	public static function getNewestProducts($limit = 20, $skip_product = FALSE)
+	public static function getNewestProducts($limit = 20, $skip_product = FALSE, $available = FALSE)
 	{
 		$response = [];
 		$products = DB::table('products')
@@ -178,6 +182,11 @@ class Model_Main extends Model
 					  ->orderBy('position', 'desc')
 					  ->where('available', '=', 1)
 					  ->where('active', '=', 1);
+
+		if ( ! empty($available))
+		{
+			$products = $products->where('quantity', '>', 0);
+		}
 
 		if ( ! empty($skip_product) && is_numeric($skip_product))
 		{
@@ -491,9 +500,8 @@ class Model_Main extends Model
 
 			if ($target != FALSE && intval($target) > 0)
 			{
-				$sliders = $sliders->where(function ($query)
+				$sliders = $sliders->where(function ($query) use ($target)
 				{
-					global $target;
 					$query->where('target', '=', intval($target))->orWhere('target', '=', '');
 				});
 			}
@@ -501,13 +509,13 @@ class Model_Main extends Model
 			$sliders = $sliders->where(function ($query)
 			{
 				$now = date('Y-m-d H:i:s');
-				$query->where('active_from', '<=', $now)->orWhere('active_from', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+				$query->where('active_from', '<=', $now)->orWhere('active_from', '=', '')->orWhere('active_from', '=', '0000-00-00 00:00:00');
 			});
 
 			$sliders = $sliders->where(function ($query)
 			{
 				$now = date('Y-m-d H:i:s');
-				$query->where('active_to', '>=', $now)->orWhere('active_to', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+				$query->where('active_to', '>=', $now)->orWhere('active_to', '=', '')->orWhere('active_to', '=', '0000-00-00 00:00:00');
 			});
 
 			$sliders = $sliders
@@ -538,9 +546,8 @@ class Model_Main extends Model
 
 			if ($target != FALSE && intval($target) > 0)
 			{
-				$carousels = $carousels->where(function ($query)
+				$carousels = $carousels->where(function ($query) use ($target)
 				{
-					global $target;
 					$query->where('target', '=', intval($target))->orWhere('target', '=', '');
 				});
 			}
@@ -548,13 +555,13 @@ class Model_Main extends Model
 			$carousels = $carousels->where(function ($query)
 			{
 				$now = date('Y-m-d H:i:s');
-				$query->where('active_from', '<=', $now)->orWhere('active_from', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+				$query->where('active_from', '<=', $now)->orWhere('active_from', '=', '')->orWhere('active_from', '=', '0000-00-00 00:00:00');
 			});
 
 			$carousels = $carousels->where(function ($query)
 			{
 				$now = date('Y-m-d H:i:s');
-				$query->where('active_to', '>=', $now)->orWhere('active_to', '=', '')->orWhere('active_from', '=', '0000.00.00 00:00:00');
+				$query->where('active_to', '>=', $now)->orWhere('active_to', '=', '')->orWhere('active_to', '=', '0000-00-00 00:00:00');
 			});
 
 			$carousels = $carousels->orderBy('position', 'ASC')

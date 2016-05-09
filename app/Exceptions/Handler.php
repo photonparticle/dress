@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Caffeinated\Themes\Facades\Theme;
 
 class Handler extends ExceptionHandler
 {
@@ -42,8 +43,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
+        if($e instanceof NotFoundHttpException)
+        {
+            return redirect()->action('Homepage@notFound');
         }
 
         return parent::render($request, $e);

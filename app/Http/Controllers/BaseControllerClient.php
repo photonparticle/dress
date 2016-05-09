@@ -92,7 +92,7 @@ class BaseControllerClient extends Controller
 
 	private function getCategories()
 	{
-		if (($categories = Model_Main::getCategory(FALSE, ['title'])))
+		if (($categories = Model_Main::getCategory(FALSE, ['title'], TRUE)))
 		{
 			$categories_ids          = [];
 			$main_categories         = [];

@@ -304,10 +304,12 @@ class Model_Client extends Model
 
 	public static function getUpcomingProduct()
 	{
+		$now    = date('Y:m:d H:m:s');
 		$result = DB::table('upcoming_product')
 					->select(['title', 'product_id', 'date'])
 					->where('id', 1)
 					->where('active', 1)
+					->where('date', '>', $now)
 					->get();
 
 		if ( ! empty($result[0]))

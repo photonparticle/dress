@@ -173,7 +173,8 @@ class Homepage extends BaseControllerClient
 		return Theme::view('search.search', $response);
 	}
 
-	public function searchAjax(Request $request)
+	public
+	function searchAjax(Request $request)
 	{
 		if ($request->ajax())
 		{
@@ -195,12 +196,15 @@ class Homepage extends BaseControllerClient
 			$response['blade_standalone'] = TRUE;
 
 			return Theme::view('search.search_ajax', $response);
-		} else {
+		}
+		else
+		{
 			return Redirect::to('/')->send();
 		}
 	}
 
-	public function login(Request $request)
+	public
+	function login(Request $request)
 	{
 		//If user is not logged in
 		if ($this->user == FALSE)
@@ -231,7 +235,8 @@ class Homepage extends BaseControllerClient
 		}
 	}
 
-	public function doLogin()
+	public
+	function doLogin()
 	{
 		$response['status']  = 'error';
 		$response['title']   = trans('users.check_login_details');
@@ -270,14 +275,16 @@ class Homepage extends BaseControllerClient
 		echo json_encode($response);
 	}
 
-	public function logout()
+	public
+	function logout()
 	{
 		Sentinel::logout();
 
 		return Redirect::to('/')->send();
 	}
 
-	public function register(Request $request)
+	public
+	function register(Request $request)
 	{
 		//If user is not logged in
 		if ($this->user == FALSE)
@@ -308,7 +315,8 @@ class Homepage extends BaseControllerClient
 		}
 	}
 
-	public function doRegister()
+	public
+	function doRegister()
 	{
 		if ( ! empty(($request['email'] = Input::get('email'))) &&
 			! empty(($request['password'] = Input::get('password')))
@@ -357,7 +365,6 @@ class Homepage extends BaseControllerClient
 				$response['status']  = 'error';
 				$response['message'] = trans('user_notifications.user_exists');
 			}
-
 		}
 		else
 		{
@@ -368,7 +375,8 @@ class Homepage extends BaseControllerClient
 		echo json_encode($response);
 	}
 
-	public function account(Request $request)
+	public
+	function account(Request $request)
 	{
 		//If user is logged in
 		if ( ! $this->user == FALSE)
@@ -404,7 +412,8 @@ class Homepage extends BaseControllerClient
 		}
 	}
 
-	public function updateAccount(Request $request, $id = FALSE, $action = FALSE)
+	public
+	function updateAccount(Request $request, $id = FALSE, $action = FALSE)
 	{
 		$response['status']  = 'error';
 		$response['message'] = trans('user_notifications.user_info_not_updated');
@@ -476,7 +485,8 @@ class Homepage extends BaseControllerClient
 		echo json_encode($response);
 	}
 
-	public function orders(Request $request)
+	public
+	function orders(Request $request)
 	{
 		//If user is logged in
 		if ( ! $this->user == FALSE)
@@ -512,7 +522,8 @@ class Homepage extends BaseControllerClient
 		}
 	}
 
-	public static function contact()
+	public
+	static function contact()
 	{
 		$customCSS = [
 		];
@@ -527,13 +538,15 @@ class Homepage extends BaseControllerClient
 		return Theme::view('homepage.contact', $response);
 	}
 
-	public static function doContact()
+	public
+	static function doContact()
 	{
 		header('Location: /contact');
 		exit;
 	}
 
-	public function notFound()
+	public
+	function notFound()
 	{
 		$customCSS = [
 		];
@@ -545,7 +558,7 @@ class Homepage extends BaseControllerClient
 			'blade_custom_js'  => $customJS,
 		];
 
-		return Theme::view('homepage.not_found', $response);
+		return Theme::view('homepage.404', $response);
 	}
 
 	/**
@@ -555,7 +568,8 @@ class Homepage extends BaseControllerClient
 	 *
 	 * @return array
 	 */
-	private function prepareProductsForResponse($products)
+	private
+	function prepareProductsForResponse($products)
 	{
 		if ( ! empty($products) && is_array($products))
 		{

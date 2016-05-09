@@ -2,6 +2,17 @@
 
 @section('content')
 
+    {{--SLIDER--}}
+    @if(!empty($sliders) && is_array($sliders))
+        @foreach($sliders as $key => $slider)
+            @if(!empty($slider['slides']) && is_array($slider['slides']) && !empty($slider['slides_positions']) && is_array($slider['slides_positions']))
+                @include('dressplace::partials.render_slider', $slider)
+            @endif
+        @endforeach
+    @endif
+
+    <div class="clearfix"></div>
+
     {{-- CAROUSELS TOP --}}
     @if(!empty($carousels) && is_array($carousels))
         @foreach($carousels as $carousel)
@@ -160,6 +171,7 @@
                         <div class="clearfix"></div>
                     </form>
 
+                    @if(!empty($products[$upcoming['product_id']]))
                     <!-- widget-recent start -->
                     <aside class="widget top-product-widget hidden-sm">
                         <h3 class="sidebar-title">{{$upcoming['title'] or ''}}</h3>
@@ -177,6 +189,7 @@
                             </div>
                         </div>
                     </aside>
+                    @endif
 
                     <!-- widget-recent end -->
                 </div>
@@ -233,17 +246,6 @@
         </div>
     </div>
     <!-- shop-area end -->
-
-    <div class="clearfix"></div>
-
-    {{--SLIDER--}}
-    @if(!empty($sliders) && is_array($sliders))
-        @foreach($sliders as $key => $slider)
-            @if(!empty($slider['slides']) && is_array($slider['slides']) && !empty($slider['slides_positions']) && is_array($slider['slides_positions']))
-                @include('dressplace::partials.render_slider', $slider)
-            @endif
-        @endforeach
-    @endif
 
     <div class="clearfix"></div>
 
