@@ -14,7 +14,7 @@
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
                                 <div class="actions">
-                                    <button id="save" type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{trans('upcoming_product.save')}}</button>
+                                    <button id="save" type="submit" class="btn green-haze"><i class="fa fa-save"></i> {{trans('upcoming_product.save')}}</button>
                                 </div>
                             </div>
                             <div class="portlet-body">

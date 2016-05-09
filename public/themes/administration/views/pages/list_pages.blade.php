@@ -8,7 +8,7 @@
             <i class="fa fa-file-text-o"></i>{{$pageTitle}}
         </div>
         <div class="actions">
-            <a href="/admin/pages/create" class="btn btn-success" title="{{trans('pages.create_page')}}">
+            <a href="/admin/pages/create" class="btn green-haze" title="{{trans('pages.create_page')}}">
                 <i class="fa fa-plus"></i>
                 {{trans('pages.create_page')}}
             </a>

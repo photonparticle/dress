@@ -14,7 +14,7 @@
                                     <span class="caption-subject font-blue-madison bold uppercase">{{$pageTitle}}</span>
                                 </div>
                                 <div class="actions">
-                                    <a href="#" class="btn btn-success add_color" title="{{trans('colors.add')}}">
+                                    <a href="#" class="btn green-haze add_color" title="{{trans('colors.add')}}">
                                         <i class="fa fa-plus"></i>
                                         {{trans('colors.add')}}
                                     </a>

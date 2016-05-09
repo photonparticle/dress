@@ -506,7 +506,7 @@
                             </li>
                         </ul>
                         <div class="inner-content">
-                            <button class="btn btn-success"><i class="icon-settings"></i> Save Changes</button>
+                            <button class="btn green-haze"><i class="icon-settings"></i> Save Changes</button>
                         </div>
                     </div>
                 </div>

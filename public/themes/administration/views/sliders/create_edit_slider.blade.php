@@ -16,7 +16,7 @@
                             <i class="fa fa-arrow-left"></i>
                             {{trans('sliders.sliders_list')}}
                         </a>
-                        <a href="#" id="save" class="btn btn-success margin-top-10" title="{{trans('sliders.save')}}">
+                        <a href="#" id="save" class="btn green-haze margin-top-10" title="{{trans('sliders.save')}}">
                             <i class="fa fa-save"></i>
                             {{trans('sliders.save')}}
                         </a>

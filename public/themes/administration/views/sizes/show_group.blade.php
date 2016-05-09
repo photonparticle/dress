@@ -18,7 +18,7 @@
                                         <i class="fa fa-arrow-left"></i>
                                         {{trans('sizes.group_list')}}
                                     </a>
-                                    <a href="/admin/module/sizes/create" class="btn btn-success" title="{{trans('sizes.add')}}">
+                                    <a href="/admin/module/sizes/create" class="btn green-haze" title="{{trans('sizes.add')}}">
                                         <i class="fa fa-plus"></i>
                                         {{trans('sizes.add')}}
                                     </a>

@@ -18,11 +18,11 @@
                                         <i class="fa fa-arrow-left"></i>
                                         {{trans('tables.tables_list')}}
                                     </a>
-                                    <a href="#" id="add_col" class="btn btn-success margin-top-10" title="{{trans('tables.add_col')}}">
+                                    <a href="#" id="add_col" class="btn green-haze margin-top-10" title="{{trans('tables.add_col')}}">
                                         <i class="fa fa-plus"></i>
                                         {{trans('tables.add_col')}}
                                     </a>
-                                    <a href="#" id="add_row" class="btn btn-success margin-top-10" title="{{trans('tables.add_row')}}">
+                                    <a href="#" id="add_row" class="btn green-haze margin-top-10" title="{{trans('tables.add_row')}}">
                                         <i class="fa fa-plus"></i>
                                         {{trans('tables.add_row')}}
                                     </a>

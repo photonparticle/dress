@@ -25,7 +25,7 @@
 
     <div class="clearfix"></div>
 
-    <a href="javascript:;" id="select_product" class="btn btn-success margin-top-20">
+    <a href="javascript:;" id="select_product" class="btn green-haze margin-top-20">
         <i class="fa fa-arrow-circle-right"></i>
         {{trans('orders.select')}}
     </a>

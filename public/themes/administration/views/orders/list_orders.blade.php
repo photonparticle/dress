@@ -8,7 +8,7 @@
                 <i class="fa fa-shopping-cart"></i>{{$pageTitle}}
             </div>
             <div class="actions">
-                <a href="/admin/orders/create" class="btn btn-success" title="{{trans('orders.create')}}">
+                <a href="/admin/orders/create" class="btn green-haze" title="{{trans('orders.create')}}">
                     <i class="fa fa-plus"></i>
                     {{trans('orders.create')}}
                 </a>

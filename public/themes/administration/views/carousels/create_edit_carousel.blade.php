@@ -16,7 +16,7 @@
                             <i class="fa fa-arrow-left"></i>
                             {{trans('carousels.carousels_list')}}
                         </a>
-                        <a href="#" id="save" class="btn btn-success margin-top-10" title="{{trans('global.save')}}">
+                        <a href="#" id="save" class="btn green-haze margin-top-10" title="{{trans('global.save')}}">
                             <i class="fa fa-save"></i>
                             {{trans('global.save')}}
                         </a>

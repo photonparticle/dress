@@ -1,7 +1,7 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
     @if(!empty($sizes) && is_array($sizes) && $total_quantity > 0)
-        <a href="javascript:;" id="save_product" class="btn btn-success pull-left" data-id="{{$product_id or ''}}">
+        <a href="javascript:;" id="save_product" class="btn green-haze pull-left" data-id="{{$product_id or ''}}">
             <i class="fa fa-upload"></i>
             {{trans('orders.add_product_action')}}
         </a>
