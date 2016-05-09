@@ -251,17 +251,17 @@ class Client extends BaseControllerClient
 		$response['breadcrumbs']    = self::generateCategoryBreadcrumbs($category[$id]);
 
 		//SEO
-		if ( ! empty($category['title']))
+		if ( ! empty($category[$id]['title']))
 		{
-			View::share('page_title', $category['title']);
+			View::share('page_title', $category[$id]['title']);
 		}
-		if ( ! empty($category['meta_description']))
+		if ( ! empty($category[$id]['meta_description']))
 		{
-			View::share('page_meta_description', $category['meta_description']);
+			View::share('page_meta_description', $category[$id]['meta_description']);
 		}
-		if ( ! empty($category['meta_keywords']))
+		if ( ! empty($category[$id]['meta_keywords']))
 		{
-			View::share('page_meta_keywords', $category['meta_keywords']);
+			View::share('page_meta_keywords', $category[$id]['meta_keywords']);
 		}
 
 		// Order category products
@@ -505,9 +505,13 @@ class Client extends BaseControllerClient
 		{
 			$response['product'] = $product[$id];
 
-			if ( ! empty($response['product']['title']))
+			if ( ! empty($response['product']['page_title']))
 			{
-				View::share('page_title', $response['product']['title']);
+				View::share('page_title', $response['product']['page_title']);
+			} else {
+				if(!empty($response['product']['title'])) {
+					View::share('page_title', $response['product']['title']);
+				}
 			}
 			if ( ! empty($response['product']['meta_description']))
 			{

@@ -283,7 +283,7 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( ! empty($data['page_title']))
+			if ( isset($data['page_title']))
 			{
 				$objects['page_title'] = [
 					'value' => $data['page_title'],
@@ -347,7 +347,7 @@ class Model_Products extends Model
 			{
 				foreach ($update_objects as $name => $object)
 				{
-					if ( ! empty($object['value']) && ! empty($object['type']))
+					if ( isset($object['value']) && ! empty($object['type']))
 					{
 						DB::table('products_data')
 						  ->where('object', '=', $name)
@@ -365,7 +365,7 @@ class Model_Products extends Model
 			{
 				foreach ($insert_objects as $name => $object)
 				{
-					if ( ! empty($object['value']) && ! empty($object['type']))
+					if ( isset($object['value']) && ! empty($object['type']))
 					{
 						DB::table('products_data')
 						  ->insert([
