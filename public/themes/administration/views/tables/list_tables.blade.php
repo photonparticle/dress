@@ -8,7 +8,7 @@
             <i class="fa fa-table"></i>{{$pageTitle}}
         </div>
         <div class="actions">
-            <a href="/admin/module/tables/create" class="btn btn-success" title="{{trans('tables.create_table')}}">
+            <a href="/admin/module/tables/create" class="btn green-haze" title="{{trans('tables.create_table')}}">
                 <i class="fa fa-plus"></i>
                 {{trans('tables.create_table')}}
             </a>

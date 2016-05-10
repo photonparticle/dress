@@ -25,7 +25,7 @@
                                             {{trans('global.save')}}
                                         </a>
                                     @else
-                                        <a href="/admin/orders/edit/{{$order['id'] or ''}}" class="btn btn-success" title="{{trans('global.edit')}}">
+                                        <a href="/admin/orders/edit/{{$order['id'] or ''}}" class="btn green-haze" title="{{trans('global.edit')}}">
                                             <i class="fa fa-edit"></i>
                                             {{trans('global.edit')}}
                                         </a>
@@ -213,7 +213,7 @@
                                            },
                                            confirm: {
                                                label: "{{trans('global.yes')}}",
-                                               className: "btn-success",
+                                               className: "btn green-haze",
                                                callback: function () {
                                                    $.ajax({
                                                               type: 'post',
