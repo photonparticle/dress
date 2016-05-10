@@ -31,7 +31,7 @@
 
             <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2" style="padding-top:20px">
                 <a href="#"
-                   class="btn btn-icon-only green save_btn"
+                   class="btn btn-icon-only green-haze save_btn"
                    title="{{trans('global.save')}}"
                    data-id="{{isset($color['id']) ? $color['id'] : 'new'}}"
                    data-title="{{isset($color['title']) ? $color['title'] : ''}}"

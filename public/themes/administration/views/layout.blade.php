@@ -162,29 +162,41 @@
         });
     });
 
-    $('a.btn.green-haze').on('click', function (e) {
+    $('a.btn').on('click', function (e) {
+        $('button').prop('disabled', true);
         var btn = $('.btn');
-        if(btn.hasClass('disabled')) {
+        btn.addClass('disabled');
+        $(this).removeClass('disabled');
+
+        if($(this).hasClass('disabled')) {
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
-        } else {
-            btn.addClass('disabled');
         }
+        $(this).addClass('disabled');
 
         setTimeout(function () {
+            $('button').prop('disabled', false);
             btn.removeClass('disabled');
-        }, 5000);
+        }, 2000);
 
     });
 
     $( document ).ajaxStart(function() {
         $('button').prop('disabled', true);
-
-        setTimeout(function() {
-            $('button').prop('disabled', false);
-        }, 5000);
+        var btn = $('.btn');
+        btn.addClass('disabled');
     });
+
+    $( document ).ajaxStop(function() {
+        setTimeout(function() {
+            var btn = $('.btn');
+            $('button').prop('disabled', false);
+            btn.removeClass('disabled');
+        }, 2000);
+    });
+
+
 </script>
             
 @yield('customJS')

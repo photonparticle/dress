@@ -44,7 +44,7 @@
                                         <i class="fa fa-plus"></i>
                                     </a>
                                     <a href="#"
-                                       class="btn btn-icon-only green save_sizes"
+                                       class="btn btn-icon-only green-haze save_sizes"
                                        title="{{trans('global.save')}}"
                                     >
                                         <i class="fa fa-save"></i>

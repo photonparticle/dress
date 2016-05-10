@@ -134,6 +134,11 @@ select.cForm {
 textarea {
 	resize: vertical;
 }
+span.required {
+	line-height: 1em;
+	color: #f04646;
+	font-size: 16px;
+}
 /* Flex Custom */
 .flex-control-thumbs li {
 	margin: 0 0 10px 0 !important;
@@ -799,6 +804,41 @@ footer.sticky {
 	color: #fff;
 }
 
+/* SIDEBAR */
+.widget-categories ul ul{
+	padding-left: 2.5em;
+}
+
+.widget-categories ul li a i {
+	color: #909295;
+	display: block;
+	float: left;
+	padding-right: 0.5em;
+	font-size: 18px;
+	line-height: 2em;
+	width: 20px;
+	text-align: left;
+}
+
+.widget-categories ul li a.empty i {
+	visibility: hidden;
+}
+
+.widget.filter-by label{
+	margin: 0;
+	width: 100%;
+	display: block;
+	cursor: pointer;
+	line-height: 3em;
+}
+
+.widget.filter-by label input[type="checkbox"] {
+	float: right;
+	margin-top: 1em;
+	width: 15px;
+	height: 15px;
+}
+
 /* CUSTOM ANIMATIONS */
 .tab-pane.active {
 	-webkit-animation: fadeIn 750ms ease-in-out 250ms both;
@@ -806,4 +846,20 @@ footer.sticky {
 	-o-animation: fadeIn 750ms ease-in-out 250ms both;
 	-ms-animation: fadeIn 750ms ease-in-out 250ms both;
 	animation: fadeIn 750ms ease-in-out 250ms both;
+}
+
+.widget-categories ul.childs {
+	-webkit-animation: slideInUp 500ms ease-in-out 0ms both;
+	-moz-animation: slideInUp 500ms ease-in-out 0ms both;
+	-o-animation: slideInUp 500ms ease-in-out 0ms both;
+	-ms-animation: slideInUp 500ms ease-in-out 0ms both;
+	animation: slideInUp 500ms ease-in-out 0ms both;
+}
+
+.widget-categories ul.childs.hidden {
+	-webkit-animation: slideOutUp 500ms ease-in-out 0ms both;
+	-moz-animation: slideOutUp 500ms ease-in-out 0ms both;
+	-o-animation: slideOutUp 500ms ease-in-out 0ms both;
+	-ms-animation: slideOutUp 500ms ease-in-out 0ms both;
+	animation: slideOutUp 500ms ease-in-out 0ms both;
 }

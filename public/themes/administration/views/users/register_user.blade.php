@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-md-offset-2 col-md-10">
                             <button type="button" class="btn default">{{trans('users.cancel')}}</button>
-                            <button id="register" type="button" class="btn green">{{trans('users.register')}}</button>
+                            <button id="register" type="button" class="btn green-haze">{{trans('users.register')}}</button>
                         </div>
                     </div>
                 </div>

@@ -97,12 +97,27 @@ class Model_Client extends Model
 	 *  Get all available sizes
 	 * @return array
 	 */
-	public static function getSizes()
+	public static function getSizes($group_name = FALSE)
 	{
 		$sizes = DB::table('sizes');
 
-		$sizes = $sizes->select(['name'])
-					   ->groupBy('name');
+		$sizes = $sizes->select(['name']);
+
+		if ( ! empty($group_name))
+		{
+			if (is_array($group_name))
+			{
+				$sizes = $sizes->whereIn('group', $group_name);
+			}
+			else
+			{
+				$sizes = $sizes->where('group', '=', $group_name);
+			}
+		}
+		else
+		{
+			$sizes = $sizes->groupBy('name');
+		}
 
 		$response = [];
 
@@ -189,8 +204,11 @@ class Model_Client extends Model
 	public static function getProductsWithSize($size_name)
 	{
 		$products = DB::table('product_to_size')
-					  ->select('product_id')
-					  ->where('size', '=', $size_name)
+					  ->leftJoin('products', 'products.id', '=', 'product_to_size.product_id')
+					  ->select('product_to_size.product_id')
+					  ->where('products.quantity', '>', 0)
+					  ->whereIn('product_to_size.size', $size_name)
+					  ->groupBy('product_to_size.product_id')
 					  ->get();
 		$response = [];
 
@@ -208,8 +226,11 @@ class Model_Client extends Model
 	public static function getProductsWithMaterial($material_id)
 	{
 		$products = DB::table('product_to_material')
-					  ->select('product_id')
-					  ->where('material_id', '=', $material_id)
+					  ->leftJoin('products', 'products.id', '=', 'product_to_material.product_id')
+					  ->select('product_to_material.product_id')
+					  ->where('products.quantity', '>', 0)
+					  ->whereIn('product_to_material.material_id', $material_id)
+					  ->groupBy('product_to_material.product_id')
 					  ->get();
 		$response = [];
 
@@ -247,8 +268,11 @@ class Model_Client extends Model
 	public static function getProductsWithColor($color_id)
 	{
 		$products = DB::table('product_to_color')
-					  ->select('product_id')
-					  ->where('color_id', '=', $color_id)
+					  ->leftJoin('products', 'products.id', '=', 'product_to_color.product_id')
+					  ->select('product_to_color.product_id')
+					  ->where('products.quantity', '>', 0)
+					  ->whereIn('product_to_color.color_id', $color_id)
+					  ->groupBy('product_to_color.product_id')
 					  ->get();
 		$response = [];
 

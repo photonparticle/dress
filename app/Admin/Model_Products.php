@@ -471,64 +471,16 @@ class Model_Products extends Model
 	{
 		if ( ! empty($product_id) && ! empty($categories) && is_array($categories))
 		{
-			$current_categories  = self::getProductToCategory($product_id);
-			$remove_categories   = [];
-			$insert_categories   = $categories;
-			$categories_ids      = Model_Categories::getCategoriesIDs();
-			$existing_categories = [];
-
-			foreach ($categories_ids as $cat)
-			{
-				if ( ! empty($cat['id']))
-				{
-					$existing_categories[] = $cat['id'];
-				}
-			}
-
-			//Determine update and insert categories
-
-			if (is_array($current_categories))
-			{
-				foreach ($current_categories as $category)
-				{
-					if ( ! array_key_exists($category, $categories))
-					{
-						$remove_categories[] = $category;
-					}
-					elseif ( ! in_array($category, $existing_categories))
-					{
-						$remove_categories[] = $category;
-					}
-					elseif (array_key_exists($category, $insert_categories))
-					{
-						unset($insert_categories[$category]);
-					}
-				}
-			}
-			else
-			{
-				$insert_categories = $categories;
-			}
 
 			//Process remove categories
-			if (is_array($remove_categories))
-			{
-				foreach ($remove_categories as $category)
-				{
-					if ( ! empty($category))
-					{
-						DB::table('product_to_category')
-						  ->where('product_id', '=', $product_id)
-						  ->where('category_id', '=', $category)
-						  ->delete();
-					}
-				}
-			}
+			DB::table('product_to_category')
+			  ->where('product_id', '=', $product_id)
+			  ->delete();
 
 			//Process insert categories
-			if (is_array($insert_categories))
+			if (is_array($categories))
 			{
-				foreach ($insert_categories as $category)
+				foreach ($categories as $category)
 				{
 					if ( ! empty($category))
 					{

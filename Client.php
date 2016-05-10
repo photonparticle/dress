@@ -293,7 +293,6 @@ class Client extends BaseControllerClient
 		$response['products'] = Model_Main::getProductsToCategoryPage($id, $page, $this->system['quantity'], $order_by);
 		$products_to_category = Model_Main::getProductsToCategoryId($id);
 		$total_products       = count($products_to_category);
-
 		//Filters
 
 		//Get submitted filters
@@ -342,7 +341,6 @@ class Client extends BaseControllerClient
 		if ( ! empty($filter_size))
 		{
 			$products_with_size         = Model_Client::getProductsWithSize($filter_size);
-//			dd($products_with_size);
 			$products_without_size      = array_diff($response['products'], $products_with_size);
 			$response['products']       = array_diff($response['products'], $products_without_size);
 			$total_products             = count($response['products']) - count($products_without_size);
@@ -423,9 +421,7 @@ class Client extends BaseControllerClient
 		$response['sliders'] = self::prepareSliders($response['sliders']);
 
 		// Get Sizes
-		if(!empty($response['category']['size_group']) && is_array(json_decode($response['category']['size_group'], TRUE))) {
-			$response['sizes'] = Model_Client::getSizes(json_decode($response['category']['size_group'], TRUE));
-		}
+		$response['sizes'] = Model_Client::getSizes();
 
 		// Get Colors
 		$response['colors'] = Model_Client::getColors();
@@ -450,6 +446,7 @@ class Client extends BaseControllerClient
 
 		//Calculate total pages
 		$response['total_pages'] = intval($total_products / $this->system['quantity']) + 1;
+dd($response);
 
 		return $response;
 

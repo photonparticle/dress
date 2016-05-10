@@ -235,6 +235,19 @@ class Module_Orders extends BaseController
 					{
 						if (Model_Orders::updateOrder($id, $data))
 						{
+							//If updated check status and if it's canceled, return product quantities
+							if(Input::get('status') == 'canceled') {
+								$records = Model_Orders::getOrderProducts($id);
+
+								if(!empty($records) && is_array($records)) {
+									foreach($records as $record) {
+										if(!empty($record['id'])) {
+											Model_Orders::returnProduct($record['id']);
+										}
+									}
+								}
+							}
+
 							$response['status']  = 'success';
 							$response['message'] = trans('orders.saved');
 						}
@@ -347,7 +360,7 @@ class Module_Orders extends BaseController
 							$product['quantity'] = 0;
 						}
 
-						Model_Orders::discountProduct($product['id'], $sizes, $product['quantity']);
+						Model_Orders::manageQuantities($product['id'], $sizes, $product['quantity']);
 						Model_Products::saveProductToSize($product['id'], $sizes);
 
 						$response['status']  = 'success';
@@ -587,81 +600,6 @@ class Module_Orders extends BaseController
 		$response['pageTitle'] = trans('orders.edit_order');
 
 		return Theme::view('orders.create_edit_order', $response);
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
-	 * @param  int $action
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public
-	function postUpdate(Request $request, $id)
-	{
-		$response['status']  = 'error';
-		$response['message'] = trans('categories.not_updated');
-
-		if ( ! empty($_POST))
-		{
-			$error = FALSE;
-
-			if (empty(trim(Input::get('title'))))
-			{
-				$response['message'] = trans('categories.title_required');
-				$error               = TRUE;
-			}
-
-			$category_level = Input::get('level');
-			$parent         = Input::get('parent');
-
-			if ( ! empty($category_level) && in_array($category_level, ['1', '2']))
-			{
-				if (empty($parent))
-				{
-					$response['message'] = trans('categories.parent_required');
-					$error               = TRUE;
-				}
-			}
-
-			if ($error === FALSE)
-			{
-				$data = [
-					'title'            => trim(Input::get('title')),
-					'description'      => Input::get('description'),
-					'level'            => $category_level,
-					'parent'           => $parent,
-					'position'         => Input::get('position'),
-					'visible'          => Input::get('visible'),
-					'active'           => Input::get('active'),
-					'meta_description' => Input::get('meta_description'),
-					'meta_keywords'    => Input::get('meta_keywords'),
-				];
-
-				if (Model_Categories::updateCategory($id, $data) === TRUE)
-				{
-					try
-					{
-						//Manage Friendly URL
-						Model_Categories::setURL($id, Input::get('friendly_url'));
-
-						$response['status']  = 'success';
-						$response['message'] = trans('categories.updated');
-					} catch (Exception $e)
-					{
-						$response['message'] = $e;
-					}
-				}
-				else
-				{
-					$response['message'] = trans('categories.not_updated');
-				}
-			}
-		}
-
-		return response()->json($response);
 	}
 
 	/**

@@ -163,6 +163,8 @@ $(document).ready(function () {
 
 	productEqualHeight();
 
+	widget_categories();
+
 	//Sticky footer
 	stickyHeader();
 	stickyFooter();
@@ -511,6 +513,22 @@ function validateAddToCart(product_holder) {
 
 	//Disable form on load
 	form_disabled();
+}
+
+function widget_categories() {
+	$('ul.sidebar-menu li a i').click( function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		e.stopImmediatePropagation();
+
+		if($(this).closest('li').find('ul.childs').hasClass('hidden')) {
+			$(this).removeClass('fa-angle-right').addClass('fa-angle-down');
+			$(this).closest('li').find('ul.childs').removeClass('hidden');
+		} else {
+			$(this).addClass('fa-angle-right').removeClass('fa-angle-down');
+			$(this).closest('li').find('ul.childs').addClass('hidden');
+		}
+	});
 }
 
 function cart_drop() {

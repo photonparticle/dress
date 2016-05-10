@@ -1591,8 +1591,8 @@ h3.sidebar-title {
 	border-bottom: 1px solid #e8e8e9;
 	font-size: 16px;
 	font-weight: 600;
-	margin: 0 0 20px;
-	padding: 0 0 5px;
+	margin: 0 0 5px;
+	padding: 0 0 10px;
 	text-transform: uppercase;
 	line-height: 12px;
 }
@@ -1601,7 +1601,6 @@ h3.sidebar-title {
 ul.sidebar-menu {
 }
 ul.sidebar-menu li {
-	border-bottom: 1px solid #e8e8e9;
 	float: left;
 	font-size: 12px;
 	line-height: 40px;
@@ -1611,14 +1610,9 @@ ul.sidebar-menu li {
 	width: 100%;
 }
 ul.sidebar-menu li a {
+	border-bottom: 1px solid #e8e8e9;
+	display: block;
 	text-transform: uppercase;
-}
-ul.sidebar-menu li a::before {
-	color: #909295;
-	content: "";
-	display: inline-block;
-	font-family: FontAwesome;
-	margin-right: 10px;
 }
 ul.sidebar-menu li a:hover {
 }

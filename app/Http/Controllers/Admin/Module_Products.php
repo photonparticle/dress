@@ -748,7 +748,7 @@ class Module_Products extends BaseController
 							}
 
 							//Manage categories relations
-							if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
+							if ( !empty(Input::get('categories')) && is_array(Input::get('categories')))
 							{
 								Model_Products::setProductToCategory($id, Input::get('categories'));
 							}

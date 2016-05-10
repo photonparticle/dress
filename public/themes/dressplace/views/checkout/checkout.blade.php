@@ -74,37 +74,37 @@
             </h3>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email <span class="required">*</span></label>
                     <input type="email" class="form-control cForm" name="email" id="email" placeholder="Email" value="{{$current_user['email'] or ''}}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
-                    <label for="name">{{trans('client.name')}}</label>
+                    <label for="name">{{trans('client.name')}} <span class="required">*</span></label>
                     <input type="text" class="form-control cForm" id="name" name="name" placeholder="{{trans('client.name')}}" value="{{$current_user['first_name'] or ''}}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
-                    <label for="last_name">{{trans('client.last_name')}}</label>
+                    <label for="last_name">{{trans('client.last_name')}} <span class="required">*</span></label>
                     <input type="text" class="form-control cForm" id="last_name" name="last_name" placeholder="{{trans('client.last_name')}}" value="{{$current_user['last_name'] or ''}}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
-                    <label for="phone">{{trans('client.phone')}}</label>
+                    <label for="phone">{{trans('client.phone')}} <span class="required">*</span></label>
                     <input type="text" class="form-control cForm" id="phone" name="phone" placeholder="{{trans('client.phone')}}" value="{{$current_user['phone'] or ''}}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
-                    <label for="address">{{trans('client.address')}}</label>
+                    <label for="address">{{trans('client.address')}} <span class="required">*</span></label>
                     <input type="text" class="form-control cForm" id="address" name="address" placeholder="{{trans('client.address')}}" value="{{$current_user['address'] or ''}}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
-                    <label for="city">{{trans('client.city')}}</label>
+                    <label for="city">{{trans('client.city')}} <span class="required">*</span></label>
                     <input type="text" class="form-control cForm" id="city" name="city" placeholder="{{trans('client.city')}}" value="{{$current_user['city'] or ''}}">
                 </div>
             </div>

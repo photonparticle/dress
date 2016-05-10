@@ -240,6 +240,8 @@ class Model_Orders extends Model
 		{
 			try
 			{
+				self::returnProduct($record_id);
+
 				$query = DB::table('order_products')
 						   ->where('id', '=', $record_id)
 						   ->delete();
@@ -263,7 +265,7 @@ class Model_Orders extends Model
 		}
 	}
 
-	public static function discountProduct($product_id, $sizes, $total)
+	public static function manageQuantities($product_id, $sizes, $total)
 	{
 		if ( ! empty($product_id) && ! empty($sizes) && isset($total))
 		{
@@ -295,6 +297,39 @@ class Model_Orders extends Model
 		}
 		else
 		{
+			return FALSE;
+		}
+	}
+
+	public static function returnProduct($record_id) {
+		//Get record id
+		$record = DB::table('order_products')
+						->where('id', '=', $record_id)
+						->get();
+
+		if ( ! empty($record[0]) && is_array($record[0]) && ! empty($record[0]['product_id']))
+		{
+			$product_id = $record[0]['product_id'];
+
+			$product = Model_Products::getProducts($product_id, ['sizes']);
+
+			if(!empty($product[$product_id]['sizes']) && is_array(json_decode($product[$product_id]['sizes'], TRUE))) {
+				$sizes = json_decode($product[$product_id]['sizes'], TRUE);
+				$pr_quantity = $product[$product_id]['quantity'];
+
+				foreach($sizes as $key => $size) {
+					if($record[0]['size'] == $size['name']) {
+						$sizes[$key]['quantity'] = intval($sizes[$key]['quantity']) + intval($record[0]['quantity']);
+						$pr_quantity = intval($pr_quantity) + intval($record[0]['quantity']);
+					}
+				}
+			}
+
+			$sizes = json_encode($sizes);
+
+			return self::manageQuantities($product_id, $sizes, $pr_quantity);
+
+		} else {
 			return FALSE;
 		}
 	}

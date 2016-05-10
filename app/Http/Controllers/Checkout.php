@@ -430,7 +430,7 @@ class Checkout extends BaseControllerClient
 									$product['quantity'] = intval($product['quantity']) - intval($item['quantity']);
 								}
 
-								Model_Orders::discountProduct($product['id'], $sizes, $product['quantity']);
+								Model_Orders::manageQuantities($product['id'], $sizes, $product['quantity']);
 
 								session()->forget('cart');
 								session()->forget('total');

@@ -75,24 +75,40 @@
 
                 <!-- left-sidebar start -->
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <!-- widget-categories start -->
+                    <aside class="widget widget-categories">
+                        <h3 class="sidebar-title">{{trans('client.categories')}}</h3>
+                        <ul class="sidebar-menu">
+                            @if(!empty($main_categories) && is_array($main_categories))
+                                @foreach($main_categories as $key => $main_category)
+                                    <li>
+                                        <a href="/{{$main_category['slug']}}" class="@if(empty($second_level_categories[$main_category['id']])) empty @endif">
+                                            <i class="fa fa-angle-right" aria-hidden="true"></i>
+
+                                            {{$main_category['title'] or ''}}
+                                        </a>
+
+                                        @if(!empty($second_level_categories[$main_category['id']]) && is_array($second_level_categories[$main_category['id']]))
+                                            <ul class="childs hidden">
+                                                @foreach($second_level_categories[$main_category['id']] as $second_level_category)
+                                                    <li>
+                                                        <a href="/{{$second_level_category['slug']}}">
+                                                            {{$second_level_category['title'] or ''}}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            @endif
+                        </ul>
+                    </aside>
+                    <!-- widget-categories end -->
+
+
                     <form method="POST" id="filters" action="/{{$slug}}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <!-- widget-categories start -->
-                        <aside class="widget widget-categories">
-                            <h3 class="sidebar-title">{{trans('client.categories')}}</h3>
-                            <ul class="sidebar-menu">
-                                @if(!empty($main_categories) && is_array($main_categories))
-                                    @foreach($main_categories as $key => $main_category)
-                                        <li>
-                                            <a href="/{{$main_category['slug']}}">
-                                                {{$main_category['title'] or ''}}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                @endif
-                            </ul>
-                        </aside>
-                        <!-- widget-categories end -->
                         <!-- shop-filter start -->
                         <aside class="widget shop-filter">
                             <h3 class="sidebar-title">{{trans('client.price')}}</h3>
@@ -110,88 +126,109 @@
                             </div>
                         </aside>
                         <!-- shop-filter end -->
-                        @if(!empty($sizes) && is_array($sizes))
-                                <!-- filter-by start -->
-                        <aside class="widget filter-by">
-                            <h3 class="sidebar-title">
-                                <label for="filter_sizes">
-                                    {{trans('client.sizes')}}
-                                </label>
-                            </h3>
-                            <select id="filter_sizes" name="size" class="form-control cForm">
-                                <option value=""> - {{trans('client.choose_size')}} -</option>
-                                @foreach($sizes as $name)
-                                    <option value="{{$name}}" @if(!empty($filter['size']) && $filter['size'] == $name) selected @endif>{{$name}}</option>
-                                @endforeach
-                            </select>
-                        </aside>
-                        <!-- filter-by end -->
-                        @endif
+                    @if(!empty($sizes) && is_array($sizes))
+                        <!-- filter-by start -->
+                            <aside class="widget filter-by">
+                                <h3 class="sidebar-title">
+                                    <label for="filter_sizes">
+                                        {{trans('client.sizes')}}
+                                    </label>
+                                </h3>
 
-                        {{--@if(!empty($materials) && is_array($materials))--}}
-                                {{--<!-- filter-by start -->--}}
-                        {{--<aside class="widget filter-by">--}}
-                            {{--<h3 class="sidebar-title">--}}
-                                {{--<label for="filter_materials">--}}
-                                    {{--{{trans('client.material')}}--}}
-                                {{--</label>--}}
-                            {{--</h3>--}}
+                                <ul class="sidebar-menu">
+                                    <?php $count = 0; ?>
+                                    @foreach($sizes as $name)
+                                        <?php $count++; ?>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <label for="filter_sizes_{{$count}}">
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                    {{$name}}
 
-                            {{--<select id="filter_materials" name="filter_materials" class="form-control cForm">--}}
-                                {{--<option value=""> - {{trans('client.choose_material')}} -</option>--}}
-                                {{--@foreach($materials as $key => $name)--}}
-                                    {{--<option value="{{$key}}" @if(!empty($filter['material']) && $filter['material'] == $key) selected @endif>{{$name}}</option>--}}
-                                {{--@endforeach--}}
-                            {{--</select>--}}
+                                                    <input type="checkbox" name="size[]" id="filter_sizes_{{$count}}" value="{{$name}}" @if(!empty($filter['size']) && is_array($filter['size']) && in_array($name, $filter['size'])) checked @endif  />
+                                                </label>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </aside>
+                            <!-- filter-by end -->
+                    @endif
 
-                        {{--</aside>--}}
-                        {{--<!-- filter-by end -->--}}
-                        {{--@endif--}}
+                    @if(!empty($colors) && is_array($colors))
+                        <!-- filter-by start -->
+                            <aside class="widget filter-by">
+                                <h3 class="sidebar-title">
+                                    <label for="filter_colors">
+                                        {{trans('client.colors')}}
+                                    </label>
+                                </h3>
 
-                        @if(!empty($colors) && is_array($colors))
-                                <!-- filter-by start -->
-                        <aside class="widget filter-by">
-                            <h3 class="sidebar-title">
-                                <label for="filter_colors">
-                                    {{trans('client.colors')}}
-                                </label>
-                            </h3>
+                                <ul class="sidebar-menu">
+                                    <?php $count = 0; ?>
+                                    @foreach($colors as $key => $name)
+                                        <?php $count++; ?>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <label for="filter_colors_{{$count}}">
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                    {{$name}}
 
-                            <select id="filter_colors" name="filter_colors" class="form-control cForm">
-                                <option value=""> - {{trans('client.choose_color')}} -</option>
-                                @foreach($colors as $key => $name)
-                                    <option value="{{$key}}" @if(!empty($filter['color']) && $filter['color'] == $key) selected @endif>{{$name}}</option>
-                                @endforeach
-                            </select>
+                                                    <input type="checkbox" name="color[]" id="filter_colors_{{$count}}" value="{{$key}}" @if(!empty($filter['color']) && is_array($filter['color']) && in_array($key, $filter['color'])) checked @endif/>
+                                                </label>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
 
-                        </aside>
-                        <!-- filter-by end -->
+                            </aside>
+                            <!-- filter-by end -->
                         @endif
                         <input type="submit" class="filter" value="{{trans('client.filter')}}"/>
                         <div class="clearfix"></div>
+
+                    {{--@if(!empty($materials) && is_array($materials))--}}
+                    {{--<!-- filter-by start -->--}}
+                    {{--<aside class="widget filter-by">--}}
+                    {{--<h3 class="sidebar-title">--}}
+                    {{--<label for="filter_materials">--}}
+                    {{--{{trans('client.material')}}--}}
+                    {{--</label>--}}
+                    {{--</h3>--}}
+
+                    {{--<select id="filter_materials" name="filter_materials" class="form-control cForm">--}}
+                    {{--<option value=""> - {{trans('client.choose_material')}} -</option>--}}
+                    {{--@foreach($materials as $key => $name)--}}
+                    {{--<option value="{{$key}}" @if(!empty($filter['material']) && $filter['material'] == $key) selected @endif>{{$name}}</option>--}}
+                    {{--@endforeach--}}
+                    {{--</select>--}}
+
+                    {{--</aside>--}}
+                    {{--<!-- filter-by end -->--}}
+                    {{--@endif--}}
                     </form>
 
-                    @if(!empty($products[$upcoming['product_id']]))
+                @if(!empty($products[$upcoming['product_id']]))
                     <!-- widget-recent start -->
-                    <aside class="widget top-product-widget hidden-sm">
-                        <h3 class="sidebar-title">{{$upcoming['title'] or ''}}</h3>
-                        <div class="banner-curosel">
-                            <div class="banner">
-                                <a href="{{$products[$upcoming['product_id']]['slug']}}">
-                                    <img
-                                            src="{{$thumbs_path . $upcoming['product_id'] . '/' . $icon_size . '/' .  $products[$upcoming['product_id']]['image']}}"
-                                            alt="{{$products[$upcoming['product_id']]['title']}}"
-                                    />
-                                </a>
-                                <div class="upcoming-pro">
-                                    <div data-countdown="{{$upcoming['date'] or ''}}"></div>
+                        <aside class="widget top-product-widget hidden-sm">
+                            <h3 class="sidebar-title">{{$upcoming['title'] or ''}}</h3>
+                            <div class="banner-curosel">
+                                <div class="banner">
+                                    <a href="{{$products[$upcoming['product_id']]['slug']}}">
+                                        <img
+                                                src="{{$thumbs_path . $upcoming['product_id'] . '/' . $icon_size . '/' .  $products[$upcoming['product_id']]['image']}}"
+                                                alt="{{$products[$upcoming['product_id']]['title']}}"
+                                        />
+                                    </a>
+                                    <div class="upcoming-pro">
+                                        <div data-countdown="{{$upcoming['date'] or ''}}"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </aside>
-                    @endif
+                        </aside>
+                @endif
 
-                    <!-- widget-recent end -->
+                <!-- widget-recent end -->
                 </div>
                 <!-- left-sidebar end -->
                 <!-- shop-content start -->
@@ -208,7 +245,7 @@
                         <div class="toolbar-form">
                             <form method="POST" id="order" action="/{{$slug}}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <div class="tolbar-select">
+                                <div class="toolbar-select">
                                     <label for="order_by">{{trans('client.order_by')}}</label>
                                     <select name="order_by" id="order_by">
                                         <option value="newest" @if(empty($order_by) || (!empty($order_by) && $order_by == 'newest')) selected @endif>{{trans('client.newest')}}</option>
@@ -289,17 +326,6 @@
 
             //Filters
             var body = $('body');
-            body.on('change', '#filter_sizes', function () {
-                $(this).closest('form').submit();
-            });
-
-            body.on('change', '#filter_materials', function () {
-                $(this).closest('form').submit();
-            });
-
-            body.on('change', '#filter_colors', function () {
-                $(this).closest('form').submit();
-            });
 
             body.on('change', '#order_by', function () {
                 $(this).closest('form').submit();
