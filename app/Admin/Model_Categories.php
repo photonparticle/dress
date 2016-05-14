@@ -289,9 +289,9 @@ class Model_Categories extends Model
 			//Determine update and insert objects
 			foreach ($objects as $name => $object)
 			{
-				if (is_array($current_objects) && ! empty($current_objects[$category_id]))
+				if (is_array($current_objects) && isset($current_objects[$category_id]))
 				{
-					if (array_key_exists($name, $current_objects[$category_id]))
+					if (isset($name, $current_objects[$category_id]))
 					{
 						$update_objects[$name] = $object;
 					}

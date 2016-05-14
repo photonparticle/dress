@@ -16,8 +16,12 @@
     {{-- CAROUSELS TOP --}}
     @if(!empty($carousels) && is_array($carousels))
         @foreach($carousels as $carousel)
-            @if(empty($carousel['position']) || (!empty($carousel['position']) && intval($carousel['position']) < 2))
-                @include('dressplace::partials.render_carousel')
+            <div class="container">
+                <div class="row">
+                @if(empty($carousel['position']) || (!empty($carousel['position']) && intval($carousel['position']) < 2))
+                    @include('dressplace::partials.render_carousel')
+                </div>
+            </div>
             @endif
         @endforeach
     @endif

@@ -51,11 +51,13 @@ class Model_Products extends Model
 			$products = $products->where('id', '=', $product_id);
 		}
 
-		if(!empty($active_only)) {
+		if ( ! empty($active_only))
+		{
 			$products = $products->where('active', '=', 1);
 		}
 
-		if(!empty($available_only)) {
+		if ( ! empty($available_only))
+		{
 			$products = $products->where('quantity', '>', 0);
 		}
 
@@ -70,7 +72,7 @@ class Model_Products extends Model
 				if ( ! empty($product) && is_array($product))
 				{
 					$response[$product['id']] = $product;
-					$loaded_product[] = $product['id'];
+					$loaded_product[]         = $product['id'];
 				}
 			}
 		}
@@ -241,7 +243,7 @@ class Model_Products extends Model
 			$update_objects  = [];
 			$insert_objects  = [];
 
-			if ( ! empty($current_objects[$product_id]))
+			if (isset($current_objects[$product_id]))
 			{
 				$current_objects = $current_objects[$product_id];
 			}
@@ -270,20 +272,22 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( isset($data['related_products']))
+			if (isset($data['related_products']))
 			{
 				$objects['related_products'] = [
 					'value' => json_encode($data['related_products']),
 					'type'  => 'json',
 				];
-			} elseif(empty($data['related_products'])) {
+			}
+			elseif (empty($data['related_products']))
+			{
 				$objects['related_products'] = [
 					'value' => '',
 					'type'  => 'json',
 				];
 			}
 
-			if ( isset($data['page_title']))
+			if (isset($data['page_title']))
 			{
 				$objects['page_title'] = [
 					'value' => $data['page_title'],
@@ -291,7 +295,7 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( isset($data['meta_description']))
+			if (isset($data['meta_description']))
 			{
 				$objects['meta_description'] = [
 					'value' => $data['meta_description'],
@@ -299,7 +303,7 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( isset($data['meta_keywords']))
+			if (isset($data['meta_keywords']))
 			{
 				$objects['meta_keywords'] = [
 					'value' => $data['meta_keywords'],
@@ -307,14 +311,14 @@ class Model_Products extends Model
 				];
 			}
 
-			if ( isset($data['images']))
+			if (isset($data['images']))
 			{
 				$objects['images'] = [
 					'value' => json_encode($data['images']),
 					'type'  => 'json',
 				];
 			}
-			if ( isset($data['dimensions_table']))
+			if (isset($data['dimensions_table']))
 			{
 				$objects['dimensions_table'] = [
 					'value' => $data['dimensions_table'],
@@ -327,7 +331,7 @@ class Model_Products extends Model
 			{
 				if (is_array($current_objects))
 				{
-					if (array_key_exists($name, $current_objects))
+					if (isset($name, $current_objects))
 					{
 						$update_objects[$name] = $object;
 					}
@@ -347,7 +351,7 @@ class Model_Products extends Model
 			{
 				foreach ($update_objects as $name => $object)
 				{
-					if ( isset($object['value']) && ! empty($object['type']))
+					if (isset($object['value']) && ! empty($object['type']))
 					{
 						DB::table('products_data')
 						  ->where('object', '=', $name)
@@ -365,7 +369,7 @@ class Model_Products extends Model
 			{
 				foreach ($insert_objects as $name => $object)
 				{
-					if ( isset($object['value']) && ! empty($object['type']))
+					if (isset($object['value']) && ! empty($object['type']))
 					{
 						DB::table('products_data')
 						  ->insert([
@@ -700,7 +704,6 @@ class Model_Products extends Model
 		{
 			return FALSE;
 		}
-
 	}
 
 	/**
@@ -986,6 +989,198 @@ class Model_Products extends Model
 							   'size'       => $size,
 						   ]);
 			}
+		}
+	}
+
+	public static function duplicateProduct($product_id)
+	{
+		//Get product
+		$product = DB::table('products')
+					 ->where('id', $product_id)
+					 ->get();
+
+		if ( ! empty($product[0]))
+		{
+			$product = $product[0];
+
+			//Replace product data
+			if (isset($product['id']))
+			{
+				unset($product['id']);
+			}
+
+			$product['created_at'] = date('Y-m-d H:i:s');
+			$product['updated_at'] = date('Y-m-d H:i:s');
+			$product['active']     = 0;
+
+			$new_id = DB::table('products')
+						->insertGetId($product);
+
+			//Get product data
+			$product_data = DB::table('products_data')
+							  ->where('product_id', $product_id)
+							  ->get();
+
+			//Loop trough product data
+			if ( ! empty($product_data) && is_array($product_data))
+			{
+				foreach ($product_data as $key => $data)
+				{
+					//Unset row id
+					if ( ! empty($product_data[$key]['id']))
+					{
+						unset($product_data[$key]['id']);
+					}
+
+					//Change id
+					$product_data[$key]['product_id'] = $new_id;
+
+					//Remove images
+					if($product_data[$key]['object'] == 'images') {
+						unset($product_data[$key]);
+					}
+				}
+
+				//Insert new data
+				DB::table('products_data')
+					->insert($product_data);
+			}
+
+			//Get product to category
+			$product_to_category = DB::table('product_to_category')
+									 ->where('product_id', $product_id)
+									 ->get();
+
+			//Loop trough product data and replace product_id
+			if ( ! empty($product_to_category) && is_array($product_to_category))
+			{
+				foreach ($product_to_category as $key => $data)
+				{
+					if (isset($product_to_category[$key]['id']))
+					{
+						unset($product_to_category[$key]['id']);
+					}
+
+					$product_to_category[$key]['product_id'] = $new_id;
+				}
+
+				DB::table('product_to_category')
+				  ->insert($product_to_category);
+			}
+
+			//Get product to color
+			$product_to_color = DB::table('product_to_color')
+								  ->where('product_id', $product_id)
+								  ->get();
+
+			//Loop trough product data and replace product_id
+			if ( ! empty($product_to_color) && is_array($product_to_color))
+			{
+				foreach ($product_to_color as $key => $data)
+				{
+					if (isset($product_to_color[$key]['id']))
+					{
+						unset($product_to_color[$key]['id']);
+					}
+
+					$product_to_color[$key]['product_id'] = $new_id;
+				}
+
+				DB::table('product_to_color')
+				  ->insert($product_to_color);
+			}
+
+			//Get product to manufacturer
+			$product_to_manufacturer = DB::table('product_to_manufacturer')
+										 ->where('product_id', $product_id)
+										 ->get();
+
+			//Loop trough product data and replace product_id
+			if ( ! empty($product_to_manufacturer) && is_array($product_to_manufacturer))
+			{
+				foreach ($product_to_manufacturer as $key => $data)
+				{
+					if (isset($product_to_manufacturer[$key]['id']))
+					{
+						unset($product_to_manufacturer[$key]['id']);
+					}
+
+					$product_to_manufacturer[$key]['product_id'] = $new_id;
+				}
+
+				DB::table('product_to_manufacturer')
+				  ->insert($product_to_manufacturer);
+			}
+
+			//Get product to material
+			$product_to_material = DB::table('product_to_material')
+									 ->where('product_id', $product_id)
+									 ->get();
+
+			//Loop trough product data and replace product_id
+			if ( ! empty($product_to_material) && is_array($product_to_material))
+			{
+				foreach ($product_to_material as $key => $data)
+				{
+					if (isset($product_to_material[$key]['id']))
+					{
+						unset($product_to_material[$key]['id']);
+					}
+
+					$product_to_material[$key]['product_id'] = $new_id;
+				}
+
+				DB::table('product_to_material')
+				  ->insert($product_to_material);
+			}
+
+			//Get product to size
+			$product_to_size = DB::table('product_to_size')
+								 ->where('product_id', $product_id)
+								 ->get();
+
+			//Loop trough product data and replace product_id
+			if ( ! empty($product_to_size) && is_array($product_to_size))
+			{
+				foreach ($product_to_size as $key => $data)
+				{
+					if (isset($product_to_size[$key]['id']))
+					{
+						unset($product_to_size[$key]['id']);
+					}
+
+					$product_data[$key]['product_id'] = $new_id;
+				}
+
+				DB::table('product_to_size')
+				  ->insert($product_to_size);
+			}
+
+			//Get product to tag
+			$product_to_tag = DB::table('product_to_tag')
+								->where('product_id', $product_id)
+								->get();
+
+			//Loop trough product data and replace product_id
+			if ( ! empty($product_to_tag) && is_array($product_to_tag))
+			{
+				foreach ($product_to_tag as $key => $data)
+				{
+					if (isset($product_to_tag[$key]['id']))
+					{
+						unset($product_to_tag[$key]['id']);
+					}
+
+					$product_to_tag[$key]['product_id'] = $new_id;
+				}
+
+				DB::table('product_to_tag')
+				  ->insert($product_to_tag);
+			}
+
+			return $new_id;
+		} else {
+			return FALSE;
 		}
 	}
 }

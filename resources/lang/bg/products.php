@@ -61,4 +61,7 @@ return [
 	'choose_table_template'         => 'Избери темплейт',
 	'add_material'                  => 'Нова материя',
 	'image'                         => 'Изображение',
+	'duplicate'                     => 'Копирай продукта',
+	'not_duplicated'                => 'Продуктът не беше копиран',
+	'duplicated'                    => 'Продуктът беше копиран',
 ];

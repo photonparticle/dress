@@ -182,158 +182,175 @@ class Module_Products extends BaseController
 
 		if ( ! empty($_POST))
 		{
-
-			$error = FALSE;
-
-			if (empty(trim(Input::get('title'))))
+			if ( ! empty($_POST['duplicate']))
 			{
-				$response['message'] = trans('products.title_required');
-				$error               = TRUE;
+				$response['message'] = trans('products.not_duplicated');
+
+				if(!empty($_POST['product_id']) && is_numeric($_POST['product_id'])) {
+					if(
+					!empty(($new_id = Model_Products::duplicateProduct($_POST['product_id']))) &&
+					is_numeric($new_id)
+					) {
+						$response['status'] = 'success';
+						$response['message'] = trans('products.duplicated');
+						$response['new_id'] = $new_id;
+					}
+				}
 			}
-			if (empty(trim(Input::get('friendly_url'))))
+			else
 			{
-				$response['title']   = trans('global.warning');
-				$response['message'] = trans('products.url_required');
-				$error               = TRUE;
-			}
+				$error = FALSE;
 
-			if ($error === FALSE)
-			{
-				//Get images
-				$images_array = [];
-
-				if ( ! empty(Input::get('images_dir')) &&
-					is_dir($this->images_path.Input::get('images_dir')) &&
-					is_dir($this->images_path.Input::get('images_dir').DIRECTORY_SEPARATOR.Config::get('images.full_size'))
-				)
+				if (empty(trim(Input::get('title'))))
 				{
-					$images = array_diff(scandir($this->images_path.Input::get('images_dir').DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
-					natcasesort($images);
-					$images = array_values($images);
+					$response['message'] = trans('products.title_required');
+					$error               = TRUE;
+				}
+				if (empty(trim(Input::get('friendly_url'))))
+				{
+					$response['title']   = trans('global.warning');
+					$response['message'] = trans('products.url_required');
+					$error               = TRUE;
+				}
 
-					if ( ! empty($images) && is_array($images))
+				if ($error === FALSE)
+				{
+					//Get images
+					$images_array = [];
+
+					if ( ! empty(Input::get('images_dir')) &&
+						is_dir($this->images_path.Input::get('images_dir')) &&
+						is_dir($this->images_path.Input::get('images_dir').DIRECTORY_SEPARATOR.Config::get('images.full_size'))
+					)
 					{
-						foreach ($images as $key => $data)
+						$images = array_diff(scandir($this->images_path.Input::get('images_dir').DIRECTORY_SEPARATOR.Config::get('images.full_size')), array('..', '.'));
+						natcasesort($images);
+						$images = array_values($images);
+
+						if ( ! empty($images) && is_array($images))
 						{
-							if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+							foreach ($images as $key => $data)
 							{
-								$data = iconv("WINDOWS-1251", "UTF-8", $data);
+								if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+								{
+									$data = iconv("WINDOWS-1251", "UTF-8", $data);
+								}
+
+								$images_array[$data] = $key;
+							}
+						}
+					}
+
+					$available_sizes = [];
+
+					if ( ! empty(Input::get('sizes')) && is_array(Input::get('sizes')))
+					{
+						foreach (Input::get('sizes') as $size_name => $size)
+						{
+							if ($size['quantity'] > 0)
+							{
+								$available_sizes[] = $size_name;
+							}
+						}
+					}
+
+					if ( ! empty(Input::get('quantity')))
+					{
+						$available = 1;
+					}
+					else
+					{
+						$available = 0;
+					}
+
+					$data = [
+						'title'            => trim(Input::get('title')),
+						'description'      => Input::get('description'),
+						'main_category'    => Input::get('main_category'),
+						'quantity'         => Input::get('quantity'),
+						'available'        => $available,
+						'position'         => Input::get('position'),
+						'active'           => Input::get('active'),
+						'original_price'   => Input::get('original_price'),
+						'price'            => Input::get('price'),
+						'discount_price'   => Input::get('discount_price'),
+						'discount_start'   => Input::get('discount_start'),
+						'discount_end'     => Input::get('discount_end'),
+						'created_at'       => Input::get('created_at'),
+						'sizes'            => Input::get('sizes'),
+						'page_title'       => Input::get('page_title'),
+						'meta_description' => Input::get('meta_description'),
+						'meta_keywords'    => Input::get('meta_keywords'),
+						'related_products' => Input::get('related_products'),
+						'images'           => $images_array,
+						'dimensions_table' => Input::get('dimensions_table'),
+					];
+
+					if ($id = Model_Products::createProduct($data))
+					{
+						try
+						{
+							//Manage sizes relations
+							if ( ! empty($available_sizes) && is_array($available_sizes))
+							{
+								Model_Products::setProductToCategory($id, $available_sizes);
 							}
 
-							$images_array[$data] = $key;
+							//Manage categories relations
+							if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
+							{
+								Model_Products::setProductToCategory($id, Input::get('categories'));
+							}
+
+							//Manage Friendly URL
+							Model_Products::setURL($id, Input::get('friendly_url'));
+
+							//Rename images directory
+							if ( ! empty(Input::get('images_dir')) && is_dir($this->images_path.Input::get('images_dir')))
+							{
+								//Loop trough uploaded images and insert them to the database
+								rename($this->images_path.Input::get('images_dir'), $this->images_path.$id);
+							}
+
+							//Manage tags
+							$tags = Input::get('tags');
+							if ( ! empty($tags))
+							{
+								$tags = explode(',', $tags);
+								Model_Products::saveTags($id, $tags);
+							}
+
+							//Manage manufacturer
+							$manufacturer = Input::get('manufacturer');
+							if ( ! empty($manufacturer))
+							{
+								Model_Products::setManufacturer($id, $manufacturer);
+							}
+
+							//Manage material
+							$material = Input::get('material');
+							if ( ! empty($material))
+							{
+								Model_Products::setMaterial($id, $material);
+							}
+
+							//Manage colors
+							if ( ! empty(Input::get('colors')) && is_array(Input::get('colors')))
+							{
+								Model_Products::setColors($id, Input::get('colors'));
+							}
+						} catch (Exception $e)
+						{
+							$response['message'] = $e;
 						}
+						$response['status']     = 'success';
+						$response['message']    = trans('products.created');
+						$response['product_id'] = $id;
 					}
-				}
-
-				$available_sizes = [];
-
-				if ( ! empty(Input::get('sizes')) && is_array(Input::get('sizes')))
-				{
-					foreach (Input::get('sizes') as $size_name => $size)
+					else
 					{
-						if ($size['quantity'] > 0)
-						{
-							$available_sizes[] = $size_name;
-						}
+						$response['message'] = trans('products.not_created');
 					}
-				}
-
-				if ( ! empty(Input::get('quantity')))
-				{
-					$available = 1;
-				}
-				else
-				{
-					$available = 0;
-				}
-
-				$data = [
-					'title'            => trim(Input::get('title')),
-					'description'      => Input::get('description'),
-					'main_category'    => Input::get('main_category'),
-					'quantity'         => Input::get('quantity'),
-					'available'        => $available,
-					'position'         => Input::get('position'),
-					'active'           => Input::get('active'),
-					'original_price'   => Input::get('original_price'),
-					'price'            => Input::get('price'),
-					'discount_price'   => Input::get('discount_price'),
-					'discount_start'   => Input::get('discount_start'),
-					'discount_end'     => Input::get('discount_end'),
-					'created_at'       => Input::get('created_at'),
-					'sizes'            => Input::get('sizes'),
-					'page_title'       => Input::get('page_title'),
-					'meta_description' => Input::get('meta_description'),
-					'meta_keywords'    => Input::get('meta_keywords'),
-					'related_products' => Input::get('related_products'),
-					'images'           => $images_array,
-					'dimensions_table' => Input::get('dimensions_table'),
-				];
-
-				if ($id = Model_Products::createProduct($data))
-				{
-					try
-					{
-						//Manage sizes relations
-						if ( ! empty($available_sizes) && is_array($available_sizes))
-						{
-							Model_Products::setProductToCategory($id, $available_sizes);
-						}
-
-						//Manage categories relations
-						if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
-						{
-							Model_Products::setProductToCategory($id, Input::get('categories'));
-						}
-
-						//Manage Friendly URL
-						Model_Products::setURL($id, Input::get('friendly_url'));
-
-						//Rename images directory
-						if ( ! empty(Input::get('images_dir')) && is_dir($this->images_path.Input::get('images_dir')))
-						{
-							//Loop trough uploaded images and insert them to the database
-							rename($this->images_path.Input::get('images_dir'), $this->images_path.$id);
-						}
-
-						//Manage tags
-						$tags = Input::get('tags');
-						if ( ! empty($tags))
-						{
-							$tags = explode(',', $tags);
-							Model_Products::saveTags($id, $tags);
-						}
-
-						//Manage manufacturer
-						$manufacturer = Input::get('manufacturer');
-						if ( ! empty($manufacturer))
-						{
-							Model_Products::setManufacturer($id, $manufacturer);
-						}
-
-						//Manage material
-						$material = Input::get('material');
-						if ( ! empty($material))
-						{
-							Model_Products::setMaterial($id, $material);
-						}
-
-						//Manage colors
-						if ( ! empty(Input::get('colors')) && is_array(Input::get('colors')))
-						{
-							Model_Products::setColors($id, Input::get('colors'));
-						}
-					} catch (Exception $e)
-					{
-						$response['message'] = $e;
-					}
-					$response['status']     = 'success';
-					$response['message']    = trans('products.created');
-					$response['product_id'] = $id;
-				}
-				else
-				{
-					$response['message'] = trans('products.not_created');
 				}
 			}
 		}
@@ -748,7 +765,7 @@ class Module_Products extends BaseController
 							}
 
 							//Manage categories relations
-							if ( !empty(Input::get('categories')) && is_array(Input::get('categories')))
+							if ( ! empty(Input::get('categories')) && is_array(Input::get('categories')))
 							{
 								Model_Products::setProductToCategory($id, Input::get('categories'));
 							}
