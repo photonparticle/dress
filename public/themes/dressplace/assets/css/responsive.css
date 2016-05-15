@@ -59,14 +59,12 @@
  
 /* small mobile :320px. */
 @media (max-width: 767px) {
-.container {width:300px}
-.box-page .container{width:300px}
 .logo {
   text-align: center;
 }
 .cart-toggler {
   width: 240px;
-  margin: auto;
+  margin: 20px auto 0 auto;
 } 
 .cart-toggler a span.cart-title {
   padding-right: 8px;
@@ -157,9 +155,6 @@ ul.footer-contact li:last-child {
 }
 .price_slider_amount > input[type="submit"] {
   width: 75px;
-}
-.shop-content {
-  margin-top: 30px;
 }
 .toolbar-form {
   display: none;

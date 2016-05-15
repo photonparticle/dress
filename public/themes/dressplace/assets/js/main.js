@@ -14,7 +14,7 @@
 	/*----------------------------
 	 product-curosel active
 	 ------------------------------ */
-	$(".product-curosel").owlCarousel({
+	$(".product-carousel").owlCarousel({
 		                                  autoPlay: true,
 		                                  slideSpeed: 500,
 		                                  pagination: false,
@@ -24,14 +24,14 @@
 		                                  navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
 		                                  itemsDesktop: [1199, 4],
 		                                  itemsDesktopSmall: [980, 3],
-		                                  itemsTablet: [768, 2],
+		                                  itemsTablet: [768, 3],
 		                                  itemsMobile: [479, 1],
 	                                  });
 
 	/*----------------------------
 	 latest-blog-curosel active
 	 ------------------------------ */
-	$(".latest-blog-curosel").owlCarousel({
+	$(".latest-blog-carousel").owlCarousel({
 		                                      autoPlay: false,
 		                                      slideSpeed: 2000,
 		                                      pagination: false,
@@ -132,7 +132,7 @@
 	$('[data-countdown]').each(function () {
 		var $this = $(this), finalDate = $(this).data('countdown');
 		$this.countdown(finalDate, function (event) {
-			$this.html(event.strftime('<span class="cdown days"><span class="time-count">%-D</span> <p>Дни</p></span> <span class="cdown hour"><span class="time-count">%-H</span> <p>Часа</p></span> <span class="cdown minutes"><span class="time-count">%M</span> <p>минути</p></span> <span class="cdown second"> <span><span class="time-count">%S</span> <p>секунди</p></span>'));
+			$this.html(event.strftime('<span class="cdown days"><span class="time-count">%-D</span> <p>Дни</p></span> <span class="cdown hour"><span class="time-count">%-H</span> <p>Часа</p></span> <span class="cdown minutes"><span class="time-count">%M</span> <p>Минути</p></span> <span class="cdown second"> <span><span class="time-count">%S</span> <p>Секунди</p></span>'));
 		});
 	});
 

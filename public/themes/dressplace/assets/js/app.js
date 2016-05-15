@@ -257,6 +257,7 @@ function initProductSlider(slider) {
 
 				                  setTimeout(function () {
 					                  createImageZoom(slider);
+					                  productsSliderResize(slider);
 				                  }, 500);
 			                  },
 			                  after: function (slides) {
@@ -267,6 +268,7 @@ function initProductSlider(slider) {
 
 				                  setTimeout(function () {
 					                  createImageZoom(slider);
+					                  productsSliderResize(slider);
 				                  }, 500);
 			                  }
 		                  });
@@ -320,7 +322,7 @@ function productsSliderResize(target) {
 function productEqualHeight() {
 	setTimeout(function () {
 		var max_height = 0,
-			title = $('.single-product .product-info');
+			title = $('.single-product .product-info h3');
 
 		if (title.length > 0) {
 			title.each(function () {

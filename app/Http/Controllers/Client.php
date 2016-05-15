@@ -67,7 +67,6 @@ class Client extends BaseControllerClient
 			$response['system'] = $this->system;
 
 			return Theme::view('categories.category', $response);
-
 		}
 		elseif ($object['type'] == 'page')
 		{
@@ -101,6 +100,16 @@ class Client extends BaseControllerClient
 				//Images
 				if ( ! empty($product['images']) && is_array($image = json_decode($product['images'], TRUE)))
 				{
+					uasort($image, function ($a, $b)
+					{
+						if ($a == $b)
+						{
+							return 0;
+						}
+
+						return ($a < $b) ? -1 : 1;
+					});
+
 					reset($image);
 					$products[$id]['image'] = key($image);
 					unset($products[$id]['images']);
@@ -237,15 +246,17 @@ class Client extends BaseControllerClient
 		$response = [];
 
 		//Get category
-		$category                   = Model_Main::getCategory($id);
+		$category = Model_Main::getCategory($id);
 
 		//If category not found - maybe it's disabled but still gotta stay hidden
-		if(empty($category[$id])) {
+		if (empty($category[$id]))
+		{
 			abort(404);
-		} else {
-			$response['category']       = $category[$id];
 		}
-
+		else
+		{
+			$response['category'] = $category[$id];
+		}
 
 		$response['all_categories'] = $this->categories['all'];
 		$response['breadcrumbs']    = self::generateCategoryBreadcrumbs($category[$id]);
@@ -297,7 +308,7 @@ class Client extends BaseControllerClient
 		//Filters
 
 		//Get submitted filters
-		$filter_size      = (Input::get('size')) ? Input::get('size') : '';
+		$filter_size = (Input::get('size')) ? Input::get('size') : '';
 //		$filter_material  = (Input::get('material')) ? Input::get('material') : '';
 		$filter_color     = (Input::get('color')) ? Input::get('color') : '';
 		$filter_price_min = (Input::get('price_min')) ? Input::get('price_min') : '';
@@ -341,7 +352,7 @@ class Client extends BaseControllerClient
 
 		if ( ! empty($filter_size))
 		{
-			$products_with_size         = Model_Client::getProductsWithSize($filter_size);
+			$products_with_size = Model_Client::getProductsWithSize($filter_size);
 //			dd($products_with_size);
 			$products_without_size      = array_diff($response['products'], $products_with_size);
 			$response['products']       = array_diff($response['products'], $products_without_size);
@@ -423,7 +434,8 @@ class Client extends BaseControllerClient
 		$response['sliders'] = self::prepareSliders($response['sliders']);
 
 		// Get Sizes
-		if(!empty($response['category']['size_group']) && is_array(json_decode($response['category']['size_group'], TRUE))) {
+		if ( ! empty($response['category']['size_group']) && is_array(json_decode($response['category']['size_group'], TRUE)))
+		{
 			$response['sizes'] = Model_Client::getSizes(json_decode($response['category']['size_group'], TRUE));
 		}
 
@@ -452,7 +464,6 @@ class Client extends BaseControllerClient
 		$response['total_pages'] = intval($total_products / $this->system['quantity']) + 1;
 
 		return $response;
-
 	}
 
 	private function generateCategoryBreadcrumbs($category)
@@ -511,8 +522,11 @@ class Client extends BaseControllerClient
 			if ( ! empty($response['product']['page_title']))
 			{
 				View::share('page_title', $response['product']['page_title']);
-			} else {
-				if(!empty($response['product']['title'])) {
+			}
+			else
+			{
+				if ( ! empty($response['product']['title']))
+				{
 					View::share('page_title', $response['product']['title']);
 				}
 			}
@@ -615,6 +629,10 @@ class Client extends BaseControllerClient
 
 		//Color
 		$response['product']['related_colors'] = Model_Main::getColor($id);
+		if ( ! empty($response['product']['related_colors']) && is_array($response['product']['related_colors']))
+		{
+			$response['product']['related_colors_count'] = count($response['product']['related_colors']);
+		}
 		if ( ! empty($response['product']['related_colors']))
 		{
 			$response['product']['related_colors'] = implode(', ', $response['product']['related_colors']);

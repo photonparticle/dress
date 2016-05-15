@@ -112,9 +112,9 @@ return [
 	'banner-returns-text-1'         => 'Опция за преглед и тест',
 	'banner-returns-text-2'         => 'Връщане в 30 дневен срок',
 	'banner-returns-text-3'         => 'Замяна с друг размер',
-	'banner-call-us-text-fb'        => 'Пиши ни във FaceBook',
-	'call-us'                       => 'Обади ни се',
-	'mail-us'                       => 'Изпрати email',
+	'banner-call-us-text-fb'        => 'Пишете ни във Facebook',
+	'call-us'                       => 'Обадете ни се',
+	'mail-us'                       => 'Изпратете ни email',
 	'sale'                          => 'Промо',
 	'categories'                    => 'Категории',
 	'from'                          => 'От',
@@ -148,6 +148,7 @@ return [
 	'no_results'                    => 'Няма резултати',
 	'cart_empty'                    => 'Кошницата е празна',
 	'scroll_top'                    => 'Върни ме най-горе',
+	'sitemap'                       => 'Карта на сайта',
 
 	//	@TODO to be moved into database
 	'currency'                      => 'лв.',

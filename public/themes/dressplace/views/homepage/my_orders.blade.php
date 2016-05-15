@@ -16,25 +16,25 @@
     <div class="container">
         <div class="col-xs-12 margin-20">
             @if(!empty($orders) && is_array($orders))
-                <table class="table table-striped table-bordered table-hover" id="orders">
+                <table class="table table-striped table-bordered table-hover text-center"  id="orders">
                     <thead>
                     <tr>
-                        <th>
+                        <th class="text-center">
                             {{trans('client.number')}}
                         </th>
-                        <th>
+                        <th class="text-center">
                             {{trans('orders.user_names')}}
                         </th>
-                        <th>
+                        <th class="text-center">
                             {{trans('orders.phone')}}
                         </th>
-                        <th>
+                        <th class="text-center">
                             {{trans('orders.order_status')}}
                         </th>
-                        <th>
+                        <th class="text-center">
                             {{trans('orders.created_at')}}
                         </th>
-                        <th>
+                        <th class="text-center">
                             {{trans('orders.actions')}}
                         </th>
                     </tr>

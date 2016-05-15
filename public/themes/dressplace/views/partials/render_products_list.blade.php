@@ -53,7 +53,7 @@
                 @endif
                 <div class="clearfix"></div>
             </div>
-            <div class="product-action">
+            <div class="product-action hidden-xs hidden-sm">
                 <div class="pro-button-bottom">
                     <p class="catalogue_number text-left">{{trans('client.catalogue_number')}}: {{$product_id}} </p>
                     <p class="available_sizes text-left">{{trans('client.available_sizes')}}:</p>

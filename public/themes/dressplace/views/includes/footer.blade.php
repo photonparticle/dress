@@ -12,10 +12,25 @@
 
                         </p>
                         <div class="widget-icon">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-linkedin"></i></a>
-                            <a href="#"><i class="fa fa-google-plus"></i></a>
+                            @if(!empty($sys['social_facebook']))
+                                <a href="{{$sys['social_facebook'] or ''}}"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            @endif
+                            @if(!empty($sys['social_twitter']))
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            @endif
+                            @if(!empty($sys['social_google_plus']))
+                                <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                            @endif
+                            @if(!empty($sys['social_pinterest']))
+                                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                            @endif
+                            @if(!empty($sys['social_youtube']))
+                                <a href="#"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                            @endif
+                            @if(!empty($sys['social_blog']))
+                                <a href="#"><i class="fa fa-rss-square" aria-hidden="true"></i></a>
+                            @endif
+                            <a href="/rss"><i class="fa fa-rss" aria-hidden="true"></i></a>
                         </div>
 
                     </div>
@@ -31,6 +46,7 @@
                                 @foreach($footer_pages as $page)
                                     <li><a href="{{$page['slug']}}">{{$page['title']}}</a></li>
                                 @endforeach
+                                <li><a href="/sitemap">{{trans('client.sitemap')}}</a></li>
                             @endif
                         </ul>
                     </div>
@@ -103,7 +119,7 @@
                 </div>
             </div>
         </div>
-        @endif
-                <!-- footer-bottom-area end -->
+@endif
+<!-- footer-bottom-area end -->
 </footer>
 <!-- footer end -->

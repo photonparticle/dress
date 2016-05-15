@@ -1,6 +1,6 @@
-<div class="container banner-actions hidden-xs">
+<div class="container banner-actions hidden-xs hidden-sm hidden-md">
     <div class="row">
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
+        <div class="col-lg-4">
             <div class="box free-delivery">
                 <div class="icon pull-right">
                 </div>
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+        <div class="col-lg-4">
             <div class="box returns">
                 <div class="icon pull-right">
                 </div>
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
+        <div class="col-lg-4">
             <div class="box call-us">
                 <div class="icon pull-right">
                 </div>

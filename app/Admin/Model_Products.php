@@ -331,7 +331,7 @@ class Model_Products extends Model
 			{
 				if (is_array($current_objects))
 				{
-					if (isset($name, $current_objects))
+					if (isset($current_objects[$name]))
 					{
 						$update_objects[$name] = $object;
 					}

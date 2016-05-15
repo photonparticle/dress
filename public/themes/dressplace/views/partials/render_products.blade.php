@@ -24,7 +24,7 @@
                         @endif
 
                         @if(empty($products_large))
-                            <div class="product-action">
+                            <div class="product-action hidden-xs hidden-sm">
                                 <div class="pro-button-top">
                                     <a class="quick_buy_trigger"
                                        href="/{{$products[$product_id]['slug']}}"

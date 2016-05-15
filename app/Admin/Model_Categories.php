@@ -238,7 +238,7 @@ class Model_Categories extends Model
 			$insert_objects  = [];
 
 			//Collect objects
-			if ( ! empty($data['title']))
+			if (isset($data['title']))
 			{
 				$objects['title'] = [
 					'value' => $data['title'],
@@ -246,7 +246,7 @@ class Model_Categories extends Model
 				];
 			}
 
-			if ( ! empty($data['description']))
+			if (isset($data['description']))
 			{
 				$objects['description'] = [
 					'value' => $data['description'],
@@ -254,7 +254,7 @@ class Model_Categories extends Model
 				];
 			}
 
-			if ( ! empty($data['size_group']))
+			if (isset($data['size_group']))
 			{
 				$objects['size_group'] = [
 					'value' => json_encode($data['size_group']),
@@ -262,7 +262,7 @@ class Model_Categories extends Model
 				];
 			}
 
-			if ( ! empty($data['page_title']))
+			if (isset($data['page_title']))
 			{
 				$objects['page_title'] = [
 					'value' => $data['page_title'],
@@ -270,7 +270,7 @@ class Model_Categories extends Model
 				];
 			}
 
-			if ( ! empty($data['meta_description']))
+			if ( isset($data['meta_description']))
 			{
 				$objects['meta_description'] = [
 					'value' => $data['meta_description'],
@@ -278,7 +278,7 @@ class Model_Categories extends Model
 				];
 			}
 
-			if ( ! empty($data['meta_keywords']))
+			if (isset($data['meta_keywords']))
 			{
 				$objects['meta_keywords'] = [
 					'value' => $data['meta_keywords'],
@@ -291,7 +291,7 @@ class Model_Categories extends Model
 			{
 				if (is_array($current_objects) && isset($current_objects[$category_id]))
 				{
-					if (isset($name, $current_objects[$category_id]))
+					if (isset($current_objects[$category_id][$name]))
 					{
 						$update_objects[$name] = $object;
 					}
@@ -311,7 +311,7 @@ class Model_Categories extends Model
 			{
 				foreach ($update_objects as $name => $object)
 				{
-					if ( ! empty($object['value']) && ! empty($object['type']))
+					if (isset($object['value']) && ! empty($object['type']))
 					{
 						DB::table('categories_data')
 						  ->where('object', '=', $name)
@@ -329,7 +329,7 @@ class Model_Categories extends Model
 			{
 				foreach ($insert_objects as $name => $object)
 				{
-					if ( ! empty($object['value']) && ! empty($object['type']))
+					if (isset($object['value']) && ! empty($object['type']))
 					{
 						DB::table('categories_data')
 						  ->insert([

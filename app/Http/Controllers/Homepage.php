@@ -545,6 +545,88 @@ class Homepage extends BaseControllerClient
 		exit;
 	}
 
+	public static function sitemap()
+	{
+
+		$customCSS = [
+		];
+		$customJS  = [
+		];
+
+		$response = [
+			'page_title' => trans('client.sitemap'),
+			'blade_custom_css' => $customCSS,
+			'blade_custom_js'  => $customJS,
+		];
+
+		if (($response['categories'] = Model_Main::getCategory(FALSE, ['title'], FALSE)))
+		{
+			$categories_ids          = [];
+			$main_categories         = [];
+			$second_level_categories = [];
+//			$third_level_categories  = [];
+
+			if ( ! empty($response['categories']) && is_array($response['categories']))
+			{
+				//Loop and get ID's
+				foreach ($response['categories'] as $key => $category)
+				{
+					$categories_ids[] = $category['id'];
+				}
+
+				//Get urls
+				if (($urls = Model_Client::getURL($categories_ids, 'category')))
+				{
+					if ( ! empty($urls) && is_array($urls))
+					{
+						foreach ($urls as $url)
+						{
+							$response['categories'][$url['object']]['slug'] = $url['slug'];
+						}
+					}
+				}
+
+				foreach ($response['categories'] as $key => $category)
+				{
+					if (($category['level']) == 0)
+					{
+						$main_categories[$category['id']] = [
+							'id'    => $category['id'],
+							'slug'  => ! empty($category['slug']) ? $category['slug'] : '',
+							'title' => $category['title'],
+						];
+					}
+					elseif ($category['level'] == 1)
+					{
+						$second_level_categories[$category['parent_id']][] = [
+							'id'     => $category['id'],
+							'slug'   => ! empty($category['slug']) ? $category['slug'] : '',
+							'title'  => $category['title'],
+							'parent' => $category['parent_id'],
+						];
+					}
+//					elseif ($category['level'] == 2)
+//					{
+//						$third_level_categories[$category['parent_id']][] = [
+//							'id'     => $category['id'],
+//							'slug'   => ! empty($category['slug']) ? $category['slug'] : '',
+//							'title'  => $category['title'],
+//							'parent' => $category['parent_id'],
+//						];
+//					}
+				}
+			}
+
+			$response['map_cat_lvl_1'] = $main_categories;
+			$response['map_cat_lvl_2'] = $second_level_categories;
+//			$response['map_cat_lvl_3'] = $third_level_categories;
+
+			$response['map_pages'] = Model_Main::getSitemapPages();
+		}
+
+		return Theme::view('homepage.sitemap', $response);
+	}
+
 	public
 	function notFound()
 	{

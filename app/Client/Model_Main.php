@@ -779,4 +779,15 @@ class Model_Main extends Model
 				 ->orderBy('pages.navigation_position', 'ASC')
 				 ->get();
 	}
+
+	public static function getSitemapPages()
+	{
+		return DB::table('pages')
+				 ->select(['pages.title', 'seo_url.slug'])
+				 ->join('seo_url', 'seo_url.object', '=', 'pages.id')
+				 ->where('pages.active', '=', 1)
+				 ->where('seo_url.type', '=', 'page')
+				 ->orderBy('pages.navigation_position', 'ASC')
+				 ->get();
+	}
 }

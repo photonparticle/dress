@@ -3,7 +3,7 @@
     <div class="header-top-area bg-color">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-4">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <div class="welcome">
                         @if(!empty($sys['phone']))
                             <span class="phone">{{$sys['phone'] or ''}}</span> <span>/</span>
@@ -13,7 +13,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-8">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <div class="top-menu">
                         <ul>
                             @if(empty($current_user))

@@ -28,8 +28,7 @@
     <meta name="slurp" content="index,follow"/>
 
     <!-- google fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Lato:400,900,700,300' rel='stylesheet' type='text/css'>
-
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,100italic,100,400italic,500,500italic,700,700italic,900,900italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
     <!-- all css here -->
     <!-- bootstrap v3.3.6 css -->

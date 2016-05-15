@@ -18,34 +18,35 @@
         @foreach($carousels as $carousel)
             <div class="container">
                 <div class="row">
-                @if(empty($carousel['position']) || (!empty($carousel['position']) && intval($carousel['position']) < 2))
-                    @include('dressplace::partials.render_carousel')
+                    @if(empty($carousel['position']) || (!empty($carousel['position']) && intval($carousel['position']) < 2))
+                        @include('dressplace::partials.render_carousel')
+                    @endif
                 </div>
             </div>
-            @endif
         @endforeach
     @endif
     {{-- CAROUSELS TOP --}}
 
     <div class="container">
-        <div class="col-xs-12">
-            <div class="section-title text-center">
-                <h1>{{$category['title'] or ''}}</h1>
-            </div>
-        </div>
-
-        @if(!empty($category['description']))
-
+        <div class="row">
             <div class="col-xs-12">
-                {!! $category['description'] !!}
+                <div class="section-title text-center">
+                    <h1>{{$category['title'] or ''}}</h1>
+                </div>
             </div>
-        @endif
+
+            @if(!empty($category['description']))
+                <div class="col-xs-12 hidden-xs hidden-sm">
+                    {!! $category['description'] !!}
+                </div>
+            @endif
+        </div>
     </div>
 
     <!-- shop-area start -->
-    <div class="shop-area">
-        <div class="container">
-            <div class="row">
+    <div class="container">
+        <div class="row">
+            <div class="shop-area">
 
                 @if(!empty($breadcrumbs) && is_array($breadcrumbs))
                     <ol class="breadcrumb">
@@ -78,7 +79,7 @@
                 <div class="clearfix"></div>
 
                 <!-- left-sidebar start -->
-                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
                     <!-- widget-categories start -->
                     <aside class="widget widget-categories">
                         <h3 class="sidebar-title">{{trans('client.categories')}}</h3>
@@ -149,7 +150,7 @@
                                                     <i class="fa fa-angle-right" aria-hidden="true"></i>
                                                     {{$name}}
 
-                                                    <input type="checkbox" name="size[]" id="filter_sizes_{{$count}}" value="{{$name}}" @if(!empty($filter['size']) && is_array($filter['size']) && in_array($name, $filter['size'])) checked @endif  />
+                                                    <input type="checkbox" name="size[]" id="filter_sizes_{{$count}}" value="{{$name}}" @if(!empty($filter['size']) && is_array($filter['size']) && in_array($name, $filter['size'])) checked @endif />
                                                 </label>
                                             </a>
                                         </li>
@@ -191,25 +192,25 @@
                         <input type="submit" class="filter" value="{{trans('client.filter')}}"/>
                         <div class="clearfix"></div>
 
-                    {{--@if(!empty($materials) && is_array($materials))--}}
-                    {{--<!-- filter-by start -->--}}
-                    {{--<aside class="widget filter-by">--}}
-                    {{--<h3 class="sidebar-title">--}}
-                    {{--<label for="filter_materials">--}}
-                    {{--{{trans('client.material')}}--}}
-                    {{--</label>--}}
-                    {{--</h3>--}}
+                        {{--@if(!empty($materials) && is_array($materials))--}}
+                        {{--<!-- filter-by start -->--}}
+                        {{--<aside class="widget filter-by">--}}
+                        {{--<h3 class="sidebar-title">--}}
+                        {{--<label for="filter_materials">--}}
+                        {{--{{trans('client.material')}}--}}
+                        {{--</label>--}}
+                        {{--</h3>--}}
 
-                    {{--<select id="filter_materials" name="filter_materials" class="form-control cForm">--}}
-                    {{--<option value=""> - {{trans('client.choose_material')}} -</option>--}}
-                    {{--@foreach($materials as $key => $name)--}}
-                    {{--<option value="{{$key}}" @if(!empty($filter['material']) && $filter['material'] == $key) selected @endif>{{$name}}</option>--}}
-                    {{--@endforeach--}}
-                    {{--</select>--}}
+                        {{--<select id="filter_materials" name="filter_materials" class="form-control cForm">--}}
+                        {{--<option value=""> - {{trans('client.choose_material')}} -</option>--}}
+                        {{--@foreach($materials as $key => $name)--}}
+                        {{--<option value="{{$key}}" @if(!empty($filter['material']) && $filter['material'] == $key) selected @endif>{{$name}}</option>--}}
+                        {{--@endforeach--}}
+                        {{--</select>--}}
 
-                    {{--</aside>--}}
-                    {{--<!-- filter-by end -->--}}
-                    {{--@endif--}}
+                        {{--</aside>--}}
+                        {{--<!-- filter-by end -->--}}
+                        {{--@endif--}}
                     </form>
 
                 @if(!empty($products[$upcoming['product_id']]))
@@ -303,11 +304,6 @@
         @endforeach
     @endif
     {{-- CAROUSELS BOTTOM --}}
-
-    {{--INIT MODULES--}}
-    {{--@include('dressplace::partials.init_slider')--}}
-    {{--@include('dressplace::partials.init_carousel')--}}
-    {{--@include('dressplace::partials.init_products')--}}
 @endsection
 
 @section('customJS')

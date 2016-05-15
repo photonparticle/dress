@@ -6,13 +6,9 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="{{trans('client.close')}}"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
             <h4 class="modal-title">
-                <div class="section-title no-margin text-center">
-                    <h1 class="no-margin">
-                        <a href="/{{$product['slug']}}">
-                            {{$product['title'] or ''}}
-                        </a>
-                    </h1>
-                </div>
+                <a href="/{{$product['slug']}}">
+                    {{$product['title'] or ''}}
+                </a>
             </h4>
         </div>
     @else
@@ -113,7 +109,10 @@
                                 </div>
                                 <div class="col-md-7 col-sm-7 col-xs-12 shop-list">
                                     <div class="product-info">
-                                        <div class="col-xs-12 col-md-5 no-padding">
+                                        <div class="col-xs-12 no-padding">
+                                            <h4>{{trans('client.catalogue_number')}}: <strong>{{$product['id']}}</strong></h4>
+                                        </div>
+                                        <div class="col-xs-12 no-padding">
                                             <div class="pro-price price_single">
                                                 <h4>{{trans('client.price')}}</h4>
                                                 @if(
@@ -143,25 +142,21 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-md-7 call_us no-padding no-margin">
-                                            <a href="tel:{{$sys['phone']}}" title="{{trans('client.call_us')}}">
-                                                <div>
-                                                    <i class="fa fa-phone"></i>
-                                                </div>
-                                                <div>
-                                                    <span>{{trans('client.call_us')}}</span><br/>
-                                                    <span>{{$sys['phone']}}</span>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a>
-                                        </div>
 
                                         <div class="col-xs-12 col-md-12 no-margin in-para no-padding">
                                             <div class="col-xs-12 product-main-info no-padding no-margin">
-                                                <h4>{{trans('client.catalogue_number')}}: <strong>{{$product['id']}}</strong></h4>
                                                 @if(!empty($product['related_colors']))
                                                     <p class="no-margin">
-                                                        <strong>{{trans('client.colors')}}</strong><br/> {{$product['related_colors']}}
+                                                        <strong>
+                                                            @if(
+                                                                (empty($product['related_colors_count'])) or
+                                                                (!empty($product['related_colors_count']) && $product['related_colors_count'] == 1)
+                                                            )
+                                                                {{trans('client.color')}}
+                                                            @else
+                                                                {{trans('client.colors')}}
+                                                            @endif
+                                                        </strong><br/> {{$product['related_colors']}}
                                                     </p>
                                                 @endif
                                                 @if(!empty($product['manufacturer']))
@@ -177,6 +172,20 @@
                                         <div class="product-desc">
                                             {!! $product['description'] !!}
                                         </div>
+
+                                        <div class="col-xs-12 call_us no-padding">
+                                            <h4>
+                                                <a href="tel:{{$sys['phone']}}" title="{{trans('client.call_us')}}">
+                                                    {{trans('client.call_us')}}
+                                                </a>
+                                            </h4>
+                                            <a href="tel:{{$sys['phone']}}" title="{{trans('client.call_us')}}">
+                                                <i class="fa fa-phone"></i>
+                                                <span>{{$sys['phone']}}</span>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </div>
+
                                         @if(!empty($product['sizes']) && is_array($product['sizes']))
                                             <div class="sizes">
                                                 <h5>{{trans('client.available_sizes')}}</h5>

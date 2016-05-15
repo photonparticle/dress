@@ -692,6 +692,7 @@ class Module_Products extends BaseController
 						$response['message'] = $message_success;
 					}
 				}
+
 			}
 			else
 			{

@@ -68,6 +68,7 @@ Route::get('/', 'Homepage@homepage');
 Route::get('/404', 'Homepage@notFound');
 Route::get('/contact', 'Homepage@contact');
 Route::post('/contact', 'Homepage@doContact');
+Route::get('/sitemap', 'Homepage@sitemap');
 Route::get('/login', 'Homepage@login');
 Route::post('/login', 'Homepage@doLogin');
 Route::get('/logout', 'Homepage@logout');
