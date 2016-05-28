@@ -75,6 +75,8 @@
                 </p>
             </div>
         </div>
+
+        <div class="clearfix"></div>
     </div>
 </div>
 <!-- single-product end -->

@@ -148,6 +148,8 @@ return [
 		Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class, //A modern and framework agnostic authorization and authentication package featuring roles, permissions, custom hashing algorithms and additional security features.
 		Caffeinated\Themes\ThemesServiceProvider::class, //Caffeinated Themes gives the means to group together a set of views and assets for Laravel 5.0 and Laravel 5.1. This gives an easy way to further decouple the way your web application looks from your code base.
 		Barryvdh\Debugbar\ServiceProvider::class, //Includes a ServiceProvider to register the debugbar and attach it to the output.,
+		'Watson\Sitemap\SitemapServiceProvider', //Sitemap is a package built specifically for Laravel that will help you generate XML sitemaps for Google.
+		'Roumen\Feed\FeedServiceProvider', //A simple feed generator for Laravel 5.
 	],
 
 	/*
@@ -205,6 +207,8 @@ return [
 		'Theme'      => Caffeinated\Themes\Facades\Theme::class,
 		'Component'  => Caffeinated\Themes\Facades\Component::class,
 		'Debugbar'   => Barryvdh\Debugbar\Facade::class,
+		'Sitemap'    => 'Watson\Sitemap\Facades\Sitemap',
+		'Feed' => 'Roumen\Feed\Feed',
 	],
 
 ];

@@ -16,6 +16,7 @@ use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Caffeinated\Themes\Facades\Theme;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
 use View;
 
 class Checkout extends BaseControllerClient
@@ -122,20 +123,26 @@ class Checkout extends BaseControllerClient
 		}
 
 		//Calculate delivery and total
-		if(!empty($order_data['delivery_type']) && $response['total'] < $this->system['delivery_free_delivery']) {
-			if($order_data['delivery_type'] == 'to_address') {
+		if ( ! empty($order_data['delivery_type']) && $response['total'] < $this->system['delivery_free_delivery'])
+		{
+			if ($order_data['delivery_type'] == 'to_address')
+			{
 				$response['delivery_cost'] = $this->system['delivery_to_address'];
-			} elseif($order_data['delivery_type'] == 'to_office') {
+			}
+			elseif ($order_data['delivery_type'] == 'to_office')
+			{
 				$response['delivery_cost'] = $this->system['delivery_to_office'];
 			}
 			$response['order_total'] = $response['total'] + $response['delivery_cost'];
-		} else {
+		}
+		else
+		{
 			$response['delivery_cost'] = 0;
-			$response['order_total'] = $response['total'];
+			$response['order_total']   = $response['total'];
 		}
 
-		$response['order_id'] = $order_data['id'];
-		$response['date_created'] = date('H:i - m.d.Y', strtotime($order_data['created_at']));
+		$response['order_id']      = $order_data['id'];
+		$response['date_created']  = date('H:i - m.d.Y', strtotime($order_data['created_at']));
 		$response['delivery_type'] = $order_data['delivery_type'];
 
 		$products_to_cart = [];
@@ -431,18 +438,21 @@ class Checkout extends BaseControllerClient
 								}
 
 								Model_Orders::manageQuantities($product['id'], $sizes, $product['quantity']);
-
-								session()->forget('cart');
-								session()->forget('total');
-								session()->forget('items_count');
-								session()->put('order_id', $id);
-
-								$response['status']  = 'success';
-								$response['message'] = trans('orders.saved');
-								$response['id']      = $id;
 							}
 						}
 					}
+
+					session()->forget('cart');
+					session()->forget('total');
+					session()->forget('items_count');
+					session()->put('order_id', $id);
+
+					$response['status']  = 'success';
+					$response['message'] = trans('orders.saved');
+					$response['id']      = $id;
+
+					//Send mail
+					$this->sendMail($id);
 				}
 			}
 		}
@@ -483,5 +493,108 @@ class Checkout extends BaseControllerClient
 		}
 
 		return $products;
+	}
+
+	private function sendMail($id)
+	{
+		$response = [
+			'sys_title' => $this->system['title'],
+			'sys_email' => $this->system['email'],
+		];
+
+		//Try to catch order id
+		if (empty($id))
+		{
+			$id = session()->get('order_id', FALSE);
+
+			if ( ! empty($id))
+			{
+				$response['new'] = TRUE;
+				session()->forget('order_id');
+			}
+		}
+
+		//If no order
+		if (empty($id))
+		{
+			return redirect('/');
+		}
+
+		$order_data = Model_Orders::getOrders($id, FALSE);
+
+		if ( ! empty(($order_data = $order_data[0])) && is_array($order_data))
+		{
+			$response['cart']  = ! empty($order_data['cart']) ? json_decode($order_data['cart'], TRUE) : [];
+			$response['total'] = ! empty($order_data['total']) ? $order_data['total'] : 0;
+			if (isset($order_data['total']))
+			{
+				unset($order_data['total']);
+			}
+			if (isset($order_data['cart']))
+			{
+				unset($order_data['cart']);
+			}
+			if (isset($response['cart']['total']))
+			{
+				unset($response['cart']['total']);
+			}
+			$response['order'] = $order_data;
+		}
+
+		foreach ($this->states as $state)
+		{
+			$response['states'][$state] = trans('orders.'.$state);
+		}
+
+		//Calculate delivery and total
+		if ( ! empty($order_data['delivery_type']) && $response['total'] < $this->system['delivery_free_delivery'])
+		{
+			if ($order_data['delivery_type'] == 'to_address')
+			{
+				$response['delivery_cost'] = $this->system['delivery_to_address'];
+			}
+			elseif ($order_data['delivery_type'] == 'to_office')
+			{
+				$response['delivery_cost'] = $this->system['delivery_to_office'];
+			}
+			$response['order_total'] = $response['total'] + $response['delivery_cost'];
+		}
+		else
+		{
+			$response['delivery_cost'] = 0;
+			$response['order_total']   = $response['total'];
+		}
+
+		$response['order_id']      = $order_data['id'];
+		$response['date_created']  = date('H:i - m.d.Y', strtotime($order_data['created_at']));
+		$response['delivery_type'] = $order_data['delivery_type'];
+
+		$products_to_cart = [];
+
+		//Get product id's
+		if ( ! empty($response['cart']) && is_array($response['cart']))
+		{
+			foreach ($response['cart'] as $key => $item)
+			{
+				$products_to_cart[] = $item['product_id'];
+			}
+		}
+
+		// Get products data
+		$response['products'] = Model_Main::getProducts($products_to_cart, ['title', 'images']);
+
+		// Send products to response
+		$response['products'] = self::prepareProductsForResponse($response['products']);
+
+		$response['thumbs_path'] = Config::get('system_settings.product_public_path');
+		$response['icon_size']   = Config::get('images.sm_icon_size');
+
+		Mail::send('dressplace::emails.order', $response, function ($m) use ($response)
+		{
+			$m->from($response['sys_email'], $response['sys_title']);
+			$m->replyTo($response['sys_email'], $response['sys_title']);
+
+			$m->to($response['order']['email'], $response['order']['name'] . ' ' . $response['order']['last_name'])->subject(trans('client.order_completed_mail'));
+		});
 	}
 }

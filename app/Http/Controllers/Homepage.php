@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Model_Orders;
 use App\Admin\Model_Users;
 use App\Client\Model_Client;
 use App\Client\Model_Main;
@@ -17,6 +18,7 @@ use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Caffeinated\Themes\Facades\Theme;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use View;
 
@@ -349,6 +351,20 @@ class Homepage extends BaseControllerClient
 								Sentinel::loginAndRemember($user);
 							}
 
+							$data = [
+								'sys_title' => $this->system['title'],
+								'sys_email' => $this->system['email'],
+								'user' => $user
+							];
+
+							Mail::send('dressplace::emails.register', $data, function ($m) use ($data)
+							{
+								$m->from($data['sys_email'], $data['sys_title']);
+								$m->replyTo($data['sys_email'], $data['sys_title']);
+
+								$m->to($data['user']['email'], $data['user']['email'])->subject(trans('client.register_mail'));
+							});
+
 							$response['status']  = 'success';
 							$response['message'] = trans('user_notifications.user_created');
 						}
@@ -511,6 +527,10 @@ class Homepage extends BaseControllerClient
 			}
 			$user_data = $this->user_data;
 
+//			$user_data['phone'] = !empty($user_data['phone']) ? $user_data['phone'] : FALSE;
+			$user_data['phone'] = FALSE;
+			$user_data['email'] = !empty($user_data['email']) ? $user_data['email'] : FALSE;
+
 			$response['orders'] = Model_Client::getOrders($user_data['id'], $user_data['email'], $user_data['phone']);
 
 			return Theme::view('homepage.my_orders', $response);
@@ -538,11 +558,162 @@ class Homepage extends BaseControllerClient
 		return Theme::view('homepage.contact', $response);
 	}
 
-	public
-	static function doContact()
+	public function testMail() {
+//		$id = 15;
+//		//Try to catch order id
+//		if (empty($id))
+//		{
+//			$id = session()->get('order_id', FALSE);
+//
+//			if ( ! empty($id))
+//			{
+//				$response['new'] = TRUE;
+//				session()->forget('order_id');
+//			}
+//		}
+//
+//		//If no order
+//		if (empty($id))
+//		{
+//			return redirect('/');
+//		}
+//
+//		$order_data = Model_Orders::getOrders($id, FALSE);
+//
+//		if ( ! empty(($order_data = $order_data[0])) && is_array($order_data))
+//		{
+//			$response['cart']  = ! empty($order_data['cart']) ? json_decode($order_data['cart'], TRUE) : [];
+//			$response['total'] = ! empty($order_data['total']) ? $order_data['total'] : 0;
+//			if (isset($order_data['total']))
+//			{
+//				unset($order_data['total']);
+//			}
+//			if (isset($order_data['cart']))
+//			{
+//				unset($order_data['cart']);
+//			}
+//			if (isset($response['cart']['total']))
+//			{
+//				unset($response['cart']['total']);
+//			}
+//			$response['order'] = $order_data;
+//		}
+//
+//		foreach ($this->states as $state)
+//		{
+//			$response['states'][$state] = trans('orders.'.$state);
+//		}
+//
+//		//Calculate delivery and total
+//		if(!empty($order_data['delivery_type']) && $response['total'] < $this->system['delivery_free_delivery']) {
+//			if($order_data['delivery_type'] == 'to_address') {
+//				$response['delivery_cost'] = $this->system['delivery_to_address'];
+//			} elseif($order_data['delivery_type'] == 'to_office') {
+//				$response['delivery_cost'] = $this->system['delivery_to_office'];
+//			}
+//			$response['order_total'] = $response['total'] + $response['delivery_cost'];
+//		} else {
+//			$response['delivery_cost'] = 0;
+//			$response['order_total'] = $response['total'];
+//		}
+//
+//		$response['order_id'] = $order_data['id'];
+//		$response['date_created'] = date('H:i - m.d.Y', strtotime($order_data['created_at']));
+//		$response['delivery_type'] = $order_data['delivery_type'];
+//
+//		$products_to_cart = [];
+//
+//		//Get product id's
+//		if ( ! empty($response['cart']) && is_array($response['cart']))
+//		{
+//			foreach ($response['cart'] as $key => $item)
+//			{
+//				$products_to_cart[] = $item['product_id'];
+//			}
+//		}
+//
+//		// Get products data
+//		$response['products'] = Model_Main::getProducts($products_to_cart, ['title', 'images']);
+//
+//		// Send products to response
+//		$response['products'] = self::prepareProductsForResponse($response['products']);
+//
+//		$response['thumbs_path']  = Config::get('system_settings.product_public_path');
+//		$response['icon_size']    = Config::get('images.sm_icon_size');
+
+//		$data = [
+//			'name' => 'Krasimir Todorov',
+//			'email' => 'shooky.web.dev@gmail.com',
+//			'phone' => '0896031229',
+//			'subject' => 'Tema',
+//			'message' => 'Tova e test na template',
+//		];
+
+		return Theme::view('emails.register');
+	}
+
+	public function doContact()
 	{
-		header('Location: /contact');
-		exit;
+		$response['status'] = 'error';
+
+		//Validations
+		if(empty(trim(Input::get('message')))) {
+			$response['message'] = trans('client.message_required');
+			$error               = TRUE;
+		}
+
+		if(empty(trim(Input::get('subject')))) {
+			$response['message'] = trans('client.subject_required');
+			$error               = TRUE;
+		}
+
+		if(empty(trim(Input::get('phone')))) {
+			$response['message'] = trans('client.phone_required');
+			$error               = TRUE;
+		}
+
+		if(empty(trim(Input::get('email')))) {
+			$response['message'] = trans('client.email_required');
+			$error               = TRUE;
+		} else {
+			if ( ! filter_var(trim(Input::get('email')), FILTER_VALIDATE_EMAIL))
+			{
+				$response['message'] = trans('client.invalid_email');
+				$error               = TRUE;
+			}
+		}
+
+		if(empty(trim(Input::get('name')))) {
+			$response['message'] = trans('client.name_required');
+			$error               = TRUE;
+		}
+
+		if(empty($error)) {
+			$data = [
+				'name' => Input::get('name'),
+				'email' => Input::get('email'),
+				'phone' => Input::get('phone'),
+				'subject' => Input::get('subject'),
+				'message' => Input::get('message'),
+				'sys_title' => $this->system['title'],
+				'sys_email' => $this->system['email'],
+			];
+
+			//Send mail
+			Mail::send('dressplace::emails.contact_form', ['data' => $data], function ($m) use ($data) {
+				$m->from($data['sys_email'], $data['sys_title']);
+				$m->replyTo($data['email'], $data['name']);
+
+				$m->to($data['email'], $data['name'])->subject($data['subject']);
+			});
+
+			$response['status'] = 'success';
+			$response['message'] = trans('client.message_sent');
+		}
+
+
+		//Response
+		return response()->json($response);
 	}
 
 	public static function sitemap()
@@ -660,6 +831,16 @@ class Homepage extends BaseControllerClient
 				//Images
 				if ( ! empty($product['images']) && is_array($image = json_decode($product['images'], TRUE)))
 				{
+					uasort($image, function ($a, $b)
+					{
+						if ($a == $b)
+						{
+							return 0;
+						}
+
+						return ($a < $b) ? -1 : 1;
+					});
+
 					reset($image);
 					$products[$id]['image'] = key($image);
 					unset($products[$id]['images']);

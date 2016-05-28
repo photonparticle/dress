@@ -12,7 +12,7 @@
 @endif
 
 @if(!empty($cart) && is_array($cart))
-    <div class="cart-container @if(isset($cart_preview)) no-padding @endif"
+    <div class="cart-container @if(isset($cart_preview)) no-padding @endif @if(empty($cart_checkout)) cart-page @endif"
          data-delivery-free-delivery="{{$sys['delivery_free_delivery'] or 999999}}"
          data-delivery-to-address="{{$sys['delivery_to_address'] or 0}}"
          data-delivery-to-office="{{$sys['delivery_to_office'] or 0}}"
@@ -28,7 +28,7 @@
 
                     <div class="clearfix"></div>
 
-                    <div class="col-xs-12 margin-top-10 no-padding">
+                    <div class="col-xs-12 margin-top-10 no-padding no-margin text-center">
                         <div class="to_office delivery_type @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_office') delivery_type_active active @endif"
                              title="{{trans('client.to_office_tip')}}"
                              data-toggle="tooltip"
@@ -222,37 +222,37 @@
         <div class="totals col-xs-12">
 
             @if(empty($cart_checkout))
-                <div class="col-xs-12 no-padding text-right">
-                    <h3 class="block">{{trans('client.delivery_type')}}</h3>
-                    <div class="clearfix"></div>
-                    <div class="col-xs-12 margin-top-10 no-padding">
-                        <div class="to_office delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_office') delivery_type_active active @endif"
-                             title="{{trans('client.to_office_tip')}}"
-                             data-toggle="tooltip"
-                             data-placement="top"
-                             data-type="to_office"
-                        >
-                            <img src="{{Theme::asset('img/econt_icon.png')}}" alt="Econt Express"/>
-                            <p>
-                                {{trans('client.to_office_long')}}
-                            </p>
-                        </div>
-                        <div class="to_address delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_address') delivery_type_active active @endif"
-                             title="{{trans('client.to_address_tip')}}"
-                             data-toggle="tooltip"
-                             data-placement="top"
-                             data-type="to_address"
-                        >
-                            <img src="{{Theme::asset('img/home_icon.png')}}" alt="To home address"/>
-                            <p>
-                                {{trans('client.to_address_long')}}
-                            </p>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="clearfix"></div>
+                {{--<div class="col-xs-12 no-padding text-right">--}}
+                    {{--<h3 class="block">{{trans('client.delivery_type')}}</h3>--}}
+                    {{--<div class="clearfix"></div>--}}
+                    {{--<div class="col-xs-12 margin-top-10 no-padding">--}}
+                        {{--<div class="to_office delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_office') delivery_type_active active @endif"--}}
+                             {{--title="{{trans('client.to_office_tip')}}"--}}
+                             {{--data-toggle="tooltip"--}}
+                             {{--data-placement="top"--}}
+                             {{--data-type="to_office"--}}
+                        {{-->--}}
+                            {{--<img src="{{Theme::asset('img/econt_icon.png')}}" alt="Econt Express"/>--}}
+                            {{--<p>--}}
+                                {{--{{trans('client.to_office_long')}}--}}
+                            {{--</p>--}}
+                        {{--</div>--}}
+                        {{--<div class="to_address delivery_type pull-right @if(isset($cart_locked)) locked @endif @if(!empty($delivery_type) && $delivery_type=='to_address') delivery_type_active active @endif"--}}
+                             {{--title="{{trans('client.to_address_tip')}}"--}}
+                             {{--data-toggle="tooltip"--}}
+                             {{--data-placement="top"--}}
+                             {{--data-type="to_address"--}}
+                        {{-->--}}
+                            {{--<img src="{{Theme::asset('img/home_icon.png')}}" alt="To home address"/>--}}
+                            {{--<p>--}}
+                                {{--{{trans('client.to_address_long')}}--}}
+                            {{--</p>--}}
+                        {{--</div>--}}
+                        {{--<div class="clearfix"></div>--}}
+                    {{--</div>--}}
+                    {{--<div class="clearfix"></div>--}}
+                {{--</div>--}}
+                {{--<div class="clearfix"></div>--}}
             @endif
 
             <div class="col-xs-12 no-padding values">

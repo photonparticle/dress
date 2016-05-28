@@ -125,7 +125,7 @@
                                             <input type="text" class="min-price" name="price_min" readonly/> -
                                             <input type="text" class="max-price" name="price_max" readonly/>
                                         </div>
-                                        <input type="submit" value="{{trans('client.filter')}}"/>
+{{--                                        <input type="submit" value="{{trans('client.filter')}}"/>--}}
                                     </div>
                                 </div>
                             </div>
@@ -329,6 +329,20 @@
 
             body.on('change', '#order_by', function () {
                 $(this).closest('form').submit();
+            });
+
+            var timer = null;
+
+            $('.price_filter').mouseup(function () {
+                if(timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
+
+                timer = setTimeout(function () {
+                    console.log('submit');
+                    $('#filters').submit();
+                }, 2000);
             });
 
             //Breadcrumbs

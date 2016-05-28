@@ -267,8 +267,8 @@ blockquote {
  
 /* Large Mobile :480px. */
 @media only screen and (min-width: 480px) and (max-width: 767px) {
-.container {width:450px}
-.box-page .container{width:450px}
+/*.container {width:450px}*/
+/*.box-page .container{width:450px}*/
 ul.tab-menu li a {
   padding: 6px 12px;
 }

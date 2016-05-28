@@ -80,6 +80,12 @@ Route::get('/my-orders', 'Homepage@orders');
 Route::get('/search/ajax', 'Homepage@searchAjax');
 Route::get('/search/{needable}', 'Homepage@search');
 Route::get('/search/{needable}/{tag}', 'Homepage@search');
+Route::get('/sitemap', 'Client@sitemap');
+Route::get('/sitemap/categories', 'Client@sitemapCategories');
+Route::get('/sitemap/products', 'Client@sitemapProducts');
+Route::get('/sitemap/pages', 'Client@sitemapPages');
+Route::get('/rss', 'Client@rss');
+Route::get('/mail', 'Homepage@testMail');
 
 Route::get('/cart', 'Cart@cart');
 Route::get('/cart/added/{id}', 'Cart@added');

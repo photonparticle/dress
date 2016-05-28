@@ -3,17 +3,44 @@
     <div class="header-top-area bg-color">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 header-top-item">
                     <div class="welcome">
                         @if(!empty($sys['phone']))
-                            <span class="phone">{{$sys['phone'] or ''}}</span> <span>/</span>
+                            <a href="tel:{{$sys['phone'] or ''}}">
+                                <span class="phone">{{$sys['phone'] or ''}}</span>
+                            </a>
                         @endif
                         @if(!empty($sys['email']))
-                            <span class="email">{{$sys['email'] or ''}}</span>
+                            <a href="mailto:{{$sys['email'] or ''}}">
+                                <span class="email">{{$sys['email'] or ''}}</span>
+                            </a>
                         @endif
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="col-lg-4 hidden-md hidden-sm hidden-xs text-center  header-top-item">
+                    <div class="widget-icon social-icons">
+                        @if(!empty($sys['social_facebook']))
+                            <a href="{{$sys['social_facebook'] or '#'}}" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        @endif
+                        @if(!empty($sys['social_twitter']))
+                            <a href="{{$sys['social_twitter'] or '#'}}" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        @endif
+                        @if(!empty($sys['social_google_plus']))
+                            <a href="{{$sys['social_google_plus'] or '#'}}" target="_blank"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                        @endif
+                        @if(!empty($sys['social_pinterest']))
+                            <a href="{{$sys['social_pinterest'] or '#'}}" target="_blank"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                        @endif
+                        @if(!empty($sys['social_youtube']))
+                            <a href="{{$sys['social_youtube'] or '#'}}" target="_blank"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                        @endif
+                        @if(!empty($sys['social_blog']))
+                            <a href="{{$sys['social_blog'] or '#'}}" target="_blank"><i class="fa fa-rss-square" aria-hidden="true"></i></a>
+                        @endif
+                        <a href="/rss" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 header-top-item">
                     <div class="top-menu">
                         <ul>
                             @if(empty($current_user))
@@ -59,7 +86,7 @@
                                 </div>
                             </a>
                         </div>
-                        <ul class="cart-items-drop">
+                        <ul class="cart-items-drop hidden-xs hidden-sm">
                         </ul>
                     </div>
                 </div>

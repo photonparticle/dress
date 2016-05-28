@@ -14,7 +14,7 @@
         @foreach($carousel['products'] as $key => $product_id)
             <?php $product_id = ! empty($product_id) ? intval($product_id) : FALSE; ?>
             @if(!empty($product_id) && !empty($products[$product_id]) && !empty($products[$product_id]['image']) && !empty($products[$product_id]['slug']) && !empty($products[$product_id]['title']))
-                <div class="col-lg-12 no-padding">
+                <div class="col-lg-12 padding-5">
                     <div class="single-product">
                         <div class="product-img">
                             <a href="/{{$products[$product_id]['slug']}}">

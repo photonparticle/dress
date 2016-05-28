@@ -16,14 +16,14 @@
 	 ------------------------------ */
 	$(".product-carousel").owlCarousel({
 		                                  autoPlay: true,
-		                                  slideSpeed: 500,
+		                                  slideSpeed: 250,
 		                                  pagination: false,
 		                                  navigation: true,
 		                                  items: 4,
 		                                  /* transitionStyle : "fade", */    /* [This code for animation ] */
 		                                  navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-		                                  itemsDesktop: [1199, 4],
-		                                  itemsDesktopSmall: [980, 3],
+		                                  itemsDesktop: [1366, 4],
+		                                  itemsDesktopSmall: [1024, 3],
 		                                  itemsTablet: [768, 3],
 		                                  itemsMobile: [479, 1],
 	                                  });
@@ -67,7 +67,7 @@
 	 ------------------------------ */
 	$(".related-curosel").owlCarousel({
 		                                  autoPlay: false,
-		                                  slideSpeed: 2000,
+		                                  slideSpeed: 250,
 		                                  pagination: false,
 		                                  navigation: true,
 		                                  items: 4,

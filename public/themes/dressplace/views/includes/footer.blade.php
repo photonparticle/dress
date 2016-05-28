@@ -13,24 +13,24 @@
                         </p>
                         <div class="widget-icon">
                             @if(!empty($sys['social_facebook']))
-                                <a href="{{$sys['social_facebook'] or ''}}"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="{{$sys['social_facebook'] or '#'}}" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                             @endif
                             @if(!empty($sys['social_twitter']))
-                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                <a href="{{$sys['social_twitter'] or '#'}}" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
                             @endif
                             @if(!empty($sys['social_google_plus']))
-                                <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                                <a href="{{$sys['social_google_plus'] or '#'}}" target="_blank"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
                             @endif
                             @if(!empty($sys['social_pinterest']))
-                                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                                <a href="{{$sys['social_pinterest'] or '#'}}" target="_blank"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
                             @endif
                             @if(!empty($sys['social_youtube']))
-                                <a href="#"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                                <a href="{{$sys['social_youtube'] or '#'}}" target="_blank"><i class="fa fa-youtube" aria-hidden="true"></i></a>
                             @endif
                             @if(!empty($sys['social_blog']))
-                                <a href="#"><i class="fa fa-rss-square" aria-hidden="true"></i></a>
+                                <a href="{{$sys['social_blog'] or '#'}}" target="_blank"><i class="fa fa-rss-square" aria-hidden="true"></i></a>
                             @endif
-                            <a href="/rss"><i class="fa fa-rss" aria-hidden="true"></i></a>
+                            <a href="/rss" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i></a>
                         </div>
 
                     </div>

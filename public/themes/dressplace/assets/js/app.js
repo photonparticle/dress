@@ -159,6 +159,8 @@ $(document).ready(function () {
 		}, 500);
 	});
 
+	$('')
+
 	//After page is rendered
 
 	productEqualHeight();
@@ -240,7 +242,7 @@ function initProductSlider(slider) {
 			                  animation: "slide",
 			                  controlNav: "thumbnails",
 			                  easing: 'swing',
-			                  animationSpeed: 1000,
+			                  animationSpeed: 250,
 			                  touch: true,
 			                  arrows: false,
 			                  keyboard: false,

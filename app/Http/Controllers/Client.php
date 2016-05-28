@@ -14,11 +14,15 @@ use App\Http\Controllers\Controller;
 
 //Custom packages
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Lang;
+use Watson\Sitemap\Facades\Sitemap;
 
 use Caffeinated\Themes\Facades\Theme;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use View;
+use URL;
 
 class Client extends BaseControllerClient
 {
@@ -719,5 +723,156 @@ class Client extends BaseControllerClient
 		}
 
 		return $response;
+	}
+
+	public function sitemap()
+	{
+		Sitemap::addSitemap(url('/sitemap/categories'), date('Y-m-d H:i:s'));
+		Sitemap::addSitemap(url('/sitemap/products'), date('Y-m-d H:i:s'));
+		Sitemap::addSitemap(url('/sitemap/pages'), date('Y-m-d H:i:s'));
+
+		// Return the sitemap to the client.
+		return Sitemap::renderSitemapIndex();
+	}
+
+	public function sitemapCategories()
+	{
+		$categories = Model_Main::getCategory(FALSE, ['title']);
+
+		if ( ! empty($categories) && is_array($categories))
+		{//Loop and get ID's
+			foreach ($categories as $key => $category)
+			{
+				$categories_ids[] = $category['id'];
+			}
+
+			//Get urls
+			if (($urls = Model_Client::getURL($categories_ids, 'category')))
+			{
+				if ( ! empty($urls) && is_array($urls))
+				{
+					foreach ($urls as $url)
+					{
+						$categories[$url['object']]['slug'] = $url['slug'];
+					}
+				}
+			}
+
+			foreach ($categories as $id => $data)
+			{
+				Sitemap::addTag(url('/'.$data['slug']), $data['updated_at']);
+			}
+		}
+
+		// Return the sitemap to the client.
+		return Sitemap::render();
+	}
+
+	public static function sitemapProducts()
+	{
+		$products = Model_Main::getProducts(FALSE, 'none', FALSE, 0, 0);
+
+		if(!empty($products) && is_array($products))
+		{
+			foreach ($products as $key => $product)
+			{
+				Sitemap::addTag(url('/'.$product['slug']), $product['updated_at']);
+			}
+		}
+
+		// Return the sitemap to the client.
+		return Sitemap::render();
+	}
+
+	public static function sitemapPages()
+	{
+		$pages = Model_Main::getSitemapPages();
+
+		if(!empty($pages) && is_array($pages)) {
+			foreach ($pages as $key => $page) {
+				Sitemap::addTag(url('/'.$page['slug']), $page['updated_at']);
+			}
+		}
+
+		// Return the sitemap to the client.
+		return Sitemap::render();
+	}
+
+	public function rss() {
+		// create new feed
+		$feed = App::make("feed");
+
+		// cache the feed for 60 minutes (second parameter is optional)
+		$feed->setCache(30, 'laravelFeedKey');// check if there is cached feed and build new only if is not
+
+		if (!$feed->isCached())
+		{
+			// creating rss feed with our most recent 20 posts
+			$products = Model_Main::getProducts(FALSE, ['title', 'description', 'meta_description', 'images'], FALSE, 0, 20);
+
+			$products_copy = $products;
+			$pubdate = reset($products_copy);
+			$pubdate = isset($pubdate['created_at']) ? $pubdate['created_at'] : date('Y.m.d H:i:s');
+			unset($products_copy);
+
+			// set your feed's title, description, link, pubdate and language
+			$feed->title = $this->system['title'];
+			$feed->description = $this->system['meta_description'];
+			$feed->logo = url('/images/logo.png');
+			$feed->link = url('rss');
+			$feed->setDateFormat('datetime'); // 'datetime', 'timestamp' or 'carbon'
+			$feed->pubdate = $pubdate; //$posts[0]->created_at;
+			$feed->lang = Lang::locale();
+			$feed->setShortening(true); // true or false
+			$feed->setTextLimit(255); // maximum length of description text
+			$feed->ctype = "text/xml";
+
+			$public_path = Config::get('system_settings.product_public_path');
+			$full_size   = Config::get('images.full_size');
+
+//			Loop trough products
+			foreach ($products as $key => $product)
+			{
+				$product['meta_description'] = isset($product['meta_description']) ? $product['meta_description'] : '';
+				$product['description'] = isset($product['description']) ? strip_tags($product['description']) : '';
+				$product['description'] = trim(preg_replace('/\s\s+/', ' ', $product['description']));
+
+				//Fetch images
+				if(!empty($product['images']) && is_array(json_decode($product['images'], TRUE))) {
+					$products[$key]['images'] = json_decode($product['images'], TRUE);
+
+					//Order images
+					uasort($products[$key]['images'], function ($a, $b)
+					{
+						if ($a == $b)
+						{
+							return 0;
+						}
+
+						return ($a < $b) ? -1 : 1;
+					});
+
+					$enclosure = [];
+
+					//Add to feed
+					foreach($products[$key]['images'] as $image => $position) {
+						$enclosure[] = [
+							'url' => url($public_path . $product['id'] . '/' .  $full_size . '/' . $image),
+							'type' => 'image/jpeg'
+						];
+					}
+				}
+				$enclosure = reset($enclosure);
+
+				// set item's title, author, url, pubdate, description, content, enclosure (optional)*
+				$feed->add($product['title'], $this->system['title'], URL::to('/' . $product['slug']), $product['created_at'], $product['meta_description'], $product['description'], $enclosure);
+			}
+
+		}
+
+		// first param is the feed format
+		// optional: second param is cache duration (value of 0 turns off caching)
+		// optional: you can set custom cache key with 3rd param as string
+		return $feed->render('rss', 1, 'laravelFeedKey');
 	}
 }

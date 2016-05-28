@@ -23,7 +23,6 @@ function checkout(cart_holder) {
 
 	function calculateTotals(cart_holder) {
 		if (parseFloat(sub_total) >= parseFloat(delivery_free_delivery)) {
-			console.log('calcTotals');
 			delivery_price_holder_obj.addClass('hidden');
 			delivery_price_free_obj.removeClass('hidden');
 		} else {
@@ -48,7 +47,7 @@ function checkout(cart_holder) {
 
 	calculateTotals(cart_holder);
 
-	if (delivery_type_active.length > 0) {
+	if (delivery_type_active.length > 0 || $('.cart-page').length > 0) {
 		create_order.addClass('active').removeClass('disabled');
 		create_order.attr('title', '').attr('data-original-title', '');
 	}
@@ -97,7 +96,7 @@ function checkout(cart_holder) {
 		e.stopPropagation();
 		e.stopImmediatePropagation();
 
-		if ($(this).hasClass('disabled')) {
+		if ($(this).hasClass('disabled') && $('.cart-page').length === 0) {
 			return;
 		} else {
 			if ($(this).hasClass('submit')) {

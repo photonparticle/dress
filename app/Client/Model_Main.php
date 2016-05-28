@@ -291,7 +291,7 @@ class Model_Main extends Model
 			$products = $products->orderBy('price', 'DESC');
 		}
 
-		if (empty($order_by))
+		if (empty($order_by) || (!empty($order_by) && $order_by == 'newest'))
 		{
 			$products = $products->orderBy('created_at', 'DESC')
 								 ->orderBy('position', 'ASC')
@@ -783,7 +783,7 @@ class Model_Main extends Model
 	public static function getSitemapPages()
 	{
 		return DB::table('pages')
-				 ->select(['pages.title', 'seo_url.slug'])
+				 ->select(['pages.title', 'pages.updated_at' ,'seo_url.slug'])
 				 ->join('seo_url', 'seo_url.object', '=', 'pages.id')
 				 ->where('pages.active', '=', 1)
 				 ->where('seo_url.type', '=', 'page')

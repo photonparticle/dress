@@ -86,7 +86,7 @@ a.meanmenu-reveal{display:none}
 .mean-remove{display:none!important}
 .mean-container .mean-bar::after {
   color: #ffffff;
-  content: "Меню";
+  content: "";
   font-size: 21px;
   left: 5%;
   position: absolute;

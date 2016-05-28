@@ -189,10 +189,6 @@ a#scrollUp:hover {
 	background: #f2f2f2 none repeat scroll 0 0;
 }
 
-.welcome {
-	margin-top: 8px;
-}
-
 .welcome span {
 }
 
@@ -230,7 +226,6 @@ a#scrollUp:hover {
 .top-menu ul li {
 	display: inline-block;
 	margin-left: 10px;
-	padding: 8px 0;
 }
 
 .top-menu ul li a {
@@ -735,20 +730,22 @@ a#scrollUp:hover {
 	text-transform: uppercase;
 }
 
-.section-title h1::before, .section-title h1::after,
-.section-title h2::before, .section-title h2::after {
-	border-top: 4px double #666;
-	content: "";
-	left: -136px;
-	position: absolute;
-	top: 9px;
-	width: 120px;
-}
+@media only screen and (min-width: 1024px) {
+	.section-title h1::before, .section-title h1::after,
+	.section-title h2::before, .section-title h2::after {
+		border-top: 4px double #666;
+		content: "";
+		left: -136px;
+		position: absolute;
+		top: 9px;
+		width: 120px;
+	}
 
-.section-title h1::after,
-.section-title h2::after {
-	left: inherit;
-	right: -136px;
+	.section-title h1::after,
+	.section-title h2::after {
+		left: inherit;
+		right: -136px;
+	}
 }
 
 .single-product {
@@ -1651,7 +1648,7 @@ ul.footer-contact li i {
 15. contact-area
 ---------------------------------- */
 .contact-area {
-	padding: 60px 0;
+	padding: 0;
 }
 
 .map-area {
@@ -1692,9 +1689,15 @@ ul.footer-contact li i {
 }
 
 .contact-info ul li i {
-	font-size: 16px;
-	margin-right: 5px;
-	width: 20px;
+	font-size: 24px;
+	margin: 7px 5px 0 0;
+	width: 36px;
+	text-align: center;
+	float: left;
+}
+
+.contact-info ul li .work_time {
+	margin-left: 41px;
 }
 
 .contact-info ul li a {

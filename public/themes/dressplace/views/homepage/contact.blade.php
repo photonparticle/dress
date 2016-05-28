@@ -19,9 +19,9 @@
 
     @if(!isset($ajax))
         <div class="container col-xs-12">
-            @endif
+        @endif
 
-            <!-- contact-area start -->
+        <!-- contact-area start -->
             <div class="contact-area">
                 <div class="container">
                     <div class="row">
@@ -29,7 +29,7 @@
                             <div class="contact-form">
                                 <h3><i class="fa fa-envelope-o"></i> {{trans('client.pm_us')}}</h3>
                                 <div class="row">
-                                    <form action="/contact" method="POST">
+                                    <form id="contact_form" action="/contact" method="POST">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <input name="name" type="text" placeholder="{{trans('client.names')}}"/>
@@ -41,11 +41,11 @@
                                             <input name="phone" type="text" placeholder="{{trans('client.phone')}}"/>
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input name="subject" type="text" placeholder="Subject"/>
+                                            <input name="subject" type="text" placeholder="{{trans('client.subject')}}"/>
                                         </div>
                                         <div class="col-md-12 col-sm-12 col-xs-12">
                                             <textarea name="message" id="message" cols="30" rows="10" placeholder="{{trans('client.message')}}"></textarea>
-                                            <input type="submit" value="{{trans('client.send_request')}}"/>
+                                            <input id="contact_submit" type="submit" value="{{trans('client.send_request')}}"/>
                                         </div>
                                     </form>
                                 </div>
@@ -70,7 +70,9 @@
                                     @endif
                                     <li>
                                         <i class="fa fa-clock-o"></i> <strong>{{trans('client.work_time')}}</strong>
-                                        {!! $sys['work_time'] !!}
+                                        <div class="work_time">
+                                            {!! $sys['work_time'] !!}
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -89,23 +91,21 @@
 @section('customJS')
     <script type="text/javascript">
         jQuery(document).ready(function () {
-            $('#do_login').on('click', function (e) {
+            $('#contact_form').submit(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
 
                 $.ajax({
                            type: 'post',
-                           url: $('#login_form').attr('action'),
-                           data: $('#login_form').serialize(),
-                           success: function (data) {
-                               var response = jQuery.parseJSON(data);
-
-                               if (typeof response == typeof {} && response['status'] && response['message'] && response['title']) {
+                           url: $('#contact_form').attr('action'),
+                           data: $('#contact_form').serialize(),
+                           success: function (response) {
+                               if (typeof response == typeof {} && typeof response['status'] !== typeof undefined && typeof response['message'] !== typeof undefined) {
                                    if (response['status'] == 'success') {
-                                       $('#do_login').attr('disabled', 'disabled');
+                                       $('#contact_submit').attr('disabled', 'disabled');
                                        setTimeout(function () {
-                                           window.location.href = "/";
+                                           window.location.href = "/contact";
                                        }, 3000);
                                    }
 
